@@ -1,0 +1,11 @@
+Package: hadoop-subutai-plugin
+Section: devel
+Priority: optional
+Architecture: all
+Standards-Version: 3.9.4
+Homepage: http://www.subutai.io
+Pre-Depends: plugin-common
+Build-Depends: debhelper (>= 8.0.0)
+Version: [[project.version]]
+Maintainer: Subutai
+Description: This package contains kar file of Subutai BDT plugin that runs on Subutai server application.

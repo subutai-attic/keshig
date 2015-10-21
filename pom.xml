@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <name>BDT Plugin Module Parent</name>
+  <description>Build Deploy Test Subutai Plugin</description>
+  <modules>
+    <module>keshigqd-api</module>
+    <module>keshigqd-rest</module>
+    <module>keshigqd-cli</module>
+    <module>keshigqd-impl</module>
+    <!--<module>keshigqd-kar</module>-->
+  </modules>
+  <packaging>pom</packaging>
+
+  <groupId>io.subutai</groupId>
+  <artifactId>keshigqd-plugin</artifactId>
+  <version>4.0.0-RC2</version>
+
+  <properties>
+    <subutai.mgmt.parent.version>4.0.0-RC2</subutai.mgmt.parent.version>
+    <karaf.version>3.0.2</karaf.version>
+    <vaadin-version>7.3.3</vaadin-version>
+    <maven.bundle.plugin.version>2.4.0</maven.bundle.plugin.version>
+    <guava.version>18.0</guava.version>
+    <mockito.version>1.9.5</mockito.version>
+    <awaitility.version>1.6.1</awaitility.version>
+    <junit.version>4.11</junit.version>
+    <servicemix.bundles.junit.version>4.10_1</servicemix.bundles.junit.version>
+    <jaxrs.version>2.7.12</jaxrs.version>
+  </properties>
+  <dependencyManagement>
+    <dependencies>
+
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>subutai-common</artifactId>
+        <version>${subutai.mgmt.parent.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>plugin-common</artifactId>
+        <version>${subutai.mgmt.parent.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>vaadin-custom</artifactId>
+        <version>${subutai.mgmt.parent.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>host-registry-api</artifactId>
+        <version>${subutai.mgmt.parent.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>tracker-api</artifactId>
+        <version>${subutai.mgmt.parent.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>subutai-common-datasource</artifactId>
+        <version>${subutai.mgmt.parent.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>subutai-common-implementation</artifactId>
+        <version>${subutai.mgmt.parent.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <version>${maven.bundle.plugin.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
+        <version>${guava.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-all</artifactId>
+        <version>${mockito.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.jayway.awaitility</groupId>
+        <artifactId>awaitility</artifactId>
+        <version>${awaitility.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>${junit.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.karaf.shell</groupId>
+        <artifactId>org.apache.karaf.shell.console</artifactId>
+        <version>${karaf.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.servicemix.bundles</groupId>
+        <artifactId>org.apache.servicemix.bundles.junit</artifactId>
+        <version>${servicemix.bundles.junit.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.cxf</groupId>
+        <artifactId>cxf-rt-frontend-jaxrs</artifactId>
+        <version>${jaxrs.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.karaf.tooling</groupId>
+        <artifactId>karaf-maven-plugin</artifactId>
+        <version>${karaf.version}</version>
+      </dependency>
+
+    </dependencies>
+  </dependencyManagement>
+  <build>
+    <plugins>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>2.4</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.1</version>
+        <configuration>
+          <source>8</source>
+          <target>8</target>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <version>2.4.0</version>
+        <inherited>true</inherited>
+        <extensions>true</extensions>
+        <configuration>
+          <manifestLocation>META-INF</manifestLocation>
+          <unpackBundle>true</unpackBundle>
+        </configuration>
+      </plugin>
+
+    </plugins>
+  </build>
+</project>

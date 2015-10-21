@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bnd-LastModified: 1445344903655
+Build-Jdk: 1.8.0_25
+Built-By: tkila
+Bundle-Blueprint: OSGI-INF/blueprint/context.xml
+Bundle-Description: Plugin Module Impl
+Bundle-ManifestVersion: 2
+Bundle-Name: Plugin Module Impl
+Bundle-SymbolicName: io.subutai.plugin.impl
+Bundle-Version: 4.0.0.RC2
+Created-By: Apache Maven Bundle Plugin
+Import-Package: io.subutai.common.dao,org.osgi.service.blueprint;version
+ ="[1.0.0,2.0.0)"
+Tool: Bnd-2.1.0.20130426-122213

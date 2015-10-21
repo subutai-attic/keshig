@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bnd-LastModified: 1445404685730
+Build-Jdk: 1.8.0_25
+Built-By: tkila
+Bundle-Description: Plugin Module CLI
+Bundle-ManifestVersion: 2
+Bundle-Name: Plugin Module CLI
+Bundle-SymbolicName: io.subutai.plugin.cli
+Bundle-Version: 4.0.0.RC2
+Created-By: Apache Maven Bundle Plugin
+Tool: Bnd-2.1.0.20130426-122213
