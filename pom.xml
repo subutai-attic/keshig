@@ -10,7 +10,7 @@
     <module>keshigqd-rest</module>
     <module>keshigqd-cli</module>
     <module>keshigqd-impl</module>
-    <!--<module>keshigqd-kar</module>-->
+    <module>keshigqd-kar</module>
   </modules>
   <packaging>pom</packaging>
 

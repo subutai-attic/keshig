@@ -1,14 +1,27 @@
-package io.subutai.keshigqd.api.entity;
+package io.subutai.plugin.keshigqd.api.entity;
 
 
 public class Server
 {
+    private String serverId;
 
     private String serverName;
 
     private String serverAddress;
 
     private ServerType type;
+
+
+    public String getServerId()
+    {
+        return serverId;
+    }
+
+
+    public void setServerId( final String serverId )
+    {
+        this.serverId = serverId;
+    }
 
 
     public String getServerName()
@@ -43,6 +56,15 @@ public class Server
 
     public void setType( final ServerType type )
     {
+        this.type = type;
+    }
+
+
+    public Server( final String serverId, final String serverName, final String serverAddress, final ServerType type )
+    {
+        this.serverId = serverId;
+        this.serverName = serverName;
+        this.serverAddress = serverAddress;
         this.type = type;
     }
 

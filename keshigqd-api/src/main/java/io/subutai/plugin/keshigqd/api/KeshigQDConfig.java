@@ -1,4 +1,4 @@
-package io.subutai.keshigqd.api;
+package io.subutai.plugin.keshigqd.api;
 
 
 import java.util.ArrayList;

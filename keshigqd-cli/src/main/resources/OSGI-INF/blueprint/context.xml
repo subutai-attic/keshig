@@ -1,0 +1,43 @@
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0">
+
+  <reference id="keshig" availability="mandatory"
+             interface="io.subutai.plugin.keshigqd.api.KeshigQD" />
+
+  <reference id="tracker"
+             interface="io.subutai.core.tracker.api.Tracker" />
+
+  <command-bundle xmlns="http://karaf.apache.org/xmlns/shell/v1.0.0">
+
+    <command name="keshigqd/list-server">
+      <action class="io.subutai.plugin.keshigqd.cli.ListServers">
+        <property name="keshig" ref="keshig" />
+      </action>
+    </command>
+    <command name="keshigqd/set-server">
+      <action class="io.subutai.plugin.keshigqd.cli.SetupServer">
+        <property name="keshig" ref="keshig" />
+      </action>
+    </command>
+    <command name="keshigqd/clone">
+      <action class="io.subutai.plugin.keshigqd.cli.CloneCommand">
+        <property name="keshig" ref="keshig" />
+      </action>
+    </command>
+    <command name="keshigqd/build">
+      <action class="io.subutai.plugin.keshigqd.cli.BuildCommand">
+        <property name="keshig" ref="keshig" />
+      </action>
+    </command>
+    <command name="keshigqd/deploy">
+      <action class="io.subutai.plugin.keshigqd.cli.DeployCommand">
+        <property name="keshig" ref="keshig" />
+      </action>
+    </command>
+    <command name="keshigqd/test">
+      <action class="io.subutai.plugin.keshigqd.cli.TestCommand">
+        <property name="keshig" ref="keshig" />
+      </action>
+    </command>
+  </command-bundle>
+
+</blueprint>

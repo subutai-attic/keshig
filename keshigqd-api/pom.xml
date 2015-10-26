@@ -9,7 +9,7 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>keshigqd-plugin-api</artifactId>
+  <artifactId>keshigqd-api</artifactId>
   <packaging>bundle</packaging>
   <name>Plugin Module Api</name>
   <description>Plugin Module Api</description>

@@ -9,7 +9,7 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>keshigqd-plugin-rest</artifactId>
+  <artifactId>keshigqd-rest</artifactId>
   <packaging>bundle</packaging>
   <name>Plugin Module REST</name>
   <description>Plugin Module REST</description>

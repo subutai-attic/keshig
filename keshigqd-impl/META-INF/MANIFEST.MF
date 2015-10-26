@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1445344903655
+Bnd-LastModified: 1445842307286
 Build-Jdk: 1.8.0_25
 Built-By: tkila
 Bundle-Blueprint: OSGI-INF/blueprint/context.xml
@@ -9,6 +9,19 @@ Bundle-Name: Plugin Module Impl
 Bundle-SymbolicName: io.subutai.plugin.impl
 Bundle-Version: 4.0.0.RC2
 Created-By: Apache Maven Bundle Plugin
-Import-Package: io.subutai.common.dao,org.osgi.service.blueprint;version
- ="[1.0.0,2.0.0)"
+Export-Service: io.subutai.plugin.keshigqd.api.KeshigQD
+Import-Package: com.google.common.base;version="[18.0,19)",io.subutai.co
+ mmon.command;version="[4.0,5)",io.subutai.common.mdc;version="[4.0,5)",
+ io.subutai.common.peer;version="[4.0,5)",io.subutai.common.tracker;vers
+ ion="[4.0,5)",io.subutai.core.environment.api;version="[4.0,5)",io.subu
+ tai.core.network.api;version="[4.0,5)",io.subutai.core.peer.api;version
+ ="[4.0,5)",io.subutai.core.tracker.api;version="[4.0,5)",io.subutai.plu
+ gin.common.api;version="[4.0,5)",io.subutai.plugin.keshigqd.api;version
+ ="[4.0,5)",io.subutai.plugin.keshigqd.api.entity;version="[4.0,5)",org.
+ osgi.service.blueprint;version="[1.0.0,2.0.0)",org.slf4j;version="[1.7,
+ 2)"
+Import-Service: io.subutai.core.network.api.NetworkManager;multiple:=fal
+ se,io.subutai.core.peer.api.PeerManager;multiple:=false,io.subutai.core
+ .tracker.api.Tracker;multiple:=false,io.subutai.plugin.common.api.Plugi
+ nDAO;multiple:=false
 Tool: Bnd-2.1.0.20130426-122213

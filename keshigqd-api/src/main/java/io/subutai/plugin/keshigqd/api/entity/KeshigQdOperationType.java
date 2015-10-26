@@ -1,4 +1,4 @@
-package io.subutai.keshigqd.api.entity;
+package io.subutai.plugin.keshigqd.api.entity;
 
 
 public enum KeshigQdOperationType
