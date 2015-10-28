@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import io.subutai.common.command.CommandException;
+import io.subutai.common.command.CommandResult;
 import io.subutai.common.command.RequestBuilder;
 import io.subutai.common.peer.HostNotFoundException;
 import io.subutai.common.peer.ResourceHost;
@@ -49,7 +50,17 @@ public class DeployOperationHandler implements Runnable
         {
             buildHost = keshig.getPeerManager().getLocalPeer().getResourceHostById( buildServer.getServerId() );
 
-            buildHost.execute( new RequestBuilder( Command.getDeployCommand() ).withCmdArgs( args ).withTimeout( 600 ) );
+           CommandResult result = buildHost.execute(
+                new RequestBuilder( Command.getDeployCommand() ).withCmdArgs( args ).withTimeout( 600 ) );
+
+            if ( result.hasSucceeded() )
+            {
+                trackerOperation.addLog( result.getStdOut() );
+            }
+            else
+            {
+                trackerOperation.addLogFailed( result.getStdErr() );
+            }
         }
         catch ( CommandException | HostNotFoundException e )
         {

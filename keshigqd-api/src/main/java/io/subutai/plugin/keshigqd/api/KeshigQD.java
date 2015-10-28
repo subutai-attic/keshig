@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import io.subutai.plugin.keshigqd.api.entity.Build;
 import io.subutai.plugin.keshigqd.api.entity.Server;
 
 
@@ -17,6 +18,8 @@ public interface KeshigQD
     public Server getServer( Server server );
 
     public List<Server> getServers();
+
+    public List<Build> getBuilds();
 
     UUID deploy( Map<String, String> opts );
 

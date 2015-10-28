@@ -2,6 +2,7 @@ package io.subutai.plugin.keshigqd.impl;
 
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -11,8 +12,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 
+import io.subutai.common.command.CommandException;
+import io.subutai.common.command.CommandResult;
+import io.subutai.common.command.RequestBuilder;
 import io.subutai.common.mdc.SubutaiExecutors;
+import io.subutai.common.peer.HostNotFoundException;
+import io.subutai.common.peer.ResourceHost;
 import io.subutai.common.tracker.TrackerOperation;
 import io.subutai.core.environment.api.EnvironmentManager;
 import io.subutai.core.network.api.NetworkManager;
@@ -21,6 +28,8 @@ import io.subutai.core.tracker.api.Tracker;
 import io.subutai.plugin.common.api.PluginDAO;
 import io.subutai.plugin.keshigqd.api.KeshigQD;
 import io.subutai.plugin.keshigqd.api.KeshigQDConfig;
+import io.subutai.plugin.keshigqd.api.entity.Build;
+import io.subutai.plugin.keshigqd.api.entity.Command;
 import io.subutai.plugin.keshigqd.api.entity.Server;
 import io.subutai.plugin.keshigqd.api.entity.ServerType;
 import io.subutai.plugin.keshigqd.impl.handler.BuildOperationHandler;
@@ -106,6 +115,53 @@ public class KeshigQDImpl implements KeshigQD
         executor.execute( operationHandler );
 
         return operationHandler.getTrackerId();
+    }
+
+
+    @Override
+    public List<Build> getBuilds()
+    {
+        Server buildServer = getServer( ServerType.DEPLOY_SERVER );
+
+        if ( buildServer == null )
+        {
+            LOG.error( "Failed to obtain build server" );
+            return null;
+        }
+
+        ResourceHost buildHost;
+        try
+        {
+            buildHost = getPeerManager().getLocalPeer().getResourceHostById( buildServer.getServerId() );
+
+            CommandResult result = buildHost.execute(
+                    new RequestBuilder( Command.getBuilds() ).withCmdArgs( Lists.newArrayList( Command.list ) )
+                                                             .withTimeout( 30 ) );
+            if ( result.hasSucceeded() )
+            {
+                return parseBuilds( result.getStdOut() );
+            }
+        }
+        catch ( CommandException | HostNotFoundException e )
+        {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    private List<Build> parseBuilds( String stdout )
+    {
+        List<Build> list = new ArrayList<>();
+        String[] builds = stdout.split( System.getProperty( "line.separator" ) );
+
+        for ( String line : builds )
+        {
+            String[] build = line.split( "_" );
+            Date date = new Date( Long.valueOf( build[2] ) * 100 );
+            list.add( new Build( build[0], build[1], date ) );
+        }
+        return list;
     }
 
 

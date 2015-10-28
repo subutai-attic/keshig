@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import io.subutai.common.command.CommandException;
+import io.subutai.common.command.CommandResult;
 import io.subutai.common.command.RequestBuilder;
 import io.subutai.common.peer.HostNotFoundException;
 import io.subutai.common.peer.ResourceHost;
@@ -13,10 +14,10 @@ import io.subutai.common.tracker.TrackerOperation;
 import io.subutai.common.tracker.TrackerOperationView;
 import io.subutai.core.tracker.api.Tracker;
 import io.subutai.plugin.keshigqd.api.KeshigQDConfig;
+import io.subutai.plugin.keshigqd.api.entity.Command;
 import io.subutai.plugin.keshigqd.api.entity.Server;
 import io.subutai.plugin.keshigqd.api.entity.ServerType;
 import io.subutai.plugin.keshigqd.impl.KeshigQDImpl;
-import io.subutai.plugin.keshigqd.api.entity.Command;
 
 
 public class CloneOperationHandler implements Runnable
@@ -52,13 +53,24 @@ public class CloneOperationHandler implements Runnable
         {
             buildHost = keshig.getPeerManager().getLocalPeer().getResourceHostById( buildServer.getServerId() );
 
-            buildHost.execute( new RequestBuilder( Command.getCloneCommand() ).withCmdArgs( args ).withTimeout( 600 ) );
+            CommandResult result = buildHost
+                    .execute( new RequestBuilder( Command.getCloneCommand() ).withCmdArgs( args ).withTimeout( 600 ) );
+            if ( result.hasSucceeded() )
+            {
+                trackerOperation.addLog( result.getStdOut() );
+            }
+            else
+            {
+                trackerOperation.addLogFailed( result.getStdErr() );
+            }
         }
         catch ( CommandException | HostNotFoundException e )
         {
             e.printStackTrace();
         }
     }
+
+
     protected static OperationState waitUntilOperationFinish( Tracker tracker, UUID uuid )
     {
         OperationState state = null;
@@ -89,6 +101,7 @@ public class CloneOperationHandler implements Runnable
         }
         return state;
     }
+
 
     public UUID getTrackerId()
     {

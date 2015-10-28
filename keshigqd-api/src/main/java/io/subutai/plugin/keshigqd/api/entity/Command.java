@@ -11,16 +11,19 @@ public class Command
     //build flags
     public static final String tests     = "-t";
     public static final String clean     = "-c";
+    public static final String list = "-l";
     //deploy flags
     public static final String target    = "-t";
     public static final String build    = "-b";
     //test flags
     public static final String all       = "-a";
     public static final String specific  = "-s";
+    //
 
     //commands
 
     //@formatter:on
+
 
     public static String getCloneCommand()
     {
@@ -45,4 +48,9 @@ public class Command
         return "subutai keshigqd test";
     }
 
+
+    public static String getBuilds()
+    {
+        return "subutai keshigqd list";
+    }
 }

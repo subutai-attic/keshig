@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import io.subutai.common.command.CommandException;
+import io.subutai.common.command.CommandResult;
 import io.subutai.common.command.RequestBuilder;
 import io.subutai.common.peer.HostNotFoundException;
 import io.subutai.common.peer.ResourceHost;
@@ -13,10 +14,10 @@ import io.subutai.common.tracker.TrackerOperation;
 import io.subutai.common.tracker.TrackerOperationView;
 import io.subutai.core.tracker.api.Tracker;
 import io.subutai.plugin.keshigqd.api.KeshigQDConfig;
+import io.subutai.plugin.keshigqd.api.entity.Command;
 import io.subutai.plugin.keshigqd.api.entity.Server;
 import io.subutai.plugin.keshigqd.api.entity.ServerType;
 import io.subutai.plugin.keshigqd.impl.KeshigQDImpl;
-import io.subutai.plugin.keshigqd.api.entity.Command;
 
 
 public class BuildOperationHandler implements Runnable
@@ -52,7 +53,16 @@ public class BuildOperationHandler implements Runnable
         {
             buildHost = keshig.getPeerManager().getLocalPeer().getResourceHostById( server.getServerId() );
 
-            buildHost.execute( new RequestBuilder( Command.getBuildCommand() ).withCmdArgs( args ).withTimeout( 600 ) );
+            CommandResult result = buildHost
+                    .execute( new RequestBuilder( Command.getBuildCommand() ).withCmdArgs( args ).withTimeout( 600 ) );
+            if ( result.hasSucceeded() )
+            {
+                trackerOperation.addLog( result.getStdOut() );
+            }
+            else
+            {
+                trackerOperation.addLogFailed( result.getStdErr() );
+            }
         }
         catch ( HostNotFoundException | CommandException e )
         {

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import io.subutai.common.command.CommandException;
+import io.subutai.common.command.CommandResult;
 import io.subutai.common.command.RequestBuilder;
 import io.subutai.common.peer.HostNotFoundException;
 import io.subutai.common.peer.ResourceHost;
@@ -13,10 +14,10 @@ import io.subutai.common.tracker.TrackerOperation;
 import io.subutai.common.tracker.TrackerOperationView;
 import io.subutai.core.tracker.api.Tracker;
 import io.subutai.plugin.keshigqd.api.KeshigQDConfig;
+import io.subutai.plugin.keshigqd.api.entity.Command;
 import io.subutai.plugin.keshigqd.api.entity.Server;
 import io.subutai.plugin.keshigqd.api.entity.ServerType;
 import io.subutai.plugin.keshigqd.impl.KeshigQDImpl;
-import io.subutai.plugin.keshigqd.api.entity.Command;
 
 
 public class TestOperationHandler implements Runnable
@@ -39,27 +40,38 @@ public class TestOperationHandler implements Runnable
     public void run()
     {
 
-            trackerOperation.addLog( String.format( "Starting tests with args %s", args.toString() ) );
+        trackerOperation.addLog( String.format( "Starting tests with args %s", args.toString() ) );
 
-            Server buildServer = keshig.getServer( ServerType.BUILD_SERVER );
+        Server buildServer = keshig.getServer( ServerType.BUILD_SERVER );
 
-            if ( buildServer == null )
+        if ( buildServer == null )
+        {
+            trackerOperation.addLogFailed( "Failed to obtain test server" );
+            return;
+        }
+        ResourceHost buildHost;
+        try
+        {
+            buildHost = keshig.getPeerManager().getLocalPeer().getResourceHostById( buildServer.getServerId() );
+
+            CommandResult result = buildHost
+                    .execute( new RequestBuilder( Command.getTestComand() ).withCmdArgs( args ).withTimeout( 600 ) );
+
+            if ( result.hasSucceeded() )
             {
-                trackerOperation.addLogFailed( "Failed to obtain test server" );
-                return;
+                trackerOperation.addLog( result.getStdOut() );
             }
-            ResourceHost buildHost;
-            try
+            else
             {
-                buildHost = keshig.getPeerManager().getLocalPeer().getResourceHostById( buildServer.getServerId() );
-
-                buildHost.execute( new RequestBuilder( Command.getTestComand() ).withCmdArgs( args ).withTimeout( 600 ) );
-            }
-            catch ( CommandException | HostNotFoundException e )
-            {
-                e.printStackTrace();
+                trackerOperation.addLogFailed( result.getStdErr() );
             }
         }
+        catch ( CommandException | HostNotFoundException e )
+        {
+            e.printStackTrace();
+        }
+    }
+
 
     protected static OperationState waitUntilOperationFinish( Tracker tracker, UUID uuid )
     {
@@ -91,9 +103,11 @@ public class TestOperationHandler implements Runnable
         }
         return state;
     }
+
+
     public UUID getTrackerId()
     {
         return this.trackerOperation.getId();
     }
-    }
+}
 
