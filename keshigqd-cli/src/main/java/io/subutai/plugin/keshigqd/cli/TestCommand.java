@@ -40,6 +40,8 @@ public class TestCommand extends OsgiCommandSupport
 
         args.put( io.subutai.plugin.keshigqd.api.entity.Command.tests, tests );
 
+        keshig.test( args );
+
         return null;
     }
 }

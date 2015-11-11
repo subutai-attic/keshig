@@ -38,6 +38,17 @@
         <property name="keshig" ref="keshig" />
       </action>
     </command>
+    <command name="keshigqd/list-builds">
+      <action class="io.subutai.plugin.keshigqd.cli.ListBuilds">
+        <property name="keshig" ref="keshig" />
+      </action>
+    </command>
+    <command name="keshigqd/list-packages">
+      <action class="io.subutai.plugin.keshigqd.cli.ListBuilds">
+        <property name="keshig" ref="keshig" />
+      </action>
+    </command>
+
   </command-bundle>
 
 </blueprint>

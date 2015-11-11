@@ -9,7 +9,32 @@ public class Server
 
     private String serverAddress;
 
-    private ServerType type;
+    private String type;
+
+    private String description;
+
+
+    public Server( final String serverId, final String serverName, final String serverAddress, final String type,
+                   final String description )
+    {
+        this.serverId = serverId;
+        this.serverName = serverName;
+        this.serverAddress = serverAddress;
+        this.type = type;
+        this.description = description;
+    }
+
+
+    public String getDescription()
+    {
+        return description;
+    }
+
+
+    public void setDescription( final String description )
+    {
+        this.description = description;
+    }
 
 
     public String getServerId()
@@ -48,23 +73,14 @@ public class Server
     }
 
 
-    public ServerType getType()
+    public String getType()
     {
         return type;
     }
 
 
-    public void setType( final ServerType type )
+    public void setType( final String type )
     {
-        this.type = type;
-    }
-
-
-    public Server( final String serverId, final String serverName, final String serverAddress, final ServerType type )
-    {
-        this.serverId = serverId;
-        this.serverName = serverName;
-        this.serverAddress = serverAddress;
         this.type = type;
     }
 
@@ -73,9 +89,11 @@ public class Server
     public String toString()
     {
         return "Server{" +
-                "serverName='" + serverName + '\'' +
+                "serverId='" + serverId + '\'' +
+                ", serverName='" + serverName + '\'' +
                 ", serverAddress='" + serverAddress + '\'' +
-                ", type=" + type +
+                ", type='" + type + '\'' +
+                ", description='" + description + '\'' +
                 '}';
     }
 }

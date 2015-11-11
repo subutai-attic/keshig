@@ -23,6 +23,18 @@ public class CloneCommand extends OsgiCommandSupport
     private KeshigQD keshig;
 
 
+    public KeshigQD getKeshig()
+    {
+        return keshig;
+    }
+
+
+    public void setKeshig( final KeshigQD keshig )
+    {
+        this.keshig = keshig;
+    }
+
+
     @Override
     protected Object doExecute() throws Exception
     {

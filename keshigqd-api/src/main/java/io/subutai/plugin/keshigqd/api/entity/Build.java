@@ -6,17 +6,22 @@ import java.util.Date;
 
 public class Build
 {
-
+    private String id;
     private String name;
     private String version;
     private Date date;
 
 
-    public Build( final String name, final String version, final Date date )
+
+    public String getId()
     {
-        this.name = name;
-        this.version = version;
-        this.date = date;
+        return id;
+    }
+
+
+    public void setId( final String id )
+    {
+        this.id = id;
     }
 
 
@@ -56,6 +61,15 @@ public class Build
     }
 
 
+    public Build( final String id, final String name, final String version, final Date date )
+    {
+        this.id = id;
+        this.name = name;
+        this.version = version;
+        this.date = date;
+    }
+
+
     @Override
     public boolean equals( final Object o )
     {
@@ -70,6 +84,10 @@ public class Build
 
         final Build build = ( Build ) o;
 
+        if ( id != null ? !id.equals( build.id ) : build.id != null )
+        {
+            return false;
+        }
         if ( name != null ? !name.equals( build.name ) : build.name != null )
         {
             return false;
@@ -85,7 +103,8 @@ public class Build
     @Override
     public int hashCode()
     {
-        int result = name != null ? name.hashCode() : 0;
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + ( name != null ? name.hashCode() : 0 );
         result = 31 * result + ( version != null ? version.hashCode() : 0 );
         result = 31 * result + ( date != null ? date.hashCode() : 0 );
         return result;
@@ -96,7 +115,8 @@ public class Build
     public String toString()
     {
         return "Build{" +
-                "name='" + name + '\'' +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
                 ", version='" + version + '\'' +
                 ", date=" + date +
                 '}';

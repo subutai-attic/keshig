@@ -21,18 +21,18 @@ public class BuildCommand extends OsgiCommandSupport
     @Argument( index = 1, name = "clean", description = "clean run true/false", required = false, multiValued = false )
     String clean;
 
-    private KeshigQD keshigQD;
+    private KeshigQD keshig;
 
 
-    public KeshigQD getKeshigQD()
+    public KeshigQD getKeshig()
     {
-        return keshigQD;
+        return keshig;
     }
 
 
-    public void setKeshigQD( final KeshigQD keshigQD )
+    public void setKeshig( final KeshigQD keshig )
     {
-        this.keshigQD = keshigQD;
+        this.keshig = keshig;
     }
 
 
@@ -42,8 +42,9 @@ public class BuildCommand extends OsgiCommandSupport
         Map<String, String> args = new HashMap<>();
         args.put( io.subutai.plugin.keshigqd.api.entity.Command.tests, tests );
         args.put( io.subutai.plugin.keshigqd.api.entity.Command.clean, clean );
-        keshigQD.build( args );
+        keshig.build( args );
 
         return null;
     }
+
 }

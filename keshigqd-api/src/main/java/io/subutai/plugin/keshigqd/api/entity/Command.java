@@ -15,9 +15,12 @@ public class Command
     //deploy flags
     public static final String target    = "-t";
     public static final String build    = "-b";
+    public static final String folder = "-f";
+
     //test flags
     public static final String all       = "-a";
     public static final String specific  = "-s";
+
     //
 
     //commands
@@ -27,19 +30,19 @@ public class Command
 
     public static String getCloneCommand()
     {
-        return "subutai keshigqd clone";
+        return "/home/ubuntu/clone";
     }
 
 
     public static String getBuildCommand()
     {
-        return "subutai keshigqd build";
+        return "/home/ubuntu/build";
     }
 
 
     public static String getDeployCommand()
     {
-        return "subutai keshigqd deploy";
+        return "subutai deploy";
     }
 
 
@@ -49,8 +52,8 @@ public class Command
     }
 
 
-    public static String getBuilds()
+    public static String getInstalledPackagesCommand()
     {
-        return "subutai keshigqd list";
+        return "dpkg -l";
     }
 }

@@ -5,7 +5,6 @@ import org.apache.karaf.shell.commands.Argument;
 import org.apache.karaf.shell.commands.Command;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
 
-
 import io.subutai.plugin.keshigqd.api.KeshigQD;
 import io.subutai.plugin.keshigqd.api.entity.Server;
 import io.subutai.plugin.keshigqd.api.entity.ServerType;
@@ -22,9 +21,11 @@ public class SetupServer extends OsgiCommandSupport
     String serverAddress;
     @Argument( index = 3, name = "type", description = "Server Type", required = true, multiValued = false )
     String serverType;
-
+    @Argument( index = 4, name = "description", description = "Description", required = true, multiValued = false )
+    String description;
 
     private KeshigQD keshig;
+
 
     public KeshigQD getKeshig()
     {
@@ -41,7 +42,7 @@ public class SetupServer extends OsgiCommandSupport
     @Override
     protected Object doExecute() throws Exception
     {
-        ServerType type;
+        String type;
         if ( serverType.equalsIgnoreCase( "test" ) )
         {
             type = ServerType.TEST_SERVER;
@@ -59,7 +60,7 @@ public class SetupServer extends OsgiCommandSupport
             throw new Exception( "\nInvalid server type :\n Enter one of the following:\nTest\nDeploy\nBuild" );
         }
 
-        Server server = new Server( serverId, serverName, serverAddress, type );
+        Server server = new Server( serverId, serverName, serverAddress, type, description );
 
         keshig.addServer( server );
 

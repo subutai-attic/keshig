@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1445965215750
+Bnd-LastModified: 1447136358419
 Build-Jdk: 1.8.0_25
 Built-By: tkila
 Bundle-Blueprint: OSGI-INF/blueprint/context.xml
@@ -7,16 +7,17 @@ Bundle-Description: Plugin Module CLI
 Bundle-ManifestVersion: 2
 Bundle-Name: Plugin Module CLI
 Bundle-SymbolicName: io.subutai.plugin.cli
-Bundle-Version: 4.0.0.RC2
+Bundle-Version: 4.0.0.RC3
 Created-By: Apache Maven Bundle Plugin
-Export-Package: io.subutai.plugin.keshigqd.cli;version="4.0.0.RC2";uses:
+Export-Package: io.subutai.plugin.keshigqd.cli;version="4.0.0.RC3";uses:
  ="io.subutai.plugin.keshigqd.api,org.apache.karaf.shell.commands,org.ap
  ache.karaf.shell.console"
-Import-Package: io.subutai.core.tracker.api;version="[4.0,5)",io.subutai
- .plugin.keshigqd.api;version="[4.0,5)",io.subutai.plugin.keshigqd.api.e
- ntity;version="[4.0,5)",org.apache.karaf.shell.commands;version="[3.0,4
- )",org.apache.karaf.shell.console;version="[3.0,4)",org.osgi.service.bl
- ueprint;version="[1.0.0,2.0.0)"
+Import-Package: com.google.common.base;version="[18.0,19)",io.subutai.co
+ re.tracker.api;version="[4.0,5)",io.subutai.plugin.keshigqd.api;version
+ ="[4.0,5)",io.subutai.plugin.keshigqd.api.entity;version="[4.0,5)",org.
+ apache.karaf.shell.commands;version="[3.0,4)",org.apache.karaf.shell.co
+ nsole;version="[3.0,4)",org.osgi.service.blueprint;version="[1.0.0,2.0.
+ 0)"
 Import-Service: io.subutai.core.tracker.api.Tracker;multiple:=false,io.s
  ubutai.plugin.keshigqd.api.KeshigQD;multiple:=false
 Tool: Bnd-2.1.0.20130426-122213

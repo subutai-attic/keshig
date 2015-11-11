@@ -1,15 +1,15 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1445965214382
+Bnd-LastModified: 1447136356737
 Build-Jdk: 1.8.0_25
 Built-By: tkila
 Bundle-Description: Plugin Module Api
 Bundle-ManifestVersion: 2
 Bundle-Name: Plugin Module Api
 Bundle-SymbolicName: io.subutai.plugin.api
-Bundle-Version: 4.0.0.RC2
+Bundle-Version: 4.0.0.RC3
 Created-By: Apache Maven Bundle Plugin
-Export-Package: io.subutai.plugin.keshigqd.api.entity;version="4.0.0.RC2
+Export-Package: io.subutai.plugin.keshigqd.api.entity;version="4.0.0.RC3
  ",io.subutai.plugin.keshigqd.api;uses:="io.subutai.plugin.keshigqd.api.
- entity";version="4.0.0.RC2"
+ entity";version="4.0.0.RC3"
 Import-Package: io.subutai.common.settings;version="[4.0,5)"
 Tool: Bnd-2.1.0.20130426-122213

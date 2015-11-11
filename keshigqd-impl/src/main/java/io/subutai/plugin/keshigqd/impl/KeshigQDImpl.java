@@ -3,6 +3,7 @@ package io.subutai.plugin.keshigqd.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -30,6 +31,8 @@ import io.subutai.plugin.keshigqd.api.KeshigQD;
 import io.subutai.plugin.keshigqd.api.KeshigQDConfig;
 import io.subutai.plugin.keshigqd.api.entity.Build;
 import io.subutai.plugin.keshigqd.api.entity.Command;
+import io.subutai.plugin.keshigqd.api.entity.Dependencies;
+import io.subutai.plugin.keshigqd.api.entity.Dependency;
 import io.subutai.plugin.keshigqd.api.entity.Server;
 import io.subutai.plugin.keshigqd.api.entity.ServerType;
 import io.subutai.plugin.keshigqd.impl.handler.BuildOperationHandler;
@@ -74,7 +77,7 @@ public class KeshigQDImpl implements KeshigQD
     public void addServer( final Server server ) throws Exception
     {
         Preconditions.checkNotNull( server );
-        if ( !getPluginDAO().saveInfo( KeshigQDConfig.PRODUCT_KEY, server.getServerId(), server.toString() ) )
+        if ( !getPluginDAO().saveInfo( KeshigQDConfig.PRODUCT_KEY, server.getServerId(), server ) )
         {
             throw new Exception( "Could not save server info" );
         }
@@ -134,9 +137,8 @@ public class KeshigQDImpl implements KeshigQD
         {
             buildHost = getPeerManager().getLocalPeer().getResourceHostById( buildServer.getServerId() );
 
-            CommandResult result = buildHost.execute(
-                    new RequestBuilder( Command.getBuilds() ).withCmdArgs( Lists.newArrayList( Command.list ) )
-                                                             .withTimeout( 30 ) );
+            CommandResult result = buildHost.execute( new RequestBuilder( Command.getDeployCommand() )
+                    .withCmdArgs( Lists.newArrayList( Command.list, "list" ) ).withTimeout( 30 ) );
             if ( result.hasSucceeded() )
             {
                 return parseBuilds( result.getStdOut() );
@@ -158,20 +160,24 @@ public class KeshigQDImpl implements KeshigQD
         for ( String line : builds )
         {
             String[] build = line.split( "_" );
-            Date date = new Date( Long.valueOf( build[2] ) * 100 );
-            list.add( new Build( build[0], build[1], date ) );
+            Date date = new Date( Long.valueOf( build[2] ) * 1000 );
+            list.add( new Build( line, build[0], build[1], date ) );
         }
         return list;
     }
 
 
-    public Server getServer( ServerType type )
+    public Server getServer( String type )
     {
         List<Server> servers = getServers();
 
+        LOG.info( String.format( "Found servers: %s", servers.toString() ) );
+
         for ( Server server : servers )
         {
-            if ( server.getType().name().equalsIgnoreCase( type.name() ) )
+            LOG.info( String.format( "Server (%s) with type: (%s)", server.toString(), server.getType() ) );
+
+            if ( server.getType().equalsIgnoreCase( type ) )
             {
                 return server;
             }
@@ -223,6 +229,94 @@ public class KeshigQDImpl implements KeshigQD
         executor.execute( cloneOperation );
 
         return cloneOperation.getTrackerId();
+    }
+
+
+    @Override
+    public Map<String, List<Dependency>> getAllPackages()
+    {
+        List<Server> servers = getServers();
+        Map<String, List<Dependency>> packages = new HashMap<>();
+
+        for ( Server server : servers )
+        {
+            packages.put( server.getServerId(), getPackages( server.getServerId() ) );
+        }
+        return packages;
+    }
+
+
+    @Override
+    public List<Dependency> getPackages( final String serverId )
+    {
+        List<Dependency> dependencyList = null;
+        try
+        {
+            ResourceHost targetHost = getPeerManager().getLocalPeer().getResourceHostById( serverId );
+            CommandResult result = targetHost.execute( new RequestBuilder( Command.getInstalledPackagesCommand() ) );
+            if ( result.hasSucceeded() )
+            {
+                dependencyList = parsePackages( result.getStdOut() );
+            }
+        }
+        catch ( HostNotFoundException | CommandException e )
+        {
+            e.printStackTrace();
+        }
+
+        return dependencyList;
+    }
+
+
+    private List<Dependency> parsePackages( String stdOut )
+    {
+        List<Dependency> dependencyList = new ArrayList<>();
+        String[] packages = stdOut.split( System.getProperty( "line.separator" ) );
+        for ( String line : packages )
+        {
+            if ( line.startsWith( "ii" ) )
+            {
+                String[] attrs = line.split( "\\s+" );
+                dependencyList.add( new Dependency( attrs[1], attrs[2], attrs[3], attrs[4] ) );
+            }
+        }
+        return dependencyList;
+    }
+
+
+    @Override
+    public List<Dependency> getRequiredPackages( final String serverType )
+    {
+        List<Dependency> dependencies = null;
+        switch ( serverType )
+        {
+            case ServerType.BUILD_SERVER:
+                dependencies = Dependencies.KeshigCloneServer.requiredPackages();
+                break;
+            case ServerType.DEPLOY_SERVER:
+                dependencies = Dependencies.KeshigDeployServer.requiredPackages();
+                break;
+            case ServerType.TEST_SERVER:
+                dependencies = Dependencies.KeshigTestServer.requiredPackages();
+                break;
+        }
+        return dependencies;
+    }
+
+
+    @Override
+    public List<Dependency> getMissingPackages( final Server server )
+    {
+        return getMissingPackages( server.getServerId(), server.getType() );
+    }
+
+
+    @Override
+    public List<Dependency> getMissingPackages( final String serverId, final String serverType )
+    {
+        List<Dependency> existingDependencies = getPackages( serverId );
+        List<Dependency> requiredDependencies = getRequiredPackages( serverType );
+        return Dependencies.missingDependencies( existingDependencies, requiredDependencies );
     }
 
 

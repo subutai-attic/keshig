@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.UUID;
 
 import io.subutai.common.command.CommandException;
-import io.subutai.common.command.CommandResult;
 import io.subutai.common.command.RequestBuilder;
 import io.subutai.common.peer.HostNotFoundException;
 import io.subutai.common.peer.ResourceHost;
@@ -52,17 +51,29 @@ public class CloneOperationHandler implements Runnable
         try
         {
             buildHost = keshig.getPeerManager().getLocalPeer().getResourceHostById( buildServer.getServerId() );
+            buildHost.execute( new RequestBuilder( Command.getCloneCommand() ).withCmdArgs( args ).withTimeout( 600 ),
+                    ( response, commandResult ) -> {
+                        if ( commandResult.hasCompleted() )
+                        {
+                            if ( commandResult.hasSucceeded() )
+                            {
+                                trackerOperation.addLogDone( response.getStdOut() );
 
-            CommandResult result = buildHost
-                    .execute( new RequestBuilder( Command.getCloneCommand() ).withCmdArgs( args ).withTimeout( 600 ) );
-            if ( result.hasSucceeded() )
-            {
-                trackerOperation.addLog( result.getStdOut() );
-            }
-            else
-            {
-                trackerOperation.addLogFailed( result.getStdErr() );
-            }
+                                return;
+                            }
+                            else
+                            {
+                                trackerOperation.addLogFailed( response.getStdErr() );
+                                return;
+                            }
+                        }
+                        else
+                        {
+                            trackerOperation.addLog( response.getStdOut() == null ? "" :
+                                                     response.getStdOut() + "\n" + response.getStdErr() == null ? "" :
+                                                     response.getStdErr() );
+                        }
+                    } );
         }
         catch ( CommandException | HostNotFoundException e )
         {

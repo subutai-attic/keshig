@@ -5,14 +5,10 @@ import java.util.List;
 import java.util.UUID;
 
 import io.subutai.common.command.CommandException;
-import io.subutai.common.command.CommandResult;
 import io.subutai.common.command.RequestBuilder;
 import io.subutai.common.peer.HostNotFoundException;
 import io.subutai.common.peer.ResourceHost;
-import io.subutai.common.tracker.OperationState;
 import io.subutai.common.tracker.TrackerOperation;
-import io.subutai.common.tracker.TrackerOperationView;
-import io.subutai.core.tracker.api.Tracker;
 import io.subutai.plugin.keshigqd.api.KeshigQDConfig;
 import io.subutai.plugin.keshigqd.api.entity.Command;
 import io.subutai.plugin.keshigqd.api.entity.Server;
@@ -54,54 +50,33 @@ public class TestOperationHandler implements Runnable
         {
             buildHost = keshig.getPeerManager().getLocalPeer().getResourceHostById( buildServer.getServerId() );
 
-            CommandResult result = buildHost
-                    .execute( new RequestBuilder( Command.getTestComand() ).withCmdArgs( args ).withTimeout( 600 ) );
-
-            if ( result.hasSucceeded() )
-            {
-                trackerOperation.addLog( result.getStdOut() );
-            }
-            else
-            {
-                trackerOperation.addLogFailed( result.getStdErr() );
-            }
+            buildHost.execute( new RequestBuilder( Command.getTestComand() ).withCmdArgs( args ).withTimeout( 600 ),
+                    ( response, commandResult ) -> {
+                        if ( commandResult.hasCompleted() )
+                        {
+                            if ( commandResult.hasSucceeded() )
+                            {
+                                trackerOperation.addLogDone( response.getStdOut() );
+                                return;
+                            }
+                            else
+                            {
+                                trackerOperation.addLogFailed( response.getStdErr() );
+                                return;
+                            }
+                        }
+                        else
+                        {
+                            trackerOperation.addLog( response.getStdOut() == null ? "" :
+                                                     response.getStdOut() + "\n" + response.getStdErr() == null ? "" :
+                                                     response.getStdErr() );
+                        }
+                    } );
         }
         catch ( CommandException | HostNotFoundException e )
         {
             e.printStackTrace();
         }
-    }
-
-
-    protected static OperationState waitUntilOperationFinish( Tracker tracker, UUID uuid )
-    {
-        OperationState state = null;
-        long start = System.currentTimeMillis();
-        while ( !Thread.interrupted() )
-        {
-            TrackerOperationView po = tracker.getTrackerOperation( KeshigQDConfig.PRODUCT_KEY, uuid );
-            if ( po != null )
-            {
-                if ( po.getState() != OperationState.RUNNING )
-                {
-                    state = po.getState();
-                    break;
-                }
-            }
-            try
-            {
-                Thread.sleep( 1000 );
-            }
-            catch ( InterruptedException ex )
-            {
-                break;
-            }
-            if ( System.currentTimeMillis() - start > ( 30 + 3 ) * 1000 )
-            {
-                break;
-            }
-        }
-        return state;
     }
 
 
