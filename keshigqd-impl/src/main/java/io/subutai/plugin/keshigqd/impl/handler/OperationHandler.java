@@ -21,7 +21,7 @@ import io.subutai.plugin.keshigqd.api.entity.ServerType;
 import io.subutai.plugin.keshigqd.impl.KeshigQDImpl;
 
 
-public class BuildOperationHandler implements Runnable
+public class OperationHandler implements Runnable
 {
 
     private TrackerOperation trackerOperation;
@@ -31,11 +31,11 @@ public class BuildOperationHandler implements Runnable
     private Server server;
     private History history;
     private RequestBuilder command;
-    private static final Logger LOG = LoggerFactory.getLogger( BuildOperationHandler.class );
+    private static final Logger LOG = LoggerFactory.getLogger( OperationHandler.class );
 
 
-    public BuildOperationHandler( final KeshigQDImpl keshig, final RequestBuilder command, final List<String> args,
-                                  final String serverId )
+    public OperationHandler( final KeshigQDImpl keshig, final RequestBuilder command, final List<String> args,
+                             final String serverId )
     {
         this.command = command;
         this.serverId = serverId;
