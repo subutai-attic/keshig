@@ -5,31 +5,74 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import io.subutai.common.command.RequestBuilder;
 import io.subutai.plugin.keshigqd.api.entity.Build;
 import io.subutai.plugin.keshigqd.api.entity.Dependency;
+import io.subutai.plugin.keshigqd.api.entity.OperationType;
 import io.subutai.plugin.keshigqd.api.entity.Server;
+import io.subutai.plugin.keshigqd.api.entity.ServerType;
 
 
 public interface KeshigQD
 {
-    public void addServer( Server server ) throws Exception;
 
-    public void removeServer( Server server );
+    /*
+    *   Keshig Server handlers
+    * */
+    void addServer( Server server ) throws Exception;
 
-    public Server getServer( Server server );
+    void removeServer( String serverId );
 
-    public List<Server> getServers();
+    Server getServer( String serverId  );
 
-    public List<Build> getBuilds();
+    List<Server> getServers(ServerType serverType);
 
-    UUID deploy( Map<String, String> opts );
+    List<Server> getServers();
 
-    UUID test( Map<String, String> opts );
+    /*
+    *   Keshig Builds handler
+    * */
+    void saveOption(Object option,OperationType type );
 
-    UUID build( Map<String, String> opts );
+    void updateOption(Object option, OperationType type);
 
-    UUID clone( Map<String, String> opts );
+    Object getOption(String optionName, OperationType type);
 
+    void deleteOption(String optionName, OperationType type);
+
+    List<?> allOptionsByType( OperationType type );
+
+    void setActive(String optionName, OperationType type);
+
+    void deactivate(String optionName, OperationType type);
+
+    List<Build> getBuilds();
+
+    Build getLatestBuild();
+
+    /*
+    *   Keshig Operation Handlers
+    * */
+
+    UUID deploy(String optionName, String serverId);
+
+    UUID deploy( RequestBuilder requestBuilder, String serverId );
+
+    UUID test( RequestBuilder requestBuilder, String serverId );
+
+    UUID test( String optionName, String serverId );
+
+    UUID build( RequestBuilder requestBuilder, String serverId );
+
+    UUID build( String optionName, String serverId );
+
+    UUID clone( RequestBuilder requestBuilder, String serverId );
+
+    UUID clone( String optionName, String serverId );
+
+    /*
+    *   Keshig Dependency Handlers
+    * */
     Map<String, List<Dependency>> getAllPackages();
 
     /*
@@ -44,7 +87,7 @@ public interface KeshigQD
     *  @param server type
     *  @return list of required packages
     * */
-    List<Dependency> getRequiredPackages( String serverType );
+    List<Dependency> getRequiredPackages( ServerType serverType );
 
     /*
     * Cross reference installed packages vs required packages
@@ -58,6 +101,6 @@ public interface KeshigQD
     * @param server
     * @return missing packages
     * */
-    List<Dependency> getMissingPackages( String serverId, String serverType );
+    List<Dependency> getMissingPackages( String serverId, ServerType serverType );
 }
 

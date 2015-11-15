@@ -1,7 +1,8 @@
 package io.subutai.plugin.keshigqd.api.entity;
 
 
-import java.util.List;
+
+import io.subutai.common.command.RequestBuilder;
 
 
 public class History
@@ -10,22 +11,21 @@ public class History
     private String type;
     private Long startTime;
     private Long endTime;
-    private String command;
+    private RequestBuilder requestBuilder;
     private String exitCode;
     private String server;
-    private List<String> args;
     private String stdOut;
     private String stdErr;
 
-    public History( final String id, final String type, final Long startTime, final String command, final String server,
-                    final List<String> args )
+
+    public History( final String id, final String type, final Long startTime, final RequestBuilder requestBuilder,
+                    final String server )
     {
         this.id = id;
         this.type = type;
         this.startTime = startTime;
-        this.command = command;
+        this.requestBuilder = requestBuilder;
         this.server = server;
-        this.args = args;
     }
 
 
@@ -100,19 +100,6 @@ public class History
         this.endTime = endTime;
     }
 
-
-    public String getCommand()
-    {
-        return command;
-    }
-
-
-    public void setCommand( final String command )
-    {
-        this.command = command;
-    }
-
-
     public String getExitCode()
     {
         return exitCode;
@@ -137,15 +124,15 @@ public class History
     }
 
 
-    public List<String> getArgs()
+    public RequestBuilder getRequestBuilder()
     {
-        return args;
+        return requestBuilder;
     }
 
 
-    public void setArgs( final List<String> args )
+    public void setRequestBuilder( final RequestBuilder requestBuilder )
     {
-        this.args = args;
+        this.requestBuilder = requestBuilder;
     }
 
 
@@ -157,10 +144,11 @@ public class History
                 ", type='" + type + '\'' +
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +
-                ", command='" + command + '\'' +
+                ", requestBuilder=" + requestBuilder +
                 ", exitCode='" + exitCode + '\'' +
                 ", server='" + server + '\'' +
-                ", args=" + args +
+                ", stdOut='" + stdOut + '\'' +
+                ", stdErr='" + stdErr + '\'' +
                 '}';
     }
 }

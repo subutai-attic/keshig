@@ -1,6 +1,11 @@
 package io.subutai.plugin.keshigqd.api.entity.options;
 
 
+import java.util.List;
+
+import io.subutai.plugin.keshigqd.api.entity.OperationType;
+
+
 public class BuildOption
 {
 
@@ -8,6 +13,15 @@ public class BuildOption
     private boolean runTests;
     private String name;
     private boolean isActive;
+    private int timeOut;
+
+
+    private OperationType type = OperationType.BUILD;
+
+
+    public BuildOption()
+    {
+    }
 
 
     public BuildOption( final boolean cleanInstall, final boolean runTests, final String name, final boolean isActive )
@@ -16,6 +30,17 @@ public class BuildOption
         this.runTests = runTests;
         this.name = name;
         this.isActive = isActive;
+    }
+
+
+    public int getTimeOut()
+    {
+        return timeOut;
+    }
+
+    public void setTimeOut( final int timeOut )
+    {
+        this.timeOut = timeOut;
     }
 
 
@@ -61,9 +86,24 @@ public class BuildOption
     }
 
 
-    public void setName( final String name )
+
+    public void setName(String name)
     {
         this.name = name;
+    }
+
+
+
+    public List<String> getArgs()
+    {
+        return null;
+    }
+
+
+
+    public OperationType getType()
+    {
+        return type;
     }
 
 

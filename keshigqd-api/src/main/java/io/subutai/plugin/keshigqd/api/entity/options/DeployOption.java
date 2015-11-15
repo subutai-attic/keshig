@@ -1,6 +1,11 @@
 package io.subutai.plugin.keshigqd.api.entity.options;
 
 
+import java.util.List;
+
+import io.subutai.plugin.keshigqd.api.entity.OperationType;
+
+
 public class DeployOption
 {
     private String name;
@@ -8,6 +13,12 @@ public class DeployOption
     private int numberOfRhsPerPeer;
     private String buildName;
     private boolean isActive;
+    private OperationType type = OperationType.DEPLOY;
+    private int timeOut;
+
+    public DeployOption()
+    {
+    }
 
 
     public DeployOption( final String name, final int numberOfPeers, final int numberOfRhsPerPeer,
@@ -18,6 +29,25 @@ public class DeployOption
         this.numberOfRhsPerPeer = numberOfRhsPerPeer;
         this.buildName = buildName;
         this.isActive = isActive;
+    }
+
+
+    public int getTimeOut()
+    {
+        return timeOut;
+    }
+
+
+    public void setTimeOut( final int timeOut )
+    {
+        this.timeOut = timeOut;
+    }
+
+
+
+    public OperationType getType()
+    {
+        return type;
     }
 
 
@@ -36,6 +66,12 @@ public class DeployOption
     public String getName()
     {
         return name;
+    }
+
+
+    public List<String> getArgs()
+    {
+        return null;
     }
 
 
