@@ -1,13 +1,15 @@
-package io.subutai.plugin.keshigqd.cli;
+package io.subutai.plugin.keshigqd.cli.operation;
 
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 import org.apache.karaf.shell.commands.Argument;
 import org.apache.karaf.shell.commands.Command;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
 
+import com.google.common.collect.Lists;
+
+import io.subutai.common.command.RequestBuilder;
 import io.subutai.plugin.keshigqd.api.KeshigQD;
 
 
@@ -19,6 +21,9 @@ public class CloneCommand extends OsgiCommandSupport
 
     @Argument( index = 1, name = "branch", description = "branch/tag/commit", required = false, multiValued = false )
     String branch;
+
+    @Argument( index = 1, name = "target", description = "target server id", required = false )
+    String target;
 
     private KeshigQD keshig;
 
@@ -38,10 +43,12 @@ public class CloneCommand extends OsgiCommandSupport
     @Override
     protected Object doExecute() throws Exception
     {
-        Map<String, String> args = new HashMap<>();
-        args.put( io.subutai.plugin.keshigqd.api.entity.Command.repoOpt, repo );
-        args.put( io.subutai.plugin.keshigqd.api.entity.Command.branchOpt,branch );
-        keshig.clone( args );
+
+        List<String> args = Lists.newArrayList( io.subutai.plugin.keshigqd.api.entity.Command.repoOpt, repo,
+                io.subutai.plugin.keshigqd.api.entity.Command.branchOpt, branch );
+
+        keshig.clone( new RequestBuilder( io.subutai.plugin.keshigqd.api.entity.Command.getCloneCommand() )
+                .withCmdArgs( args ).withTimeout( 900 ), target );
 
         return null;
     }

@@ -1,13 +1,15 @@
-package io.subutai.plugin.keshigqd.cli;
+package io.subutai.plugin.keshigqd.cli.operation;
 
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 import org.apache.karaf.shell.commands.Argument;
 import org.apache.karaf.shell.commands.Command;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
 
+import com.google.common.collect.Lists;
+
+import io.subutai.common.command.RequestBuilder;
 import io.subutai.plugin.keshigqd.api.KeshigQD;
 
 
@@ -20,6 +22,9 @@ public class BuildCommand extends OsgiCommandSupport
 
     @Argument( index = 1, name = "clean", description = "clean run true/false", required = false, multiValued = false )
     String clean;
+
+    @Argument( index = 1, name = "target", description = "target server id", required = false )
+    String target;
 
     private KeshigQD keshig;
 
@@ -39,12 +44,12 @@ public class BuildCommand extends OsgiCommandSupport
     @Override
     protected Object doExecute() throws Exception
     {
-        Map<String, String> args = new HashMap<>();
-        args.put( io.subutai.plugin.keshigqd.api.entity.Command.tests, tests );
-        args.put( io.subutai.plugin.keshigqd.api.entity.Command.clean, clean );
-        keshig.build( args );
+        List<String> args = Lists.newArrayList( io.subutai.plugin.keshigqd.api.entity.Command.tests, tests,
+                io.subutai.plugin.keshigqd.api.entity.Command.clean, clean );
+
+        keshig.build( new RequestBuilder( io.subutai.plugin.keshigqd.api.entity.Command.getBuildCommand() )
+                .withCmdArgs( args ).withTimeout( 600 ), target );
 
         return null;
     }
-
 }

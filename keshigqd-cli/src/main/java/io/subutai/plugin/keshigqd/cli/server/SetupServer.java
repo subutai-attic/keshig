@@ -1,4 +1,4 @@
-package io.subutai.plugin.keshigqd.cli;
+package io.subutai.plugin.keshigqd.cli.server;
 
 
 import org.apache.karaf.shell.commands.Argument;
@@ -42,7 +42,7 @@ public class SetupServer extends OsgiCommandSupport
     @Override
     protected Object doExecute() throws Exception
     {
-        String type;
+        ServerType type;
         if ( serverType.equalsIgnoreCase( "test" ) )
         {
             type = ServerType.TEST_SERVER;

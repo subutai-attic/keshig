@@ -1,4 +1,4 @@
-package io.subutai.plugin.keshigqd.cli;
+package io.subutai.plugin.keshigqd.cli.server;
 
 
 import java.util.List;
