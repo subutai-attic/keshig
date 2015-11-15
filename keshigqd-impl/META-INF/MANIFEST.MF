@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1447136359806
+Bnd-LastModified: 1447683853751
 Build-Jdk: 1.8.0_25
 Built-By: tkila
 Bundle-Blueprint: OSGI-INF/blueprint/context.xml
@@ -18,8 +18,10 @@ Import-Package: com.google.common.base;version="[18.0,19)",com.google.co
  ion="[4.0,5)",io.subutai.core.peer.api;version="[4.0,5)",io.subutai.cor
  e.tracker.api;version="[4.0,5)",io.subutai.plugin.common.api;version="[
  4.0,5)",io.subutai.plugin.keshigqd.api;version="[4.0,5)",io.subutai.plu
- gin.keshigqd.api.entity;version="[4.0,5)",org.osgi.service.blueprint;ve
- rsion="[1.0.0,2.0.0)",org.slf4j;version="[1.7,2)"
+ gin.keshigqd.api.entity;version="[4.0,5)",io.subutai.plugin.keshigqd.ap
+ i.entity.options;version="[4.0,5)",org.apache.servicemix.beanflow,org.o
+ sgi.service.blueprint;version="[1.0.0,2.0.0)",org.slf4j;version="[1.7,2
+ )"
 Import-Service: io.subutai.core.network.api.NetworkManager;multiple:=fal
  se,io.subutai.core.peer.api.PeerManager;multiple:=false,io.subutai.core
  .tracker.api.Tracker;multiple:=false,io.subutai.plugin.common.api.Plugi

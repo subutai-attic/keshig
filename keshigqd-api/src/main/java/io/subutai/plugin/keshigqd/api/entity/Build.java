@@ -4,7 +4,7 @@ package io.subutai.plugin.keshigqd.api.entity;
 import java.util.Date;
 
 
-public class Build
+public class Build implements Comparable<Build>
 {
     private String id;
     private String name;
@@ -120,5 +120,12 @@ public class Build
                 ", version='" + version + '\'' +
                 ", date=" + date +
                 '}';
+    }
+
+
+    @Override
+    public int compareTo( final Build o )
+    {
+        return getDate().compareTo( o.getDate() );
     }
 }

@@ -9,46 +9,76 @@
   <command-bundle xmlns="http://karaf.apache.org/xmlns/shell/v1.0.0">
 
     <command name="keshigqd/list-server">
-      <action class="io.subutai.plugin.keshigqd.cli.ListServers">
+      <action class="io.subutai.plugin.keshigqd.cli.server.ListServers">
         <property name="keshig" ref="keshig" />
       </action>
     </command>
     <command name="keshigqd/set-server">
-      <action class="io.subutai.plugin.keshigqd.cli.SetupServer">
+      <action class="io.subutai.plugin.keshigqd.cli.server.SetupServer">
         <property name="keshig" ref="keshig" />
       </action>
     </command>
     <command name="keshigqd/clone">
-      <action class="io.subutai.plugin.keshigqd.cli.CloneCommand">
+      <action class="io.subutai.plugin.keshigqd.cli.operation.CloneCommand">
         <property name="keshig" ref="keshig" />
       </action>
     </command>
     <command name="keshigqd/build">
-      <action class="io.subutai.plugin.keshigqd.cli.BuildCommand">
+      <action class="io.subutai.plugin.keshigqd.cli.operation.BuildCommand">
         <property name="keshig" ref="keshig" />
       </action>
     </command>
     <command name="keshigqd/deploy">
-      <action class="io.subutai.plugin.keshigqd.cli.DeployCommand">
+      <action class="io.subutai.plugin.keshigqd.cli.operation.DeployCommand">
         <property name="keshig" ref="keshig" />
       </action>
     </command>
     <command name="keshigqd/test">
-      <action class="io.subutai.plugin.keshigqd.cli.TestCommand">
+      <action class="io.subutai.plugin.keshigqd.cli.operation.TestCommand">
         <property name="keshig" ref="keshig" />
       </action>
     </command>
     <command name="keshigqd/list-builds">
-      <action class="io.subutai.plugin.keshigqd.cli.ListBuilds">
+      <action class="io.subutai.plugin.keshigqd.cli.builds.ListBuilds">
         <property name="keshig" ref="keshig" />
       </action>
     </command>
     <command name="keshigqd/list-packages">
-      <action class="io.subutai.plugin.keshigqd.cli.ListBuilds">
+      <action class="io.subutai.plugin.keshigqd.cli.builds.ListBuilds">
+        <property name="keshig" ref="keshig" />
+      </action>
+    </command>
+    <command name="keshigqd/list-option">
+      <action class="io.subutai.plugin.keshigqd.cli.option.ListOptions">
         <property name="keshig" ref="keshig" />
       </action>
     </command>
 
+    <command name="keshigqd/add-clone">
+      <action class="io.subutai.plugin.keshigqd.cli.option.AddCloneOption">
+        <property name="keshig" ref="keshig" />
+      </action>
+    </command>
+    <command name="keshigqd/add-test">
+      <action class="io.subutai.plugin.keshigqd.cli.option.AddTestOption">
+        <property name="keshig" ref="keshig" />
+      </action>
+    </command>
+    <command name="keshigqd/add-deploy">
+      <action class="io.subutai.plugin.keshigqd.cli.option.AddDelpoyOption">
+        <property name="keshig" ref="keshig" />
+      </action>
+    </command>
+    <command name="keshigqd/add-build">
+      <action class="io.subutai.plugin.keshigqd.cli.option.AddBuildOption">
+        <property name="keshig" ref="keshig" />
+      </action>
+    </command>
+    <command name="keshigqd/run-default">
+      <action class="io.subutai.plugin.keshigqd.cli.operation.RunDefaultsCommand">
+        <property name="keshig" ref="keshig" />
+      </action>
+    </command>
   </command-bundle>
 
 </blueprint>

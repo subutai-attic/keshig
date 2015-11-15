@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1447136357462
+Bnd-LastModified: 1447683851492
 Build-Jdk: 1.8.0_25
 Built-By: tkila
 Bundle-Description: Plugin Module REST

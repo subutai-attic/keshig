@@ -9,12 +9,12 @@ public class Server
 
     private String serverAddress;
 
-    private String type;
+    private ServerType type;
 
     private String description;
 
 
-    public Server( final String serverId, final String serverName, final String serverAddress, final String type,
+    public Server( final String serverId, final String serverName, final String serverAddress, final ServerType type,
                    final String description )
     {
         this.serverId = serverId;
@@ -73,15 +73,9 @@ public class Server
     }
 
 
-    public String getType()
+    public ServerType getType()
     {
         return type;
-    }
-
-
-    public void setType( final String type )
-    {
-        this.type = type;
     }
 
 

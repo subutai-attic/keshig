@@ -16,6 +16,8 @@ public class KeshigQDConfig
 
     public static final String PRODUCT_HISTORY = "KESHIGQD_HISTORY";
 
+    public static final String OPTION = "OPTION";
+
     private String clusterName, domainName;
 
     private List<UUID> servers;

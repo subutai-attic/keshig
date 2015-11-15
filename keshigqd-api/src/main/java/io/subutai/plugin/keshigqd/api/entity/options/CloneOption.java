@@ -6,6 +6,7 @@ import java.util.List;
 import com.google.common.collect.Lists;
 
 import io.subutai.plugin.keshigqd.api.entity.Command;
+import io.subutai.plugin.keshigqd.api.entity.OperationType;
 
 
 public class CloneOption
@@ -15,16 +16,35 @@ public class CloneOption
     private String branch;
     private String output;
     private boolean isActive;
+    private OperationType type = OperationType.CLONE;
+    private int timeOut;
+
+    public CloneOption()
+    {
+    }
 
 
-    public CloneOption( final String name, final String url, final String branch, final String output,
-                        final boolean isActive )
+    public CloneOption( final String name, final int timeOut, final boolean isActive,
+                        final String output, final String branch, final String url )
     {
         this.name = name;
-        this.url = url;
-        this.branch = branch;
-        this.output = output;
+        this.timeOut = timeOut;
         this.isActive = isActive;
+        this.output = output;
+        this.branch = branch;
+        this.url = url;
+    }
+
+
+    public int getTimeOut()
+    {
+        return timeOut;
+    }
+
+
+    public void setTimeOut( final int timeOut )
+    {
+        this.timeOut = timeOut;
     }
 
 
@@ -96,14 +116,23 @@ public class CloneOption
     }
 
 
+    public OperationType getType()
+    {
+        return type;
+    }
+
+
     @Override
     public String toString()
     {
-        return "CloneOptions{" +
+        return "CloneOption{" +
                 "name='" + name + '\'' +
                 ", url='" + url + '\'' +
                 ", branch='" + branch + '\'' +
                 ", output='" + output + '\'' +
+                ", isActive=" + isActive +
+                ", type=" + type +
+                ", timeOut=" + timeOut +
                 '}';
     }
 }

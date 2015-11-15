@@ -21,6 +21,9 @@ public class Command
     public static final String all       = "-a";
     public static final String specific  = "-s";
 
+    public static final String ouput = "-o";
+
+
     //
 
     //commands
@@ -48,7 +51,7 @@ public class Command
 
     public static String getTestComand()
     {
-        return "subutai keshigqd test";
+        return "subutai test";
     }
 
 

@@ -5,6 +5,8 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
+import io.subutai.plugin.keshigqd.api.entity.OperationType;
+
 
 public class TestOption
 {
@@ -13,6 +15,15 @@ public class TestOption
     private List<String> targetIps;
     private List<String> playbooks;
     private boolean isActive;
+    private int timeOut;
+
+    private OperationType type = OperationType.TEST;
+
+
+    public TestOption()
+    {
+
+    }
 
 
     public TestOption( final String name, final boolean all, final List<String> targetIps, final boolean isActive )
@@ -31,6 +42,25 @@ public class TestOption
         this.playbooks = playbooks;
         this.isActive = isActive;
         this.name = name;
+    }
+
+
+    public int getTimeOut()
+    {
+        return timeOut;
+    }
+
+
+    public void setTimeOut( final int timeOut )
+    {
+        this.timeOut = timeOut;
+    }
+
+
+
+    public OperationType getType()
+    {
+        return type;
     }
 
 
@@ -107,10 +137,14 @@ public class TestOption
     @Override
     public String toString()
     {
-        return "TestOptions{" +
+        return "TestOption{" +
                 "name='" + name + '\'' +
+                ", all=" + all +
                 ", targetIps=" + targetIps +
                 ", playbooks=" + playbooks +
+                ", isActive=" + isActive +
+                ", timeOut=" + timeOut +
+                ", type=" + type +
                 '}';
     }
 }

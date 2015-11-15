@@ -33,12 +33,15 @@ import io.subutai.plugin.keshigqd.api.entity.Build;
 import io.subutai.plugin.keshigqd.api.entity.Command;
 import io.subutai.plugin.keshigqd.api.entity.Dependencies;
 import io.subutai.plugin.keshigqd.api.entity.Dependency;
+import io.subutai.plugin.keshigqd.api.entity.OperationType;
 import io.subutai.plugin.keshigqd.api.entity.Server;
 import io.subutai.plugin.keshigqd.api.entity.ServerType;
-import io.subutai.plugin.keshigqd.impl.handler.BuildOperationHandler;
-import io.subutai.plugin.keshigqd.impl.handler.CloneOperationHandler;
-import io.subutai.plugin.keshigqd.impl.handler.DeployOperationHandler;
-import io.subutai.plugin.keshigqd.impl.handler.TestOperationHandler;
+import io.subutai.plugin.keshigqd.api.entity.options.BuildOption;
+import io.subutai.plugin.keshigqd.api.entity.options.CloneOption;
+import io.subutai.plugin.keshigqd.api.entity.options.DeployOption;
+import io.subutai.plugin.keshigqd.api.entity.options.TestOption;
+import io.subutai.plugin.keshigqd.impl.handler.OperationHandler;
+import io.subutai.plugin.keshigqd.impl.workflow.integration.IntegrationWorkflow;
 
 
 public class KeshigQDImpl implements KeshigQD
@@ -85,17 +88,40 @@ public class KeshigQDImpl implements KeshigQD
 
 
     @Override
-    public void removeServer( final Server server )
+    public void removeServer( final String serverId )
     {
-        pluginDAO.deleteInfo( KeshigQDConfig.PRODUCT_KEY, server.getServerId() );
+        pluginDAO.deleteInfo( KeshigQDConfig.PRODUCT_KEY, serverId );
     }
 
 
     @Override
-    public Server getServer( final Server server )
+    public List<Server> getServers( ServerType type )
     {
-        Preconditions.checkNotNull( server );
-        return pluginDAO.getInfo( KeshigQDConfig.PRODUCT_KEY, server.getServerId(), Server.class );
+        List<Server> servers = getServers();
+
+        List<Server> typedServers = new ArrayList<>();
+
+        LOG.info( String.format( "Found servers: %s", servers.toString() ) );
+
+        for ( Server server : servers )
+        {
+            LOG.info( String.format( "Server (%s) with type: (%s)", server.toString(), server.getType() ) );
+
+            if ( server.getType().toString().equalsIgnoreCase( type.toString() ) )
+            {
+                typedServers.add( server );
+            }
+        }
+
+        return typedServers;
+    }
+
+
+    @Override
+    public Server getServer( final String serverId )
+    {
+        Preconditions.checkNotNull( serverId );
+        return pluginDAO.getInfo( KeshigQDConfig.PRODUCT_KEY, serverId, Server.class );
     }
 
 
@@ -107,24 +133,9 @@ public class KeshigQDImpl implements KeshigQD
 
 
     @Override
-    public UUID deploy( Map<String, String> opts )
-    {
-        List<String> args = new ArrayList<>();
-
-        opts.forEach( ( k, v ) -> addToList( k, v, args ) );
-
-        DeployOperationHandler operationHandler = new DeployOperationHandler( this, args );
-
-        executor.execute( operationHandler );
-
-        return operationHandler.getTrackerId();
-    }
-
-
-    @Override
     public List<Build> getBuilds()
     {
-        Server buildServer = getServer( ServerType.DEPLOY_SERVER );
+        Server buildServer = getServer( ServerType.DEPLOY_SERVER.toString() );
 
         if ( buildServer == null )
         {
@@ -152,6 +163,15 @@ public class KeshigQDImpl implements KeshigQD
     }
 
 
+    @Override
+    public Build getLatestBuild()
+    {
+        List<Build> builds = getBuilds();
+
+        return builds.get( builds.size() - 1 );
+    }
+
+
     private List<Build> parseBuilds( String stdout )
     {
         List<Build> list = new ArrayList<>();
@@ -166,35 +186,11 @@ public class KeshigQDImpl implements KeshigQD
         return list;
     }
 
-
-    public Server getServer( String type )
-    {
-        List<Server> servers = getServers();
-
-        LOG.info( String.format( "Found servers: %s", servers.toString() ) );
-
-        for ( Server server : servers )
-        {
-            LOG.info( String.format( "Server (%s) with type: (%s)", server.toString(), server.getType() ) );
-
-            if ( server.getType().equalsIgnoreCase( type ) )
-            {
-                return server;
-            }
-        }
-
-        return null;
-    }
-
-
     @Override
-    public UUID test( Map<String, String> opts )
+    public UUID deploy( final RequestBuilder requestBuilder, final String serverId )
     {
-        List<String> args = new ArrayList<>();
-
-        opts.forEach( ( k, v ) -> addToList( k, v, args ) );
-
-        TestOperationHandler operationHandler = new TestOperationHandler( this, args );
+        OperationHandler operationHandler =
+                new OperationHandler( this, requestBuilder, OperationType.DEPLOY, serverId );
 
         executor.execute( operationHandler );
 
@@ -203,28 +199,32 @@ public class KeshigQDImpl implements KeshigQD
 
 
     @Override
-    public UUID build( Map<String, String> opts )
+    public UUID test( RequestBuilder requestBuilder, String serverId )
     {
-        List<String> args = new ArrayList<>();
 
-        opts.forEach( ( k, v ) -> addToList( k, v, args ) );
-
-        BuildOperationHandler operationHandler = new BuildOperationHandler( this, args );
+        OperationHandler operationHandler = new OperationHandler( this, requestBuilder, OperationType.TEST, serverId );
 
         executor.execute( operationHandler );
 
         return operationHandler.getTrackerId();
     }
 
+    @Override
+    public UUID build( RequestBuilder requestBuilder, String serverId )
+    {
+
+        OperationHandler operationHandler = new OperationHandler( this, requestBuilder, OperationType.BUILD, serverId );
+
+        executor.execute( operationHandler );
+
+        return operationHandler.getTrackerId();
+    }
 
     @Override
-    public UUID clone( final Map<String, String> opts )
+    public UUID clone( RequestBuilder requestBuilder, String serverId )
     {
-        List<String> args = new ArrayList<>();
 
-        opts.forEach( ( k, v ) -> addToList( k, v, args ) );
-
-        CloneOperationHandler cloneOperation = new CloneOperationHandler( this, args );
+        OperationHandler cloneOperation = new OperationHandler( this, requestBuilder, OperationType.CLONE, serverId );
 
         executor.execute( cloneOperation );
 
@@ -233,9 +233,17 @@ public class KeshigQDImpl implements KeshigQD
 
 
     @Override
+    public void runDefaults()
+    {
+        IntegrationWorkflow integrationWorkflow = new IntegrationWorkflow(this);
+        integrationWorkflow.start();
+    }
+
+    @Override
     public Map<String, List<Dependency>> getAllPackages()
     {
         List<Server> servers = getServers();
+
         Map<String, List<Dependency>> packages = new HashMap<>();
 
         for ( Server server : servers )
@@ -285,18 +293,19 @@ public class KeshigQDImpl implements KeshigQD
 
 
     @Override
-    public List<Dependency> getRequiredPackages( final String serverType )
+    public List<Dependency> getRequiredPackages( final ServerType serverType )
     {
         List<Dependency> dependencies = null;
+
         switch ( serverType )
         {
-            case ServerType.BUILD_SERVER:
+            case BUILD_SERVER:
                 dependencies = Dependencies.KeshigCloneServer.requiredPackages();
                 break;
-            case ServerType.DEPLOY_SERVER:
+            case DEPLOY_SERVER:
                 dependencies = Dependencies.KeshigDeployServer.requiredPackages();
                 break;
-            case ServerType.TEST_SERVER:
+            case TEST_SERVER:
                 dependencies = Dependencies.KeshigTestServer.requiredPackages();
                 break;
         }
@@ -312,7 +321,7 @@ public class KeshigQDImpl implements KeshigQD
 
 
     @Override
-    public List<Dependency> getMissingPackages( final String serverId, final String serverType )
+    public List<Dependency> getMissingPackages( final String serverId, final ServerType serverType )
     {
         List<Dependency> existingDependencies = getPackages( serverId );
         List<Dependency> requiredDependencies = getRequiredPackages( serverType );
@@ -324,6 +333,224 @@ public class KeshigQDImpl implements KeshigQD
     {
         arg.add( k );
         arg.add( v );
+    }
+
+
+    @Override
+    public void saveOption( final Object option, final OperationType type )
+    {
+        switch ( type )
+        {
+            case CLONE:
+                CloneOption cloneOption = ( CloneOption ) option;
+                getPluginDAO().saveInfo( cloneOption.getType().toString(), cloneOption.getName(), cloneOption );
+                break;
+            case BUILD:
+                BuildOption buildOption = ( BuildOption ) option;
+                getPluginDAO().saveInfo( buildOption.getType().toString(), buildOption.getName(), buildOption );
+                break;
+            case DEPLOY:
+                DeployOption deployOption = ( DeployOption ) option;
+                getPluginDAO().saveInfo( deployOption.getType().toString(), deployOption.getName(), deployOption );
+                break;
+            case TEST:
+                TestOption testOption = ( TestOption ) option;
+                getPluginDAO().saveInfo( testOption.getType().toString(), testOption.getName(), testOption );
+                break;
+        }
+    }
+
+
+    public Object getActiveOption( final OperationType type )
+    {
+        switch ( type )
+        {
+            case CLONE:
+                List<CloneOption> cloneOptions = getPluginDAO().getInfo( type.toString(), CloneOption.class );
+                for ( CloneOption option : cloneOptions )
+                {
+                    if ( option.isActive() )
+                    {
+                        return option;
+                    }
+                }
+                break;
+            case BUILD:
+                List<BuildOption> buildOptions = getPluginDAO().getInfo( type.toString(), BuildOption.class );
+                for ( BuildOption option : buildOptions )
+                {
+                    if ( option.isActive() )
+                    {
+                        return option;
+                    }
+                }
+                break;
+            case DEPLOY:
+                List<DeployOption> deployOptions = getPluginDAO().getInfo( type.toString(), DeployOption.class );
+                for ( DeployOption option : deployOptions )
+                {
+                    if ( option.isActive() )
+                    {
+                        return option;
+                    }
+                }
+                break;
+            case TEST:
+                List<TestOption> testOptions = getPluginDAO().getInfo( type.toString(), TestOption.class );
+                for ( TestOption option : testOptions )
+                {
+                    if ( option.isActive() )
+                    {
+                        return option;
+                    }
+                }
+                break;
+        }
+        return null;
+    }
+
+
+    @Override
+    public void updateOption( final Object option, final OperationType type )
+    {
+        saveOption( option, type );
+    }
+
+
+    @Override
+    public Object getOption( final String optionName, final OperationType type )
+    {
+        switch ( type )
+        {
+            case CLONE:
+                return getPluginDAO().getInfo( type.toString(), optionName, CloneOption.class );
+
+            case BUILD:
+                return getPluginDAO().getInfo( type.toString(), optionName, BuildOption.class );
+
+            case DEPLOY:
+                return getPluginDAO().getInfo( type.toString(), optionName, DeployOption.class );
+
+            case TEST:
+                return getPluginDAO().getInfo( type.toString(), optionName, TestOption.class );
+        }
+        return null;
+    }
+
+
+    @Override
+    public void deleteOption( final String optionName, final OperationType type )
+    {
+        getPluginDAO().deleteInfo( type.toString(), optionName );
+    }
+
+
+    @Override
+    public List<?> allOptionsByType( final OperationType type )
+    {
+        switch ( type )
+        {
+            case CLONE:
+                return getPluginDAO().getInfo( type.toString(), CloneOption.class );
+
+            case BUILD:
+                return getPluginDAO().getInfo( type.toString(), BuildOption.class );
+
+            case DEPLOY:
+                return getPluginDAO().getInfo( type.toString(), DeployOption.class );
+
+            case TEST:
+                return getPluginDAO().getInfo( type.toString(), TestOption.class );
+        }
+        return null;
+    }
+
+
+    @Override
+    public void setActive( final String optionName, final OperationType type )
+    {
+        switch ( type )
+        {
+            case CLONE:
+                CloneOption cloneOption = ( CloneOption ) getOption( optionName, type );
+                if ( !cloneOption.isActive() )
+                {
+                    cloneOption.setIsActive( true );
+                    saveOption( cloneOption, cloneOption.getType() );
+                }
+                break;
+            case BUILD:
+                BuildOption buildOption = ( BuildOption ) getOption( optionName, type );
+                if ( !buildOption.isActive() )
+                {
+                    buildOption.setIsActive( true );
+                    saveOption( buildOption, buildOption.getType() );
+                }
+                break;
+            case DEPLOY:
+                DeployOption deployOption = ( DeployOption ) getOption( optionName, type );
+                if ( !deployOption.isActive() )
+                {
+                    deployOption.setIsActive( true );
+                    saveOption( deployOption, deployOption.getType() );
+                }
+                break;
+            case TEST:
+                TestOption testOption = ( TestOption ) getOption( optionName, type );
+                if ( !testOption.isActive() )
+                {
+                    testOption.setIsActive( true );
+                    saveOption( testOption, testOption.getType() );
+                }
+                break;
+        }
+    }
+
+
+    @Override
+    public void deactivate( final String opts, final OperationType type )
+    {
+        String optionName = opts.toUpperCase();
+
+        switch ( type )
+        {
+            case CLONE:
+                CloneOption cloneOption = ( CloneOption ) getOption( optionName, type );
+
+                if ( ( cloneOption != null ) && cloneOption.isActive() )
+                {
+                    LOG.info( String.format( "Retrieved %s", cloneOption.toString() ) );
+                    cloneOption.setIsActive( false );
+                    saveOption( cloneOption, cloneOption.getType() );
+                }
+
+                break;
+            case BUILD:
+                BuildOption buildOption = ( BuildOption ) getOption( optionName, type );
+                if ( buildOption != null && buildOption.isActive() )
+                {
+                    LOG.info( String.format( "Retrieved %s", buildOption.toString() ) );
+                    buildOption.setIsActive( false );
+                    saveOption( buildOption, buildOption.getType() );
+                }
+                break;
+            case DEPLOY:
+                DeployOption deployOption = ( DeployOption ) getOption( optionName, type );
+                if ( deployOption != null && deployOption.isActive() )
+                {
+                    deployOption.setIsActive( false );
+                    saveOption( deployOption, deployOption.getType() );
+                }
+                break;
+            case TEST:
+                TestOption testOption = ( TestOption ) getOption( optionName, type );
+                if ( testOption != null && testOption.isActive() )
+                {
+                    testOption.setIsActive( false );
+                    saveOption( testOption, testOption.getType() );
+                }
+                break;
+        }
     }
 
 
