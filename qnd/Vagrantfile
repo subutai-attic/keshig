@@ -20,7 +20,6 @@ Vagrant.configure(2) do |config|
     end
   end
 
-
   config.vm.define :SubutaiRH11 do |conf|
     conf.vm.box="sn"
     conf.vm.provider "virtualbox" do |v|
@@ -34,5 +33,4 @@ Vagrant.configure(2) do |config|
       v.name="SubutaiRH12"
     end
   end
-
 end
