@@ -3,8 +3,6 @@
 my_dir="$(dirname "$0")"
 source "$my_dir/qnd_vars.conf"
 mgmt_folder=$1
-if [ "$mgmt_folder" ]; then 
-
 SNAP_DISTR="SNAPS/$mgmt_folder"
 rdpPort=3490
 
@@ -14,11 +12,6 @@ cat $my_dir/Vagrantfile | grep v.name | awk -F"=" '{print $2}' | tr -d '"' | awk
 vagrant up
 vagrant ssh-config > ssh.config
 
-
-
-#count=0
-#my_dir="$(dirname "$0")"
-
 function send_files(){
 line=$1
 my_dir=$2
@@ -26,11 +19,11 @@ SNAP_DISTR=$3
 if [[ "$(echo $line | grep MGMT)" ]]; then
 VM="$line"
 scp -F ssh.config -r $my_dir/distr  ubuntu@$VM:~/
-scp -C -F ssh.config -r $SNAP_DISTR/subutai-*  ubuntu@$VM:~/distr &
+scp -c aes128-ctr -C -F ssh.config -r $SNAP_DISTR/subutai-*  ubuntu@$VM:~/distr &
 elif  [[ "$(echo $line | grep RH)" ]]; then
 VM="$line"
 scp -F ssh.config -r $my_dir/distr  ubuntu@$VM:~/
-scp -C  -F ssh.config -r $SNAP_DISTR/subutai_*  ubuntu@$VM:~/distr &
+scp -c aes128-ctr -C  -F ssh.config -r $SNAP_DISTR/subutai_*  ubuntu@$VM:~/distr &
 fi
 }
 
@@ -77,15 +70,24 @@ wait
 
 vagrant halt
 
-
 while IFS= read -r line; do
 echo "Configure and Run $line  rdp:$rdpPort"
 conf_run $line $rdpPort
 rdpPort=$((rdpPort+1))
 done < <(cat $my_dir/Vagrantfile | grep v.name | awk -F"=" '{print $2}'  | tr -d '"')
+echo "Waiting for Management IP"
 
-else 
-echo "Provide mgmt_folder option"
-fi
+sleep 45
 
+function get_ip {
+mac1=$(VBoxManage showvminfo SubutaiMGMT1 --machinereadable | grep macaddress1 | awk -F "=" '{print $2}' | tr -d '"')
+mac2=$(VBoxManage showvminfo SubutaiMGMT2 --machinereadable | grep macaddress1 | awk -F "=" '{print $2}' | tr -d '"')
 
+macd1=$(sed -e 's/\([0-9A-Fa-f]\{2\}\)/\1:/g' -e 's/\(.*\):$/\1/' <<< $mac1 | tr '[:upper:]' '[:lower:]')
+macd2=$(sed -e 's/\([0-9A-Fa-f]\{2\}\)/\1:/g' -e 's/\(.*\):$/\1/' <<< $mac2 | tr '[:upper:]' '[:lower:]')
+
+ssh management "grep $macd1 /var/lib/apps/subutai-mng/current/dnsmasq.leases" | awk $'{print $3}' | awk '{print "management1=" $1}'
+ssh management "grep $macd2 /var/lib/apps/subutai-mng/current/dnsmasq.leases" | awk $'{print $3}' | awk '{print "management2=" $1}'
+}
+
+get_ip
