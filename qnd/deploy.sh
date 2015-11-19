@@ -3,6 +3,8 @@
 my_dir="$(dirname "$0")"
 source "$my_dir/qnd_vars.conf"
 mgmt_folder=$1
+if [ "$mgmt_folder" ]; then 
+
 SNAP_DISTR="SNAPS/$mgmt_folder"
 rdpPort=3490
 
@@ -82,6 +84,8 @@ conf_run $line $rdpPort
 rdpPort=$((rdpPort+1))
 done < <(cat $my_dir/Vagrantfile | grep v.name | awk -F"=" '{print $2}'  | tr -d '"')
 
-
+else 
+echo "Provide mgmt_folder option"
+fi
 
 
