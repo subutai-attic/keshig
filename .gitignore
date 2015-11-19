@@ -4,6 +4,8 @@
 .settings/
 
 # Intellij
+/META-INF/*
+MANIFEST.MF
 .idea/
 *.iml
 *.iws
