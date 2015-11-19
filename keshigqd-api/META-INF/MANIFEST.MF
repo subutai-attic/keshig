@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1447683850778
-Build-Jdk: 1.8.0_25
-Built-By: tkila
+Bnd-LastModified: 1447944048686
+Build-Jdk: 1.8.0_65
+Built-By: kubaziza
 Bundle-Description: Plugin Module Api
 Bundle-ManifestVersion: 2
 Bundle-Name: Plugin Module Api
@@ -12,7 +12,8 @@ Export-Package: io.subutai.plugin.keshigqd.api.entity;uses:="io.subutai.
  common.command";version="4.0.0.RC3",io.subutai.plugin.keshigqd.api.enti
  ty.options;uses:="io.subutai.plugin.keshigqd.api.entity";version="4.0.0
  .RC3",io.subutai.plugin.keshigqd.api;uses:="io.subutai.common.command,i
- o.subutai.plugin.keshigqd.api.entity";version="4.0.0.RC3"
+ o.subutai.plugin.keshigqd.api.entity,io.subutai.plugin.keshigqd.api.ent
+ ity.options";version="4.0.0.RC3"
 Import-Package: com.google.common.collect;version="[18.0,19)",io.subutai
  .common.command;version="[4.0,5)",io.subutai.common.settings;version="[
  4.0,5)"

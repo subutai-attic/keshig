@@ -13,6 +13,7 @@
   <packaging>bundle</packaging>
   <name>Plugin Module Api</name>
   <description>Plugin Module Api</description>
+
   <dependencies>
 
     <dependency>

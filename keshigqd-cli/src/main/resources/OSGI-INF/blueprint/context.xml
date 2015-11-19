@@ -44,7 +44,7 @@
       </action>
     </command>
     <command name="keshigqd/list-packages">
-      <action class="io.subutai.plugin.keshigqd.cli.builds.ListBuilds">
+      <action class="io.subutai.plugin.keshigqd.cli.builds.ListDependencies">
         <property name="keshig" ref="keshig" />
       </action>
     </command>

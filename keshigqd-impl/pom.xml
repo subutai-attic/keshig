@@ -31,12 +31,7 @@
       <artifactId>keshigqd-api</artifactId>
       <version>4.0.0-RC3</version>
     </dependency>
-    <dependency>
-      <groupId>org.apache.servicemix</groupId>
-      <artifactId>servicemix-beanflow</artifactId>
-      <version>3.2.3</version>
-      <scope>provided</scope>
-    </dependency>
+
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>subutai-common</artifactId>
@@ -58,6 +53,11 @@
       <groupId>${project.groupId}</groupId>
       <artifactId>network-manager-api</artifactId>
       <version>${subutai.mgmt.parent.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>1.6.6</version>
     </dependency>
   </dependencies>
   <build>

@@ -51,7 +51,7 @@ public class Command
 
     public static String getTestComand()
     {
-        return "subutai test";
+        return "/home/ubuntu/playbooks/run_tests.sh";
     }
 
 
