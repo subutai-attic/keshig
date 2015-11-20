@@ -12,8 +12,8 @@
   <artifactId>keshigqd-cli</artifactId>
 
   <packaging>bundle</packaging>
-  <name>Plugin Module CLI</name>
-  <description>Plugin Module CLI</description>
+  <name>Keshig Plugin Module CLI</name>
+  <description>Keshig Plugin Module CLI</description>
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>

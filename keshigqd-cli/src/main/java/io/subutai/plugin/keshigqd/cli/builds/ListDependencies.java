@@ -1,31 +1,26 @@
-// 
-// Decompiled by Procyon v0.5.30
-// 
+
 
 package io.subutai.plugin.keshigqd.cli.builds;
 
-import java.util.Iterator;
-
 import com.google.common.base.Strings;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import io.subutai.plugin.keshigqd.api.entity.ServerType;
-import io.subutai.plugin.keshigqd.api.entity.Dependency;
-
-import java.util.List;
-import java.util.Map;
-
 import io.subutai.plugin.keshigqd.api.KeshigQD;
+import io.subutai.plugin.keshigqd.api.entity.Dependency;
+import io.subutai.plugin.keshigqd.api.entity.ServerType;
 import org.apache.karaf.shell.commands.Argument;
 import org.apache.karaf.shell.commands.Command;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
 
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 @Command(scope = "keshigqd", name = "list-packages", description = "list installed packages on targer server")
 public class ListDependencies extends OsgiCommandSupport {
+
     @Argument(index = 0, name = "target", description = "all - shows all installed packages on each server\ntarget server id - shows all installed packages on target server\nbuild/deploy/test- shows all required packages by server type")
     private String arg;
+
     private KeshigQD keshig;
 
     public KeshigQD getKeshig() {
@@ -37,6 +32,7 @@ public class ListDependencies extends OsgiCommandSupport {
     }
 
     protected Object doExecute() throws Exception {
+
         final String arg = this.arg;
         switch (arg) {
             case "all": {
@@ -70,10 +66,10 @@ public class ListDependencies extends OsgiCommandSupport {
     }
 
     private void printable(final List<Dependency> dependencyList) {
-        System.out.format("%20s%10s%5s%32s", "Name", "Version", "Arch", "Description\n");
+        System.out.format("%50s%10s%5s%32s", "Name", "Version", "Arch", "Description\n");
         System.out.println(Strings.repeat("-", 67));
         for (final Dependency pkg : dependencyList) {
-            System.out.format("%20s%10s%5s%32s", pkg.getName(), pkg.getVersion(), pkg.getArch(), pkg.getDescription());
+            System.out.format("%50s%10s%5s%32s\n", pkg.getName(), pkg.getVersion(), pkg.getArch(), pkg.getDescription());
         }
     }
 

@@ -34,5 +34,6 @@ public enum OperationType
                 {
                     return super.toString();
                 }
-            }
+            };
+
 }

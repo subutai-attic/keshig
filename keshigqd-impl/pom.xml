@@ -11,8 +11,8 @@
 
   <artifactId>keshigqd-impl</artifactId>
   <packaging>bundle</packaging>
-  <name>Plugin Module Impl</name>
-  <description>Plugin Module Impl</description>
+  <name>Keshig Plugin Module Impl</name>
+  <description>Keshig Plugin Module Impl</description>
 
 
   <dependencies>
@@ -71,7 +71,7 @@
         <artifactId>maven-bundle-plugin</artifactId>
         <configuration>
           <instructions>
-            <Bundle-SymbolicName>${project.groupId}.plugin.impl</Bundle-SymbolicName>
+            <Bundle-SymbolicName>${project.groupId}.keshig.plugin.impl</Bundle-SymbolicName>
           </instructions>
         </configuration>
       </plugin>

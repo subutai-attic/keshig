@@ -1,52 +1,38 @@
-
-
 package io.subutai.plugin.keshigqd.impl;
 
+import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
+import io.subutai.common.command.CommandException;
+import io.subutai.common.command.CommandResult;
+import io.subutai.common.command.RequestBuilder;
+import io.subutai.common.mdc.SubutaiExecutors;
+import io.subutai.common.peer.HostNotFoundException;
+import io.subutai.common.peer.ResourceHost;
+import io.subutai.common.tracker.TrackerOperation;
+import io.subutai.core.environment.api.EnvironmentManager;
+import io.subutai.core.network.api.NetworkManager;
+import io.subutai.core.peer.api.PeerManager;
+import io.subutai.core.tracker.api.Tracker;
+import io.subutai.plugin.common.api.PluginDAO;
 import io.subutai.plugin.keshigqd.api.KeshigQD;
+import io.subutai.plugin.keshigqd.api.Profile;
 import io.subutai.plugin.keshigqd.api.entity.*;
 import io.subutai.plugin.keshigqd.api.entity.options.BuildOption;
 import io.subutai.plugin.keshigqd.api.entity.options.CloneOption;
 import io.subutai.plugin.keshigqd.api.entity.options.DeployOption;
 import io.subutai.plugin.keshigqd.api.entity.options.TestOption;
+import io.subutai.plugin.keshigqd.impl.handler.OperationHandler;
+import io.subutai.plugin.keshigqd.impl.workflow.integration.IntegrationWorkflow;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import io.subutai.plugin.keshigqd.impl.workflow.integration.IntegrationWorkflow;
-import io.subutai.plugin.keshigqd.impl.handler.OperationHandler;
-
-import java.util.UUID;
-import java.util.Date;
-
-import io.subutai.common.command.CommandResult;
-import io.subutai.common.peer.ResourceHost;
-import io.subutai.common.peer.HostNotFoundException;
-import io.subutai.common.command.CommandException;
-import com.google.common.collect.Lists;
-import io.subutai.common.command.RequestBuilder;
-import io.subutai.plugin.keshigqd.api.Profile;
-
-import java.util.Iterator;
-import java.util.ArrayList;
-import java.util.List;
-
-import com.google.common.base.Preconditions;
-
-import io.subutai.common.mdc.SubutaiExecutors;
-import io.subutai.common.tracker.TrackerOperation;
-import io.subutai.core.network.api.NetworkManager;
-import io.subutai.core.peer.api.PeerManager;
-import io.subutai.plugin.common.api.PluginDAO;
-import io.subutai.core.environment.api.EnvironmentManager;
-
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 
-import io.subutai.core.tracker.api.Tracker;
-import org.slf4j.Logger;
-
 public class KeshigQDImpl implements KeshigQD {
-    private static final Logger LOG;
+
+    private static final Logger LOG = LoggerFactory.getLogger(KeshigQDImpl.class.getName());
+
     private Tracker tracker;
     private ExecutorService executor;
     private EnvironmentManager environmentManager;
@@ -55,16 +41,16 @@ public class KeshigQDImpl implements KeshigQD {
     private NetworkManager networkManager;
     private TrackerOperation trackerOperation;
 
+    public KeshigQDImpl(final PluginDAO pluginDAO) {
+        this.pluginDAO = pluginDAO;
+    }
+
     public void init() {
         this.executor = SubutaiExecutors.newCachedThreadPool();
     }
 
     public void destroy() {
         this.executor.shutdown();
-    }
-
-    public KeshigQDImpl(final PluginDAO pluginDAO) {
-        this.pluginDAO = pluginDAO;
     }
 
     public void addServer(final Server server) throws Exception {
@@ -98,6 +84,11 @@ public class KeshigQDImpl implements KeshigQD {
 
     public List<Server> getServers() {
         return (List<Server>) this.pluginDAO.getInfo("KESHIGQD", Server.class);
+    }
+
+    @Override
+    public void updateServer(Server server) throws Exception {
+        addServer(server);
     }
 
     public Server getServer(final ServerType serverType) {
@@ -270,6 +261,7 @@ public class KeshigQDImpl implements KeshigQD {
     }
 
     public void saveOption(final Object option, final OperationType type) {
+
         switch (type) {
             case CLONE: {
                 final CloneOption cloneOption = (CloneOption) option;
@@ -515,9 +507,5 @@ public class KeshigQDImpl implements KeshigQD {
 
     public void setNetworkManager(final NetworkManager networkManager) {
         this.networkManager = networkManager;
-    }
-
-    static {
-        LOG = LoggerFactory.getLogger(KeshigQDImpl.class.getName());
     }
 }

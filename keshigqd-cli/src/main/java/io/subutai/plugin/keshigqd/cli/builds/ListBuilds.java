@@ -1,16 +1,11 @@
-// 
-// Decompiled by Procyon v0.5.30
-// 
-
 package io.subutai.plugin.keshigqd.cli.builds;
 
-import java.util.Iterator;
-import java.util.List;
-
-import io.subutai.plugin.keshigqd.api.entity.Build;
 import io.subutai.plugin.keshigqd.api.KeshigQD;
+import io.subutai.plugin.keshigqd.api.entity.Build;
 import org.apache.karaf.shell.commands.Command;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
+
+import java.util.List;
 
 @Command(scope = "keshigqd", name = "list-builds", description = "list builds")
 public class ListBuilds extends OsgiCommandSupport {

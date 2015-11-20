@@ -11,8 +11,8 @@
 
   <artifactId>keshigqd-api</artifactId>
   <packaging>bundle</packaging>
-  <name>Plugin Module Api</name>
-  <description>Plugin Module Api</description>
+  <name>Keshig Plugin Module Api</name>
+  <description>Keshig Plugin Module Api</description>
 
   <dependencies>
 
@@ -39,7 +39,7 @@
         <artifactId>maven-bundle-plugin</artifactId>
         <configuration>
           <instructions>
-            <Bundle-SymbolicName>${project.groupId}.plugin.api</Bundle-SymbolicName>
+            <Bundle-SymbolicName>${project.groupId}.keshig.plugin.api</Bundle-SymbolicName>
           </instructions>
         </configuration>
       </plugin>
