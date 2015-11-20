@@ -26,6 +26,8 @@ public interface KeshigQD {
 
     void updateServer(Server server) throws Exception;
 
+    void setServer(String serverId, String serverType, String serverName);
+
     /*
     *   Keshig Builds handler
     * */
@@ -64,38 +66,5 @@ public interface KeshigQD {
     *   depending on the configurations(clone/build/deploy/test) provided
     * */
     void runDefaults();
-
-    /*
-    *   Keshig Dependency Handlers
-    * */
-    Map<String, List<Dependency>> getAllPackages();
-
-    /*
-    *  Obtain list of installed packages on target server
-    *  @param server id
-    *  @return list of installed packages on target server
-    * */
-    List<Dependency> getPackages(String serverId);
-
-    /*
-    *  Obtain list of required packages by server type
-    *  @param server type
-    *  @return list of required packages
-    * */
-    List<Dependency> getRequiredPackages(ServerType serverType);
-
-    /*
-    * Cross reference installed packages vs required packages
-    * @param server
-    * @return missing packages
-    * */
-    List<Dependency> getMissingPackages(Server server);
-
-    /*
-    * Cross reference installed packages vs required packages
-    * @param server
-    * @return missing packages
-    * */
-    List<Dependency> getMissingPackages(String serverId, ServerType serverType);
 }
 

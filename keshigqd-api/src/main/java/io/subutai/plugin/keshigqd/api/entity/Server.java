@@ -24,6 +24,15 @@ public class Server
         this.description = description;
     }
 
+    public Server( final String serverId, final String serverName, final String serverAddress, final ServerType type)
+    {
+        this.serverId = serverId;
+        this.serverName = serverName;
+        this.serverAddress = serverAddress;
+        this.type = type;
+
+    }
+
 
     public String getDescription()
     {

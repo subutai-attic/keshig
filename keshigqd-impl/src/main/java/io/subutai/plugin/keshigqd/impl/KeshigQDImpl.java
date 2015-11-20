@@ -26,7 +26,10 @@ import io.subutai.plugin.keshigqd.impl.workflow.integration.IntegrationWorkflow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 
 public class KeshigQDImpl implements KeshigQD {
@@ -91,8 +94,30 @@ public class KeshigQDImpl implements KeshigQD {
         addServer(server);
     }
 
+    @Override
+    public void setServer(String serverId, String serverType, String serverName) {
+
+        ResourceHost resourceHost;
+
+        try {
+
+            resourceHost = this.getPeerManager().getLocalPeer().getResourceHostById(serverId);
+
+            Server server = new Server(serverId, serverName, resourceHost.getInterfaceByName("br-int").getIp(),
+                    ServerType.valueOf(serverType.toUpperCase()), resourceHost.getHostname());
+
+            addServer(server);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
     public Server getServer(final ServerType serverType) {
+
         final List<Server> serverList = this.getServers(serverType);
+
         for (final Server server : serverList) {
             if (server.getType().equals(serverType)) {
                 return server;
@@ -126,12 +151,17 @@ public class KeshigQDImpl implements KeshigQD {
         }
         try {
             final ResourceHost buildHost = this.getPeerManager().getLocalPeer().getResourceHostById(buildServer.getServerId());
-            final CommandResult result = buildHost.execute(new RequestBuilder(Command.getDeployCommand()).withCmdArgs((List) Lists.newArrayList((Object[]) new String[]{"-l", "list"})).withTimeout(30));
+            final CommandResult result = buildHost.execute(new RequestBuilder(Command.getDeployCommand())
+                    .withCmdArgs(Lists.newArrayList("-l", "list"))
+                    .withTimeout(30));
+
             if (result.hasSucceeded()) {
                 return this.parseBuilds(result.getStdOut());
             }
+
             return null;
         } catch (CommandException | HostNotFoundException e) {
+
             e.printStackTrace();
             return null;
         }
@@ -182,77 +212,6 @@ public class KeshigQDImpl implements KeshigQD {
     public void runDefaults() {
         final IntegrationWorkflow integrationWorkflow = new IntegrationWorkflow(this);
         integrationWorkflow.run();
-    }
-
-    public Map<String, List<Dependency>> getAllPackages() {
-        final List<Server> servers = this.getServers();
-        final Map<String, List<Dependency>> packages = new HashMap<String, List<Dependency>>();
-        for (final Server server : servers) {
-            if (server.getType().equals(ServerType.PEER_SERVER)) {
-                continue;
-            }
-            packages.put(server.getServerId(), this.getPackages(server.getServerId()));
-        }
-        return packages;
-    }
-
-    public List<Dependency> getPackages(final String serverId) {
-        List<Dependency> dependencyList = null;
-        try {
-            final ResourceHost targetHost = this.getPeerManager().getLocalPeer().getResourceHostById(serverId);
-            final CommandResult result = targetHost.execute(new RequestBuilder(Command.getInstalledPackagesCommand()));
-            if (result.hasSucceeded()) {
-                dependencyList = this.parsePackages(result.getStdOut());
-            }
-        } catch (HostNotFoundException | CommandException e) {
-
-            e.printStackTrace();
-        }
-        return dependencyList;
-    }
-
-    private List<Dependency> parsePackages(final String stdOut) {
-        final List<Dependency> dependencyList = new ArrayList<Dependency>();
-
-        final String[] split = stdOut.split(System.getProperty("line.separator"));
-
-        for (final String line : split) {
-            if (line.startsWith("ii")) {
-                final String[] attrs = line.split("\\s+");
-                dependencyList.add(new Dependency(attrs[1], attrs[2], attrs[3], attrs[4]));
-            }
-        }
-        return dependencyList;
-    }
-
-    public List<Dependency> getRequiredPackages(final ServerType serverType) {
-        List<Dependency> dependencies = null;
-
-        switch (serverType) {
-            case BUILD_SERVER: {
-                dependencies = (List<Dependency>) Dependencies.KeshigCloneServer.requiredPackages();
-                break;
-            }
-            case DEPLOY_SERVER: {
-                dependencies = (List<Dependency>) Dependencies.KeshigDeployServer.requiredPackages();
-                break;
-            }
-            case TEST_SERVER: {
-                dependencies = (List<Dependency>) Dependencies.KeshigTestServer.requiredPackages();
-                break;
-            }
-        }
-        return dependencies;
-    }
-
-    public List<Dependency> getMissingPackages(final Server server) {
-        return this.getMissingPackages(server.getServerId(), server.getType());
-    }
-
-    public List<Dependency> getMissingPackages(final String serverId, final ServerType serverType) {
-        final List<Dependency> existingDependencies = this.getPackages(serverId);
-        final List<Dependency> requiredDependencies = this.getRequiredPackages(serverType);
-        return (List<Dependency>) Dependencies.missingDependencies((List) existingDependencies, (List) requiredDependencies);
     }
 
     private void addToList(final String k, final String v, final List<String> arg) {

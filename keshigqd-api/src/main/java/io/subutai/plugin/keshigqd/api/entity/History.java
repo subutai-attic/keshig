@@ -11,12 +11,12 @@ public class History
     private String type;
     private Long startTime;
     private Long endTime;
-    private RequestBuilder requestBuilder;
+
     private String exitCode;
     private String server;
     private String stdOut;
     private String stdErr;
-
+    private RequestBuilder requestBuilder;
 
     public History( final String id, final String type, final Long startTime, final RequestBuilder requestBuilder,
                     final String server )

@@ -24,7 +24,7 @@
                interface="io.subutai.plugin.keshigqd.api.KeshigQD" />
 
     <bean id="keshigRestServiceImpl" class="io.subutai.plugin.keshigqd.rest.KeshigRestServiceImpl">
-        <property ref="keshig" value = "keshig"/>
+        <property name="keshig" ref = "keshig"/>
     </bean>
 
 

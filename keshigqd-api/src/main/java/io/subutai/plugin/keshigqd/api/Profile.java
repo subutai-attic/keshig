@@ -13,9 +13,11 @@ import io.subutai.plugin.keshigqd.api.entity.options.TestOption;
 public class Profile
 {
     private String name;
+
     private CloneOption cloneOption;
     private BuildOption buildOption;
     private DeployOption deployOption;
+
     private TestOption testOption;
     private List<Server> serverList;
 
