@@ -41,6 +41,13 @@
             </dependency>
 
             <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>webui</artifactId>
+                <classifier>classes</classifier>
+                <version>${subutai.mgmt.parent.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>javax.ws.rs</groupId>
                 <artifactId>javax.ws.rs-api</artifactId>
                 <version>${jaxrs.version}</version>

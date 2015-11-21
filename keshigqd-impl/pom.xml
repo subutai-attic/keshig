@@ -31,6 +31,11 @@
       <artifactId>keshigqd-api</artifactId>
       <version>4.0.0-RC3</version>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>webui</artifactId>
+      <classifier>classes</classifier>
+    </dependency>
 
     <dependency>
       <groupId>${project.groupId}</groupId>
