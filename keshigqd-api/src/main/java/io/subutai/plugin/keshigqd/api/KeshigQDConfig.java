@@ -14,9 +14,11 @@ public class KeshigQDConfig
 
     public static final String PRODUCT_KEY = "KESHIGQD";
 
-    public static final String PRODUCT_HISTORY = "KESHIGQD_HISTORY";
+    public static final String PRODUCT_HISTORY = "HISTORY";
 
     public static final String OPTION = "OPTION";
+
+    public static final String PROFILE = "PROFILE";
 
     private String clusterName, domainName;
 

@@ -14,7 +14,7 @@ public class TestOption
     private boolean all;
     private List<String> targetIps;
     private List<String> playbooks;
-    private boolean isActive;
+    private boolean active;
     private int timeOut;
 
     private OperationType type = OperationType.TEST;
@@ -31,7 +31,7 @@ public class TestOption
         this.name = name;
         this.all = all;
         this.targetIps = targetIps;
-        this.isActive = isActive;
+        this.active = isActive;
     }
 
 
@@ -40,7 +40,7 @@ public class TestOption
     {
         this.targetIps = targetIps;
         this.playbooks = playbooks;
-        this.isActive = isActive;
+        this.active = isActive;
         this.name = name;
     }
 
@@ -66,13 +66,13 @@ public class TestOption
 
     public boolean isActive()
     {
-        return isActive;
+        return active;
     }
 
 
     public void setIsActive( final boolean isActive )
     {
-        this.isActive = isActive;
+        this.active = isActive;
     }
 
 
@@ -142,7 +142,7 @@ public class TestOption
                 ", all=" + all +
                 ", targetIps=" + targetIps +
                 ", playbooks=" + playbooks +
-                ", isActive=" + isActive +
+                ", isActive=" + active +
                 ", timeOut=" + timeOut +
                 ", type=" + type +
                 '}';

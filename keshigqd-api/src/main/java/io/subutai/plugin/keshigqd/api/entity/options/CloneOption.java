@@ -15,7 +15,7 @@ public class CloneOption
     private String url;
     private String branch;
     private String output;
-    private boolean isActive;
+    private boolean active;
     private OperationType type = OperationType.CLONE;
     private int timeOut;
 
@@ -29,7 +29,7 @@ public class CloneOption
     {
         this.name = name;
         this.timeOut = timeOut;
-        this.isActive = isActive;
+        this.active = isActive;
         this.output = output;
         this.branch = branch;
         this.url = url;
@@ -50,13 +50,13 @@ public class CloneOption
 
     public boolean isActive()
     {
-        return isActive;
+        return active;
     }
 
 
     public void setIsActive( final boolean isActive )
     {
-        this.isActive = isActive;
+        this.active = isActive;
     }
 
 
@@ -130,7 +130,7 @@ public class CloneOption
                 ", url='" + url + '\'' +
                 ", branch='" + branch + '\'' +
                 ", output='" + output + '\'' +
-                ", isActive=" + isActive +
+                ", isActive=" + active +
                 ", type=" + type +
                 ", timeOut=" + timeOut +
                 '}';

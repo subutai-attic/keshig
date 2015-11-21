@@ -29,7 +29,7 @@ public interface KeshigQD {
     void setServer(String serverId, String serverType, String serverName);
 
     /*
-    *   Keshig Builds handler
+    *   Keshig Option handlers
     * */
     void saveOption(Object option, OperationType type);
 
@@ -66,5 +66,27 @@ public interface KeshigQD {
     *   depending on the configurations(clone/build/deploy/test) provided
     * */
     void runDefaults();
+
+    /*
+    *  Keshig History Handlers
+    * */
+
+    List<History> listHistory();
+
+    History getHistory(String historyId);
+
+    /*
+    *  Keshig Profile Handlers
+    * */
+
+    List<Profile> listProfiles();
+
+    Profile getProfile(String profileName);
+
+    void updateProfile(Profile profile);
+
+    void deleteProfile(String profileName);
+
+    void addProfile(Profile profile) throws Exception;
 }
 

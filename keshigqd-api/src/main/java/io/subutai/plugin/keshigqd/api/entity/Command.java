@@ -8,25 +8,22 @@ public class Command
     //clone flags
     public static final String repoOpt   = "-r";
     public static final String branchOpt = "-b";
+
     //build flags
     public static final String tests     = "-t";
     public static final String clean     = "-c";
-    public static final String list = "-l";
+    public static final String list      = "-l";
+
     //deploy flags
     public static final String target    = "-t";
-    public static final String build    = "-b";
-    public static final String folder = "-f";
+    public static final String build     = "-b";
+    public static final String folder    = "-f";
 
     //test flags
     public static final String all       = "-a";
     public static final String specific  = "-s";
 
-    public static final String ouput = "-o";
-
-
-    //
-
-    //commands
+    public static final String ouput     = "-o";
 
     //@formatter:on
 
@@ -54,9 +51,4 @@ public class Command
         return "/home/ubuntu/playbooks/run_tests.sh";
     }
 
-
-    public static String getInstalledPackagesCommand()
-    {
-        return "dpkg -l";
-    }
 }

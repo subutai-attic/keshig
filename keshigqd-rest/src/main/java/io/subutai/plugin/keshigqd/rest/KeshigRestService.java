@@ -2,6 +2,10 @@ package io.subutai.plugin.keshigqd.rest;
 
 
 import io.subutai.plugin.keshigqd.api.Profile;
+import io.subutai.plugin.keshigqd.api.entity.options.BuildOption;
+import io.subutai.plugin.keshigqd.api.entity.options.CloneOption;
+import io.subutai.plugin.keshigqd.api.entity.options.DeployOption;
+import io.subutai.plugin.keshigqd.api.entity.options.TestOption;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -20,7 +24,6 @@ public interface KeshigRestService {
     @Produces({MediaType.APPLICATION_JSON})
     public Response getServer(@PathParam("serverId") String serverId);
 
-    //TODO add server types
     @GET
     @Path("server/types")
     @Produces({MediaType.APPLICATION_JSON})
@@ -65,14 +68,38 @@ public interface KeshigRestService {
     @Path("option/{type}/{optionName}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getOption(@PathParam("type") String type, @PathParam("optionName") String optionName);
+    //---------------------------------------------------------------------------------------------------//
+    @POST
+    @Path("option/clone")
+    public Response addCloneOption(CloneOption option);
 
     @POST
-    @Path("option/{optionType}")
-    public Response addOption(@PathParam("optionType") String optionType, Object option);
+    @Path("option/build")
+    public Response addBuildOption(BuildOption option);
+
+    @POST
+    @Path("option/test")
+    public Response addTestOption(TestOption option);
+
+    @POST
+    @Path("option/deploy")
+    public Response addDeployOption(DeployOption option);
 
     @PUT
-    @Path("option/{optionType}")
-    public Response updateOption(@PathParam("optionType") String optionType, Object option);
+    @Path("option/clone")
+    public Response updateCloneOption(CloneOption option);
+
+    @PUT
+    @Path("option/build")
+    public Response updateBuildOption(BuildOption option);
+
+    @PUT
+    @Path("option/test")
+    public Response updateTestOption(TestOption option);
+
+    @PUT
+    @Path("option/deploy")
+    public Response updateDeployOption(DeployOption option);
 
     @DELETE
     @Path("option/{type}/{optionName}")
