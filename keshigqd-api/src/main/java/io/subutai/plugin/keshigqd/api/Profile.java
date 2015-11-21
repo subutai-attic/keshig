@@ -14,82 +14,79 @@ public class Profile
 {
     private String name;
 
-    private CloneOption cloneOption;
-    private BuildOption buildOption;
-    private DeployOption deployOption;
+    private String cloneOption;
+    private String buildOption;
+    private String deployOption;
+    private String testOption;
 
-    private TestOption testOption;
-    private List<Server> serverList;
+    private List<String> serverList;
 
+    public Profile(String name, String cloneOption, String buildOption, String deployOption, String testOption, List<String> serverList) {
+        this.name = name;
+        this.cloneOption = cloneOption;
+        this.buildOption = buildOption;
+        this.deployOption = deployOption;
+        this.testOption = testOption;
+        this.serverList = serverList;
+    }
 
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 
-
-    public void setName( final String name )
-    {
+    public void setName(String name) {
         this.name = name;
     }
 
-
-    public CloneOption getCloneOption()
-    {
+    public String getCloneOption() {
         return cloneOption;
     }
 
-
-    public void setCloneOption( final CloneOption cloneOption )
-    {
+    public void setCloneOption(String cloneOption) {
         this.cloneOption = cloneOption;
     }
 
-
-    public BuildOption getBuildOption()
-    {
+    public String getBuildOption() {
         return buildOption;
     }
 
-
-    public void setBuildOption( final BuildOption buildOption )
-    {
+    public void setBuildOption(String buildOption) {
         this.buildOption = buildOption;
     }
 
-
-    public DeployOption getDeployOption()
-    {
+    public String getDeployOption() {
         return deployOption;
     }
 
-
-    public void setDeployOption( final DeployOption deployOption )
-    {
+    public void setDeployOption(String deployOption) {
         this.deployOption = deployOption;
     }
 
-
-    public TestOption getTestOption()
-    {
+    public String getTestOption() {
         return testOption;
     }
 
-
-    public void setTestOption( final TestOption testOption )
-    {
+    public void setTestOption(String testOption) {
         this.testOption = testOption;
     }
 
-
-    public List<Server> getServerList()
-    {
+    public List<String> getServerList() {
         return serverList;
     }
 
-
-    public void setServerList( final List<Server> serverList )
-    {
+    public void setServerList(List<String> serverList) {
         this.serverList = serverList;
+    }
+
+    @Override
+    public String toString() {
+        return "Profile{" +
+                "name='" + name + '\'' +
+                ", cloneOption='" + cloneOption + '\'' +
+                ", buildOption='" + buildOption + '\'' +
+                ", deployOption='" + deployOption + '\'' +
+                ", testOption='" + testOption + '\'' +
+                ", serverList=" + serverList +
+                '}';
     }
 }

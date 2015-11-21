@@ -15,6 +15,7 @@ import io.subutai.core.peer.api.PeerManager;
 import io.subutai.core.tracker.api.Tracker;
 import io.subutai.plugin.common.api.PluginDAO;
 import io.subutai.plugin.keshigqd.api.KeshigQD;
+import io.subutai.plugin.keshigqd.api.KeshigQDConfig;
 import io.subutai.plugin.keshigqd.api.Profile;
 import io.subutai.plugin.keshigqd.api.entity.*;
 import io.subutai.plugin.keshigqd.api.entity.options.BuildOption;
@@ -57,22 +58,31 @@ public class KeshigQDImpl implements KeshigQD {
     }
 
     public void addServer(final Server server) throws Exception {
+
         Preconditions.checkNotNull(server);
-        if (!this.getPluginDAO().saveInfo("KESHIGQD", server.getServerId(), server)) {
+
+        if (!this.getPluginDAO().saveInfo(KeshigQDConfig.PRODUCT_KEY, server.getServerId(), server)) {
             throw new Exception("Could not save server info");
         }
     }
 
     public void removeServer(final String serverId) {
-        this.pluginDAO.deleteInfo("KESHIGQD", serverId);
+
+        this.pluginDAO.deleteInfo(KeshigQDConfig.PRODUCT_KEY, serverId);
+
     }
 
     public List<Server> getServers(final ServerType type) {
+
         final List<Server> servers = this.getServers();
         final List<Server> typedServers = new ArrayList<Server>();
+
         KeshigQDImpl.LOG.warn(String.format("Found servers: %s", servers.toString()));
+
         for (final Server server : servers) {
+
             KeshigQDImpl.LOG.warn(String.format("Server (%s) with type: (%s)", server.toString(), server.getType()));
+
             if (server.getType().equals(type)) {
                 typedServers.add(server);
             }
@@ -81,12 +91,13 @@ public class KeshigQDImpl implements KeshigQD {
     }
 
     public Server getServer(final String serverId) {
+
         Preconditions.checkNotNull(serverId);
-        return (Server) this.pluginDAO.getInfo("KESHIGQD", serverId, Server.class);
+        return (Server) this.pluginDAO.getInfo(KeshigQDConfig.PRODUCT_KEY, serverId, Server.class);
     }
 
     public List<Server> getServers() {
-        return (List<Server>) this.pluginDAO.getInfo("KESHIGQD", Server.class);
+        return (List<Server>) this.pluginDAO.getInfo(KeshigQDConfig.PRODUCT_KEY, Server.class);
     }
 
     @Override
@@ -127,23 +138,46 @@ public class KeshigQDImpl implements KeshigQD {
     }
 
     public List<Profile> getAllProfiles() {
-        return null;
+        return this.pluginDAO.getInfo(KeshigQDConfig.PROFILE, Profile.class);
     }
 
-    public void addProfile(final Profile profile) {
+    public void addProfile(final Profile profile) throws Exception {
+
+        Preconditions.checkNotNull(profile);
+
+        if (!this.getPluginDAO().saveInfo(KeshigQDConfig.PROFILE, profile.getName(), profile)) {
+
+            throw new Exception("Could not save server info");
+
+        }
     }
 
     public void deleteProfile(final String profileName) {
+
+        this.pluginDAO.deleteInfo(KeshigQDConfig.PROFILE, profileName);
+
     }
 
     public void updateProfile(final Profile profile) {
+
+        try {
+
+            addProfile(profile);
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
     }
 
     public Profile getProfile(final String profileName) {
-        return null;
+
+        return this.pluginDAO.getInfo(KeshigQDConfig.PROFILE, profileName, Profile.class);
+
     }
 
     public List<Build> getBuilds() {
+
         final Server buildServer = this.getServer(ServerType.DEPLOY_SERVER);
         if (buildServer == null) {
             KeshigQDImpl.LOG.error("Failed to obtain build server");
@@ -168,50 +202,81 @@ public class KeshigQDImpl implements KeshigQD {
     }
 
     public Build getLatestBuild() {
+
         final List<Build> builds = this.getBuilds();
         return builds.get(builds.size() - 1);
+
     }
 
     private List<Build> parseBuilds(final String stdout) {
+
         final List<Build> list = new ArrayList<Build>();
-        final String[] split;
-        final String[] builds = split = stdout.split(System.getProperty("line.separator"));
+
+        final String[] split = stdout.split(System.getProperty("line.separator"));
+
         for (final String line : split) {
             final String[] build = line.split("_");
-            final Date date = new Date(Long.valueOf(build[2]) * 1000L);
-            KeshigQDImpl.LOG.warn("Adding following build  : %s ", line);
-            list.add(new Build(line, build[0], build[1], date));
+            if (build.length == 3) {
+                final Date date = new Date(Long.valueOf(build[2]) * 1000L);
+                KeshigQDImpl.LOG.warn("Adding following build  : %s ", line);
+                list.add(new Build(line, build[0], build[1], date));
+            }
         }
         return list;
     }
 
     public UUID deploy(final RequestBuilder requestBuilder, final String serverId) {
+
         final OperationHandler operationHandler = new OperationHandler(this, requestBuilder, OperationType.DEPLOY, serverId);
         this.executor.execute(operationHandler);
         return operationHandler.getTrackerId();
+
     }
 
     public UUID test(final RequestBuilder requestBuilder, final String serverId) {
+
         final OperationHandler operationHandler = new OperationHandler(this, requestBuilder, OperationType.TEST, serverId);
         this.executor.execute(operationHandler);
         return operationHandler.getTrackerId();
+
     }
 
     public UUID build(final RequestBuilder requestBuilder, final String serverId) {
+
         final OperationHandler operationHandler = new OperationHandler(this, requestBuilder, OperationType.BUILD, serverId);
         this.executor.execute(operationHandler);
         return operationHandler.getTrackerId();
+
     }
 
     public UUID clone(final RequestBuilder requestBuilder, final String serverId) {
+
         final OperationHandler cloneOperation = new OperationHandler(this, requestBuilder, OperationType.CLONE, serverId);
         this.executor.execute(cloneOperation);
         return cloneOperation.getTrackerId();
+
     }
 
     public void runDefaults() {
+
         final IntegrationWorkflow integrationWorkflow = new IntegrationWorkflow(this);
         integrationWorkflow.run();
+
+    }
+
+    @Override
+    public List<History> listHistory() {
+        return this.pluginDAO.getInfo(KeshigQDConfig.PRODUCT_HISTORY, History.class);
+    }
+
+    @Override
+    public History getHistory(String historyId) {
+        return this.pluginDAO.getInfo(KeshigQDConfig.PRODUCT_HISTORY, historyId, History.class);
+    }
+
+    @Override
+    public List<Profile> listProfiles() {
+        return this.pluginDAO.getInfo(KeshigQDConfig.PROFILE, Profile.class);
     }
 
     private void addToList(final String k, final String v, final List<String> arg) {

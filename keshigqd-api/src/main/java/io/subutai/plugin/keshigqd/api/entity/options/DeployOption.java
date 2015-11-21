@@ -16,7 +16,7 @@ public class DeployOption
 
     private String buildName;
 
-    private boolean isActive;
+    private boolean active;
     private OperationType type = OperationType.DEPLOY;
     private int timeOut;
 
@@ -32,7 +32,7 @@ public class DeployOption
         this.numberOfPeers = numberOfPeers;
         this.numberOfRhsPerPeer = numberOfRhsPerPeer;
         this.buildName = buildName;
-        this.isActive = isActive;
+        this.active = isActive;
     }
 
 
@@ -57,13 +57,13 @@ public class DeployOption
 
     public boolean isActive()
     {
-        return isActive;
+        return active;
     }
 
 
     public void setIsActive( final boolean isActive )
     {
-        this.isActive = isActive;
+        this.active = isActive;
     }
 
 
@@ -129,7 +129,7 @@ public class DeployOption
                 ", numberOfPeers=" + numberOfPeers +
                 ", numberOfRhsPerPeer=" + numberOfRhsPerPeer +
                 ", buildName='" + buildName + '\'' +
-                ", isActive=" + isActive +
+                ", isActive=" + active +
                 ", type=" + type +
                 ", timeOut=" + timeOut +
                 '}';

@@ -14,7 +14,7 @@ public class BuildOption
     private boolean cleanInstall;
     private boolean runTests;
     private String name;
-    private boolean isActive;
+    private boolean active;
     private int timeOut;
 
 
@@ -31,7 +31,7 @@ public class BuildOption
         this.cleanInstall = cleanInstall;
         this.runTests = runTests;
         this.name = name;
-        this.isActive = isActive;
+        this.active = isActive;
     }
 
 
@@ -49,13 +49,13 @@ public class BuildOption
 
     public boolean isActive()
     {
-        return isActive;
+        return active;
     }
 
 
     public void setIsActive( final boolean isActive )
     {
-        this.isActive = isActive;
+        this.active = isActive;
     }
 
 
@@ -115,7 +115,7 @@ public class BuildOption
                 "cleanInstall=" + cleanInstall +
                 ", runTests=" + runTests +
                 ", name='" + name + '\'' +
-                ", isActive=" + isActive +
+                ", isActive=" + active +
                 ", timeOut=" + timeOut +
                 ", type=" + type +
                 '}';

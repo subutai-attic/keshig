@@ -14,7 +14,6 @@ import io.subutai.plugin.keshigqd.api.entity.options.TestOption;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.FormParam;
 import javax.ws.rs.core.Response;
 import java.util.*;
 
@@ -26,17 +25,16 @@ public class KeshigRestServiceImpl implements KeshigRestService {
 
     private KeshigQD keshig;
 
+    public KeshigRestServiceImpl() {
+        LOG.warn("Init keshig");
+    }
+
     public KeshigQD getKeshig() {
         return keshig;
     }
 
     public void setKeshig(KeshigQD keshig) {
         this.keshig = keshig;
-    }
-
-
-    public KeshigRestServiceImpl() {
-        LOG.warn("Init keshig");
     }
 
     @Override
@@ -75,7 +73,7 @@ public class KeshigRestServiceImpl implements KeshigRestService {
     }
 
     @Override
-    public Response addServer(String serverId,String serverName, String serverType) {
+    public Response addServer(String serverId, String serverName, String serverType) {
 
         if (Strings.isNullOrEmpty(serverId)) {
             Response response = Response.status(Response.Status.BAD_REQUEST).entity("Invalid server id").build();
@@ -92,7 +90,7 @@ public class KeshigRestServiceImpl implements KeshigRestService {
             return response;
         }
 
-        keshig.setServer(serverId,serverType,serverName);
+        keshig.setServer(serverId, serverType, serverName);
 
         return null;
 
@@ -101,7 +99,7 @@ public class KeshigRestServiceImpl implements KeshigRestService {
     @Override
     public Response updateServer(String serverId, String serverName, String serverType) {
 
-        keshig.setServer(serverId,serverType,serverName);
+        keshig.setServer(serverId, serverType, serverName);
 
         return Response.ok().build();
     }
@@ -148,7 +146,7 @@ public class KeshigRestServiceImpl implements KeshigRestService {
         return Response.ok(options).build();
     }
 
-    public Response getServerType(){
+    public Response getServerType() {
 
         Set<Object> serverTypes = Sets.newHashSet();
 
@@ -210,28 +208,67 @@ public class KeshigRestServiceImpl implements KeshigRestService {
     }
 
     @Override
-    public Response addOption(String optionType, Object option) {
+    public Response addCloneOption(CloneOption option) {
 
-        keshig.saveOption(option, OperationType.valueOf(optionType.toUpperCase()));
+        keshig.saveOption(option, CLONE);
 
         return Response.ok().build();
-
     }
 
     @Override
-    public Response updateOption(String optionType, Object option) {
+    public Response addBuildOption(BuildOption option) {
 
-        if (Strings.isNullOrEmpty(optionType)) {
+        keshig.saveOption(option, BUILD);
 
-            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid option type").build();
+        return Response.ok().build();
+    }
 
-        }
-        if (option==null) {
+    @Override
+    public Response addTestOption(TestOption option) {
 
-            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid option").build();
-        }
+        keshig.saveOption(option, TEST);
 
-        return addOption(optionType, option);
+        return Response.ok().build();
+    }
+
+    @Override
+    public Response addDeployOption(DeployOption option) {
+
+        keshig.saveOption(option, DEPLOY);
+
+        return Response.ok().build();
+    }
+
+    @Override
+    public Response updateCloneOption(CloneOption option) {
+
+        keshig.updateOption(option, CLONE);
+
+        return Response.ok().build();
+    }
+
+    @Override
+    public Response updateBuildOption(BuildOption option) {
+
+        keshig.updateOption(option, BUILD);
+
+        return Response.ok().build();
+    }
+
+    @Override
+    public Response updateTestOption(TestOption option) {
+
+        keshig.updateOption(option, TEST);
+
+        return Response.ok().build();
+    }
+
+    @Override
+    public Response updateDeployOption(DeployOption option) {
+
+        keshig.updateOption(option, DEPLOY);
+
+        return Response.ok().build();
     }
 
     @Override
@@ -247,43 +284,68 @@ public class KeshigRestServiceImpl implements KeshigRestService {
             return Response.status(Response.Status.BAD_REQUEST).entity("Invalid option name").build();
         }
 
-        keshig.deleteOption(optionName,OperationType.valueOf(type.toUpperCase()));
+        keshig.deleteOption(optionName, OperationType.valueOf(type.toUpperCase()));
 
         return Response.ok().build();
     }
 
     @Override
     public Response listHistory() {
-        return null;
+
+        return Response.ok().entity(keshig.listHistory()).build();
+
     }
 
     @Override
     public Response getHistory(String id) {
-        return null;
+        if (Strings.isNullOrEmpty(id)) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid id").build();
+        }
+
+        return Response.ok().entity(keshig.getHistory(id)).build();
     }
 
     @Override
     public Response listProfiles() {
-        return null;
+        return Response.ok().entity(keshig.listProfiles()).build();
     }
 
     @Override
     public Response getProfile(String profileName) {
-        return null;
+
+        if (Strings.isNullOrEmpty(profileName)) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid profile name").build();
+        }
+
+        return Response.ok().entity(keshig.getProfile(profileName)).build();
     }
 
     @Override
     public Response addProfile(Profile profile) {
-        return null;
+        try {
+
+            keshig.addProfile(profile);
+
+        } catch (Exception e) {
+
+            return Response.status(Response.Status.BAD_REQUEST).entity("Error happened while saving profile info").build();
+
+        }
+        return Response.ok().build();
     }
 
     @Override
     public Response updateProfile(Profile profile) {
-        return null;
+
+        return addProfile(profile);
+
     }
 
     @Override
     public Response deleteProfile(String profileName) {
-        return null;
+
+        keshig.deleteProfile(profileName);
+
+        return Response.ok().build();
     }
 }
