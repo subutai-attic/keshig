@@ -68,10 +68,21 @@ public interface KeshigRestService {
     @Path("option/{type}/{optionName}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getOption(@PathParam("type") String type, @PathParam("optionName") String optionName);
+
+    //run options
+    @GET
+    @Path("option/{type}/{optionName}/start")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response runOption(@PathParam("type") String type, @PathParam("optionName") String optionName);
+
     //---------------------------------------------------------------------------------------------------//
     @POST
     @Path("option/clone")
     public Response addCloneOption(CloneOption option);
+
+    @PUT
+    @Path("option/clone")
+    public Response updateCloneOption(CloneOption option);
 
     @POST
     @Path("option/build")
@@ -85,9 +96,7 @@ public interface KeshigRestService {
     @Path("option/deploy")
     public Response addDeployOption(DeployOption option);
 
-    @PUT
-    @Path("option/clone")
-    public Response updateCloneOption(CloneOption option);
+
 
     @PUT
     @Path("option/build")
