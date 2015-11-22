@@ -33,17 +33,24 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 
+import static io.subutai.plugin.keshigqd.api.KeshigQDConfig.*;
+import static io.subutai.plugin.keshigqd.api.KeshigQDConfig.PRODUCT_HISTORY;
+import static io.subutai.plugin.keshigqd.api.entity.OperationType.*;
+import static io.subutai.plugin.keshigqd.api.entity.ServerType.*;
+
 public class KeshigQDImpl implements KeshigQD {
 
     private static final Logger LOG = LoggerFactory.getLogger(KeshigQDImpl.class.getName());
 
-    private Tracker tracker;
-    private ExecutorService executor;
+    //@formatter:off
+    private Tracker             tracker;
+    private ExecutorService     executor;
     private EnvironmentManager environmentManager;
-    private PluginDAO pluginDAO;
-    private PeerManager peerManager;
-    private NetworkManager networkManager;
-    private TrackerOperation trackerOperation;
+    private PluginDAO           pluginDAO;
+    private PeerManager         peerManager;
+    private NetworkManager      networkManager;
+    private TrackerOperation    trackerOperation;
+    //@formatter:on
 
     public KeshigQDImpl(final PluginDAO pluginDAO) {
         this.pluginDAO = pluginDAO;
@@ -61,14 +68,14 @@ public class KeshigQDImpl implements KeshigQD {
 
         Preconditions.checkNotNull(server);
 
-        if (!this.getPluginDAO().saveInfo(KeshigQDConfig.PRODUCT_KEY, server.getServerId(), server)) {
+        if (!this.getPluginDAO().saveInfo(PRODUCT_KEY, server.getServerId(), server)) {
             throw new Exception("Could not save server info");
         }
     }
 
     public void removeServer(final String serverId) {
 
-        this.pluginDAO.deleteInfo(KeshigQDConfig.PRODUCT_KEY, serverId);
+        this.pluginDAO.deleteInfo(PRODUCT_KEY, serverId);
 
     }
 
@@ -77,11 +84,11 @@ public class KeshigQDImpl implements KeshigQD {
         final List<Server> servers = this.getServers();
         final List<Server> typedServers = new ArrayList<Server>();
 
-        KeshigQDImpl.LOG.warn(String.format("Found servers: %s", servers.toString()));
+        LOG.info(String.format("Found servers: %s", servers.toString()));
 
         for (final Server server : servers) {
 
-            KeshigQDImpl.LOG.warn(String.format("Server (%s) with type: (%s)", server.toString(), server.getType()));
+            LOG.info(String.format("Server (%s) with type: (%s)", server.toString(), server.getType()));
 
             if (server.getType().equals(type)) {
                 typedServers.add(server);
@@ -93,11 +100,11 @@ public class KeshigQDImpl implements KeshigQD {
     public Server getServer(final String serverId) {
 
         Preconditions.checkNotNull(serverId);
-        return (Server) this.pluginDAO.getInfo(KeshigQDConfig.PRODUCT_KEY, serverId, Server.class);
+        return (Server) this.pluginDAO.getInfo(PRODUCT_KEY, serverId, Server.class);
     }
 
     public List<Server> getServers() {
-        return (List<Server>) this.pluginDAO.getInfo(KeshigQDConfig.PRODUCT_KEY, Server.class);
+        return (List<Server>) this.pluginDAO.getInfo(PRODUCT_KEY, Server.class);
     }
 
     @Override
@@ -111,12 +118,9 @@ public class KeshigQDImpl implements KeshigQD {
         ResourceHost resourceHost;
 
         try {
-
             resourceHost = this.getPeerManager().getLocalPeer().getResourceHostById(serverId);
-
             Server server = new Server(serverId, serverName, resourceHost.getInterfaceByName("br-int").getIp(),
                     ServerType.valueOf(serverType.toUpperCase()), resourceHost.getHostname());
-
             addServer(server);
 
         } catch (Exception e) {
@@ -138,14 +142,14 @@ public class KeshigQDImpl implements KeshigQD {
     }
 
     public List<Profile> getAllProfiles() {
-        return this.pluginDAO.getInfo(KeshigQDConfig.PROFILE, Profile.class);
+        return this.pluginDAO.getInfo(PROFILE, Profile.class);
     }
 
     public void addProfile(final Profile profile) throws Exception {
 
         Preconditions.checkNotNull(profile);
 
-        if (!this.getPluginDAO().saveInfo(KeshigQDConfig.PROFILE, profile.getName(), profile)) {
+        if (!this.getPluginDAO().saveInfo(PROFILE, profile.getName(), profile)) {
 
             throw new Exception("Could not save server info");
 
@@ -154,7 +158,7 @@ public class KeshigQDImpl implements KeshigQD {
 
     public void deleteProfile(final String profileName) {
 
-        this.pluginDAO.deleteInfo(KeshigQDConfig.PROFILE, profileName);
+        this.pluginDAO.deleteInfo(PROFILE, profileName);
 
     }
 
@@ -172,13 +176,13 @@ public class KeshigQDImpl implements KeshigQD {
 
     public Profile getProfile(final String profileName) {
 
-        return this.pluginDAO.getInfo(KeshigQDConfig.PROFILE, profileName, Profile.class);
+        return this.pluginDAO.getInfo(PROFILE, profileName, Profile.class);
 
     }
 
     public List<Build> getBuilds() {
 
-        final Server buildServer = this.getServer(ServerType.DEPLOY_SERVER);
+        final Server buildServer = this.getServer(DEPLOY_SERVER);
         if (buildServer == null) {
             KeshigQDImpl.LOG.error("Failed to obtain build server");
             return null;
@@ -218,7 +222,7 @@ public class KeshigQDImpl implements KeshigQD {
             final String[] build = line.split("_");
             if (build.length == 3) {
                 final Date date = new Date(Long.valueOf(build[2]) * 1000L);
-                KeshigQDImpl.LOG.warn("Adding following build  : %s ", line);
+                LOG.info("Adding following build  : %s ", line);
                 list.add(new Build(line, build[0], build[1], date));
             }
         }
@@ -227,7 +231,7 @@ public class KeshigQDImpl implements KeshigQD {
 
     public UUID deploy(final RequestBuilder requestBuilder, final String serverId) {
 
-        final OperationHandler operationHandler = new OperationHandler(this, requestBuilder, OperationType.DEPLOY, serverId);
+        final OperationHandler operationHandler = new OperationHandler(this, requestBuilder, DEPLOY, serverId);
         this.executor.execute(operationHandler);
         return operationHandler.getTrackerId();
 
@@ -235,7 +239,7 @@ public class KeshigQDImpl implements KeshigQD {
 
     public UUID test(final RequestBuilder requestBuilder, final String serverId) {
 
-        final OperationHandler operationHandler = new OperationHandler(this, requestBuilder, OperationType.TEST, serverId);
+        final OperationHandler operationHandler = new OperationHandler(this, requestBuilder, TEST, serverId);
         this.executor.execute(operationHandler);
         return operationHandler.getTrackerId();
 
@@ -243,7 +247,7 @@ public class KeshigQDImpl implements KeshigQD {
 
     public UUID build(final RequestBuilder requestBuilder, final String serverId) {
 
-        final OperationHandler operationHandler = new OperationHandler(this, requestBuilder, OperationType.BUILD, serverId);
+        final OperationHandler operationHandler = new OperationHandler(this, requestBuilder, BUILD, serverId);
         this.executor.execute(operationHandler);
         return operationHandler.getTrackerId();
 
@@ -251,7 +255,7 @@ public class KeshigQDImpl implements KeshigQD {
 
     public UUID clone(final RequestBuilder requestBuilder, final String serverId) {
 
-        final OperationHandler cloneOperation = new OperationHandler(this, requestBuilder, OperationType.CLONE, serverId);
+        final OperationHandler cloneOperation = new OperationHandler(this, requestBuilder, CLONE, serverId);
         this.executor.execute(cloneOperation);
         return cloneOperation.getTrackerId();
 
@@ -260,23 +264,51 @@ public class KeshigQDImpl implements KeshigQD {
     public void runDefaults() {
 
         final IntegrationWorkflow integrationWorkflow = new IntegrationWorkflow(this);
-        integrationWorkflow.run();
 
+        this.executor.execute(integrationWorkflow);
+
+    }
+
+    @Override
+    public void runOption(String optionName, String optionType) {
+
+        OperationType type = OperationType.valueOf(optionType.toUpperCase());
+
+        switch (type) {
+            
+            case CLONE: {
+                final CloneOption cloneOption = (CloneOption) getOption(optionName, OperationType.valueOf(optionType.toUpperCase()));
+
+                break;
+            }
+            case BUILD: {
+                final BuildOption buildOption = (BuildOption) getOption(optionName, OperationType.valueOf(optionType.toUpperCase()));
+                break;
+            }
+            case DEPLOY: {
+                final DeployOption deployOption = (DeployOption) getOption(optionName, OperationType.valueOf(optionType.toUpperCase()));
+                break;
+            }
+            case TEST: {
+                final TestOption testOption = (TestOption) getOption(optionName, OperationType.valueOf(optionType.toUpperCase()));
+                break;
+            }
+        }
     }
 
     @Override
     public List<History> listHistory() {
-        return this.pluginDAO.getInfo(KeshigQDConfig.PRODUCT_HISTORY, History.class);
+        return this.pluginDAO.getInfo(PRODUCT_HISTORY, History.class);
     }
 
     @Override
     public History getHistory(String historyId) {
-        return this.pluginDAO.getInfo(KeshigQDConfig.PRODUCT_HISTORY, historyId, History.class);
+        return this.pluginDAO.getInfo(PRODUCT_HISTORY, historyId, History.class);
     }
 
     @Override
     public List<Profile> listProfiles() {
-        return this.pluginDAO.getInfo(KeshigQDConfig.PROFILE, Profile.class);
+        return this.pluginDAO.getInfo(PROFILE, Profile.class);
     }
 
     private void addToList(final String k, final String v, final List<String> arg) {
@@ -447,8 +479,10 @@ public class KeshigQDImpl implements KeshigQD {
             case CLONE: {
                 final CloneOption cloneOption = (CloneOption) this.getOption(optionName, type);
                 if (cloneOption != null && cloneOption.isActive()) {
-                    KeshigQDImpl.LOG.warn(String.format("Retrieved %s", cloneOption.toString()));
+
+                    LOG.info(String.format("Retrieved %s", cloneOption.toString()));
                     cloneOption.setIsActive(false);
+
                     this.saveOption(cloneOption, cloneOption.getType());
                     break;
                 }
@@ -457,8 +491,10 @@ public class KeshigQDImpl implements KeshigQD {
             case BUILD: {
                 final BuildOption buildOption = (BuildOption) this.getOption(optionName, type);
                 if (buildOption != null && buildOption.isActive()) {
-                    KeshigQDImpl.LOG.warn(String.format("Retrieved %s", buildOption.toString()));
+
+                    LOG.info(String.format("Retrieved %s", buildOption.toString()));
                     buildOption.setIsActive(false);
+
                     this.saveOption(buildOption, buildOption.getType());
                     break;
                 }
@@ -467,6 +503,7 @@ public class KeshigQDImpl implements KeshigQD {
             case DEPLOY: {
                 final DeployOption deployOption = (DeployOption) this.getOption(optionName, type);
                 if (deployOption != null && deployOption.isActive()) {
+
                     deployOption.setIsActive(false);
                     this.saveOption(deployOption, deployOption.getType());
                     break;

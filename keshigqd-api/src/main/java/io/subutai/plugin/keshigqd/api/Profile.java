@@ -10,8 +10,7 @@ import io.subutai.plugin.keshigqd.api.entity.options.DeployOption;
 import io.subutai.plugin.keshigqd.api.entity.options.TestOption;
 
 
-public class Profile
-{
+public class Profile {
     private String name;
 
     private String cloneOption;
@@ -19,15 +18,18 @@ public class Profile
     private String deployOption;
     private String testOption;
 
-    private List<String> serverList;
+    private String cbServer;
+    private String deployServer;
+    private String testServer;
 
-    public Profile(String name, String cloneOption, String buildOption, String deployOption, String testOption, List<String> serverList) {
+
+    public Profile(String name, String cloneOption, String buildOption, String deployOption, String testOption) {
         this.name = name;
         this.cloneOption = cloneOption;
         this.buildOption = buildOption;
         this.deployOption = deployOption;
         this.testOption = testOption;
-        this.serverList = serverList;
+
     }
 
     public String getName() {
@@ -70,12 +72,28 @@ public class Profile
         this.testOption = testOption;
     }
 
-    public List<String> getServerList() {
-        return serverList;
+    public String getCbServer() {
+        return cbServer;
     }
 
-    public void setServerList(List<String> serverList) {
-        this.serverList = serverList;
+    public void setCbServer(String cbServer) {
+        this.cbServer = cbServer;
+    }
+
+    public String getDeployServer() {
+        return deployServer;
+    }
+
+    public void setDeployServer(String deployServer) {
+        this.deployServer = deployServer;
+    }
+
+    public String getTestServer() {
+        return testServer;
+    }
+
+    public void setTestServer(String testServer) {
+        this.testServer = testServer;
     }
 
     @Override
@@ -86,7 +104,9 @@ public class Profile
                 ", buildOption='" + buildOption + '\'' +
                 ", deployOption='" + deployOption + '\'' +
                 ", testOption='" + testOption + '\'' +
-                ", serverList=" + serverList +
+                ", cbServer='" + cbServer + '\'' +
+                ", deployServer='" + deployServer + '\'' +
+                ", testServer='" + testServer + '\'' +
                 '}';
     }
 }

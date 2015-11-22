@@ -208,6 +208,13 @@ public class KeshigRestServiceImpl implements KeshigRestService {
     }
 
     @Override
+    public Response runOption(String type, String optionName) {
+
+
+        return null;
+    }
+
+    @Override
     public Response addCloneOption(CloneOption option) {
 
         keshig.saveOption(option, CLONE);

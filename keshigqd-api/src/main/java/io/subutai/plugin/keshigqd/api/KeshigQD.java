@@ -67,6 +67,7 @@ public interface KeshigQD {
     * */
     void runDefaults();
 
+    void runOption(String optionName, String optionType);
     /*
     *  Keshig History Handlers
     * */
