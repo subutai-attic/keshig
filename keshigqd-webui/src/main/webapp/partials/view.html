@@ -1,0 +1,13 @@
+<div ng-controller="KeshigCtrl as keshigCtrl">
+
+	<div class="b-workspace__header">
+		<h1 class="b-title">Plugins/<span class="b-title_breadcrumbs">Keshig</span></h1>
+	</div>
+
+	<input type="text" ng-model="keshigCtrl.text">
+	<button name="send" ng-click="keshigCtrl.click()"></button>
+	<div>
+		{{ keshigCtrl.output }}
+	</div>
+
+</div>

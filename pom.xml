@@ -11,6 +11,7 @@
         <module>keshigqd-cli</module>
         <module>keshigqd-impl</module>
         <module>keshigqd-kar</module>
+        <module>keshigqd-webui</module>
     </modules>
     <packaging>pom</packaging>
 
