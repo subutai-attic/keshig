@@ -5,14 +5,12 @@ import io.subutai.common.tracker.TrackerOperation;
 import io.subutai.plugin.keshigqd.api.KeshigQDConfig;
 import io.subutai.plugin.keshigqd.api.Profile;
 import io.subutai.plugin.keshigqd.api.entity.Command;
-import io.subutai.plugin.keshigqd.api.entity.OperationType;
 import io.subutai.plugin.keshigqd.api.entity.Server;
-import io.subutai.plugin.keshigqd.api.entity.ServerType;
 import io.subutai.plugin.keshigqd.api.entity.options.BuildOption;
 import io.subutai.plugin.keshigqd.api.entity.options.CloneOption;
 import io.subutai.plugin.keshigqd.api.entity.options.DeployOption;
 import io.subutai.plugin.keshigqd.api.entity.options.TestOption;
-import io.subutai.plugin.keshigqd.impl.KeshigQDImpl;
+import io.subutai.plugin.keshigqd.impl.KeshigImpl;
 import io.subutai.plugin.keshigqd.impl.handler.OperationHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +26,7 @@ public class IntegrationWorkflow implements Runnable {
 
     private static final Logger LOG = LoggerFactory.getLogger((Class) IntegrationWorkflow.class);
 
-    private final KeshigQDImpl keshigQD;
+    private final KeshigImpl keshigQD;
     private final TrackerOperation operationTracker;
 
     private final Profile profile;
@@ -43,7 +41,7 @@ public class IntegrationWorkflow implements Runnable {
     private Server testServer;
 
     
-    public IntegrationWorkflow(final KeshigQDImpl keshigQD) {
+    public IntegrationWorkflow(final KeshigImpl keshigQD) {
         this.keshigQD = keshigQD;
         operationTracker = keshigQD.getTracker().createTrackerOperation(KeshigQDConfig.PRODUCT_KEY,
 
@@ -63,7 +61,7 @@ public class IntegrationWorkflow implements Runnable {
         profile = null;
     }
 
-    public IntegrationWorkflow(final KeshigQDImpl keshigQD, Profile profile) {
+    public IntegrationWorkflow(final KeshigImpl keshigQD, Profile profile) {
 
         operationTracker = keshigQD.getTracker().createTrackerOperation(KeshigQDConfig.PRODUCT_KEY,
                 String.format("Creating %s tracker object for Integration Workflow with profile %s ",

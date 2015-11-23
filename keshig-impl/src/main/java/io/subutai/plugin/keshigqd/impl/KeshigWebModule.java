@@ -4,7 +4,7 @@ package io.subutai.plugin.keshigqd.impl;
 import io.subutai.webui.api.WebuiModule;
 
 
-public class KeshigQDWebModule implements WebuiModule
+public class KeshigWebModule implements WebuiModule
 {
     public static String NAME = "Keshig";
     public static String IMG = "plugins/cassandra/cassandra.png";

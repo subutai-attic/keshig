@@ -14,8 +14,7 @@ import io.subutai.core.network.api.NetworkManager;
 import io.subutai.core.peer.api.PeerManager;
 import io.subutai.core.tracker.api.Tracker;
 import io.subutai.plugin.common.api.PluginDAO;
-import io.subutai.plugin.keshigqd.api.KeshigQD;
-import io.subutai.plugin.keshigqd.api.KeshigQDConfig;
+import io.subutai.plugin.keshigqd.api.Keshig;
 import io.subutai.plugin.keshigqd.api.Profile;
 import io.subutai.plugin.keshigqd.api.entity.*;
 import io.subutai.plugin.keshigqd.api.entity.options.BuildOption;
@@ -38,9 +37,9 @@ import static io.subutai.plugin.keshigqd.api.KeshigQDConfig.PRODUCT_HISTORY;
 import static io.subutai.plugin.keshigqd.api.entity.OperationType.*;
 import static io.subutai.plugin.keshigqd.api.entity.ServerType.*;
 
-public class KeshigQDImpl implements KeshigQD {
+public class KeshigImpl implements Keshig {
 
-    private static final Logger LOG = LoggerFactory.getLogger(KeshigQDImpl.class.getName());
+    private static final Logger LOG = LoggerFactory.getLogger(KeshigImpl.class.getName());
 
     //@formatter:off
     private Tracker             tracker;
@@ -52,7 +51,7 @@ public class KeshigQDImpl implements KeshigQD {
     private TrackerOperation    trackerOperation;
     //@formatter:on
 
-    public KeshigQDImpl(final PluginDAO pluginDAO) {
+    public KeshigImpl(final PluginDAO pluginDAO) {
         this.pluginDAO = pluginDAO;
     }
 
@@ -184,7 +183,7 @@ public class KeshigQDImpl implements KeshigQD {
 
         final Server buildServer = this.getServer(DEPLOY_SERVER);
         if (buildServer == null) {
-            KeshigQDImpl.LOG.error("Failed to obtain build server");
+            KeshigImpl.LOG.error("Failed to obtain build server");
             return null;
         }
         try {

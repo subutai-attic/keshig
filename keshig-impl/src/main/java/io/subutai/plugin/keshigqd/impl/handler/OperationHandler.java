@@ -10,7 +10,7 @@ import io.subutai.plugin.keshigqd.api.entity.History;
 import io.subutai.plugin.keshigqd.api.entity.OperationType;
 import io.subutai.plugin.keshigqd.api.entity.Server;
 import io.subutai.plugin.keshigqd.api.entity.ServerType;
-import io.subutai.plugin.keshigqd.impl.KeshigQDImpl;
+import io.subutai.plugin.keshigqd.impl.KeshigImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,7 +20,7 @@ public class OperationHandler implements Runnable {
 
     private static final Logger LOG = LoggerFactory.getLogger(OperationHandler.class);
     private TrackerOperation trackerOperation;
-    private KeshigQDImpl keshig;
+    private KeshigImpl keshig;
     private String serverId;
     private Server server;
     private History history;
@@ -28,7 +28,7 @@ public class OperationHandler implements Runnable {
     private OperationType operationType;
     ;
 
-    public OperationHandler(final KeshigQDImpl keshig, final RequestBuilder command, final OperationType operationType, final String serverId) {
+    public OperationHandler(final KeshigImpl keshig, final RequestBuilder command, final OperationType operationType, final String serverId) {
         this.operationType = operationType;
         this.command = command;
         this.serverId = serverId;

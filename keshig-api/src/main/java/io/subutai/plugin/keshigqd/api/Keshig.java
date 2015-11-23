@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.UUID;
 
 
-public interface KeshigQD {
+public interface Keshig {
 
     /*
     *   Keshig Server handlers
