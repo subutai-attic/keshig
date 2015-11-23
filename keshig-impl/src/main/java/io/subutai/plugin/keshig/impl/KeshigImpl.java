@@ -316,7 +316,6 @@ public class KeshigImpl implements Keshig {
                         withCmdArgs(testOption.getArgs()).
                         withTimeout(testOption.getTimeOut()), TEST, testServer.getServerId());
                 executor.execute(operationHandler);
-
                 break;
             }
         }
