@@ -110,23 +110,24 @@ public class TestOption {
 
 
     public List<String> getArgs() {
-
-        List<String> args = new ArrayList<>();
-        args.add("m");
-        if (args.size() > 0) {
-            args.add(targetIps.get(0));
-        }
-        args.add("M");
-        if (args.size() > 1) {
-            args.add(targetIps.get(1));
-        }
-        args.add("-s");
-
-        if (all) {
-            args.add("all");
-        } else {
-            args.add(String.join(" ", "\"" + playbooks + "\""));
-        }
+//
+        List<String> args = Lists.newArrayList();
+//
+//        args.add("m");
+//        if (targetIps.size() > 0) {
+//            args.add(targetIps.get(0));
+//        }
+//        args.add("M");
+//        if (targetIps.size() > 1) {
+//            args.add(targetIps.get(1));
+//        }
+//        args.add("-s");
+//
+//        if (all) {
+//            args.add("all");
+//        } else {
+//            args.add(String.join(" ", "\"" + playbooks + "\""));
+//        }
         return args;
 
     }

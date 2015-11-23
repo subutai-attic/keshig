@@ -14,12 +14,27 @@ public class Profile {
     private String testServer;
 
 
-    public Profile(String name, String cloneOption, String buildOption, String deployOption, String testOption) {
+    public Profile( final String name, final String cloneOption, final String buildOption, final String deployOption,
+                    final String testOption, final String cbServer, final String deployServer, final String testServer )
+    {
         this.name = name;
         this.cloneOption = cloneOption;
         this.buildOption = buildOption;
         this.deployOption = deployOption;
         this.testOption = testOption;
+        this.cbServer = cbServer;
+        this.deployServer = deployServer;
+        this.testServer = testServer;
+    }
+
+
+    public Profile( String name, String cloneOption, String buildOption, String deployOption, String testOption ) {
+        this.name = name;
+        this.cloneOption = cloneOption;
+        this.buildOption = buildOption;
+        this.deployOption = deployOption;
+        this.testOption = testOption;
+
 
     }
 
