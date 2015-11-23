@@ -67,6 +67,8 @@ public interface Keshig {
     void runDefaults();
 
     void runOption(String optionName, String optionType);
+
+    void runProfile(String profileName);
     /*
     *  Keshig History Handlers
     * */

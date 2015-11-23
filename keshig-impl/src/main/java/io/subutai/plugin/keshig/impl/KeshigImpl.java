@@ -42,13 +42,13 @@ public class KeshigImpl implements Keshig {
     private static final Logger LOG = LoggerFactory.getLogger(KeshigImpl.class.getName());
 
     //@formatter:off
-    private Tracker             tracker;
-    private ExecutorService     executor;
+    private Tracker tracker;
+    private ExecutorService executor;
     private EnvironmentManager environmentManager;
-    private PluginDAO           pluginDAO;
-    private PeerManager         peerManager;
-    private NetworkManager      networkManager;
-    private TrackerOperation    trackerOperation;
+    private PluginDAO pluginDAO;
+    private PeerManager peerManager;
+    private NetworkManager networkManager;
+    private TrackerOperation trackerOperation;
     //@formatter:on
 
     public KeshigImpl(final PluginDAO pluginDAO) {
@@ -271,28 +271,64 @@ public class KeshigImpl implements Keshig {
     @Override
     public void runOption(String optionName, String optionType) {
 
-        OperationType type = valueOf(optionType.toUpperCase());
+        OperationType type = OperationType.valueOf(optionType.toUpperCase());
 
         switch (type) {
-            
-            case CLONE: {
-                final CloneOption cloneOption = (CloneOption) getOption(optionName, valueOf(optionType.toUpperCase()));
 
+            case CLONE: {
+
+                final CloneOption cloneOption = (CloneOption) getOption(optionName, OperationType.valueOf(optionType.toUpperCase()));
+                Server cloneServer = getServers(BUILD_SERVER).get(0);
+                OperationHandler cloneOperation = new OperationHandler(this, new RequestBuilder(Command.getCloneCommand()).
+                        withCmdArgs(cloneOption.getArgs()).
+                        withTimeout(cloneOption.getTimeOut()), CLONE, cloneServer.getServerId());
+
+                executor.execute(cloneOperation);
                 break;
             }
             case BUILD: {
-                final BuildOption buildOption = (BuildOption) getOption(optionName, valueOf(optionType.toUpperCase()));
+
+                final BuildOption buildOption = (BuildOption) getOption(optionName, OperationType.valueOf(optionType.toUpperCase()));
+                Server buildServer = getServers(BUILD_SERVER).get(0);
+                final OperationHandler operationHandler = new OperationHandler(this, new RequestBuilder(Command.getBuildCommand()).
+                        withCmdArgs(buildOption.getArgs()).
+                        withTimeout(buildOption.getTimeOut()), BUILD, buildServer.getServerId());
+                executor.execute(operationHandler);
                 break;
             }
             case DEPLOY: {
-                final DeployOption deployOption = (DeployOption) getOption(optionName, valueOf(optionType.toUpperCase()));
+
+                final DeployOption deployOption = (DeployOption) getOption(optionName, OperationType.valueOf(optionType.toUpperCase()));
+                Server deployServer = getServers(DEPLOY_SERVER).get(0);
+
+                final OperationHandler operationHandler = new OperationHandler(this, new RequestBuilder(Command.getDeployCommand()).
+                        withCmdArgs(deployOption.getArgs()).
+                        withTimeout(deployOption.getTimeOut()).
+                        withRunAs("ubuntu"), DEPLOY, deployServer.getServerId());
+                executor.execute(operationHandler);
                 break;
             }
             case TEST: {
-                final TestOption testOption = (TestOption) getOption(optionName, valueOf(optionType.toUpperCase()));
+
+                final TestOption testOption = (TestOption) getOption(optionName, OperationType.valueOf(optionType.toUpperCase()));
+                Server testServer = getServers(TEST_SERVER).get(0);
+                final OperationHandler operationHandler = new OperationHandler(this, new RequestBuilder(Command.getTestComand()).
+                        withCmdArgs(testOption.getArgs()).
+                        withTimeout(testOption.getTimeOut()), TEST, testServer.getServerId());
+                executor.execute(operationHandler);
+
                 break;
             }
         }
+    }
+
+    @Override
+    public void runProfile(String profileName) {
+
+        Profile profile = this.getProfile(profileName);
+        IntegrationWorkflow integrationWorkflow = new IntegrationWorkflow(this, profile);
+
+        executor.execute(integrationWorkflow);
     }
 
     @Override
@@ -354,27 +390,27 @@ public class KeshigImpl implements Keshig {
             }
             case BUILD: {
                 final List<BuildOption> buildOptions = (List<BuildOption>) this.getPluginDAO().getInfo(type.toString(), BuildOption.class);
-                for (final BuildOption option2 : buildOptions) {
-                    if (option2.isActive()) {
-                        return option2;
+                for (final BuildOption buildOption : buildOptions) {
+                    if (buildOption.isActive()) {
+                        return buildOption;
                     }
                 }
                 break;
             }
             case DEPLOY: {
                 final List<DeployOption> deployOptions = (List<DeployOption>) this.getPluginDAO().getInfo(type.toString(), DeployOption.class);
-                for (final DeployOption option3 : deployOptions) {
-                    if (option3.isActive()) {
-                        return option3;
+                for (final DeployOption deployOption : deployOptions) {
+                    if (deployOption.isActive()) {
+                        return deployOption;
                     }
                 }
                 break;
             }
             case TEST: {
                 final List<TestOption> testOptions = (List<TestOption>) this.getPluginDAO().getInfo(type.toString(), TestOption.class);
-                for (final TestOption option4 : testOptions) {
-                    if (option4.isActive()) {
-                        return option4;
+                for (final TestOption testOption : testOptions) {
+                    if (testOption.isActive()) {
+                        return testOption;
                     }
                 }
                 break;

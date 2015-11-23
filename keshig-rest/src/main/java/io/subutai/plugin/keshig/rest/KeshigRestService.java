@@ -129,6 +129,11 @@ public interface KeshigRestService {
     //Run profiles
 
     @GET
+    @Path("profiles/{profileName}/start")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response runProfile(@PathParam("profileName") String profileName);
+
+    @GET
     @Path("profiles")
     @Produces(MediaType.APPLICATION_JSON)
     public Response listProfiles();

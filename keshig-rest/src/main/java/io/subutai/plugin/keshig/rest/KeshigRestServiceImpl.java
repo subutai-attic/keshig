@@ -21,6 +21,7 @@ import static io.subutai.plugin.keshig.api.entity.OperationType.*;
 import static io.subutai.plugin.keshig.api.entity.OperationType.BUILD;
 import static io.subutai.plugin.keshig.api.entity.OperationType.CLONE;
 import static io.subutai.plugin.keshig.api.entity.OperationType.TEST;
+import static javax.ws.rs.core.Response.Status.*;
 
 public class KeshigRestServiceImpl implements KeshigRestService {
 
@@ -61,13 +62,13 @@ public class KeshigRestServiceImpl implements KeshigRestService {
     public Response getServer(String serverId) {
 
         if (Strings.isNullOrEmpty(serverId)) {
-            Response response = Response.status(Response.Status.BAD_REQUEST).entity("Invalid server id").build();
+            Response response = Response.status(BAD_REQUEST).entity("Invalid server id").build();
             return response;
         }
         Server server = keshig.getServer(serverId);
 
         if (server == null) {
-            return Response.status(Response.Status.NOT_FOUND).entity(String.format("Server with id: %s not found", serverId)).build();
+            return Response.status(NOT_FOUND).entity(String.format("Server with id: %s not found", serverId)).build();
         }
 
         Response response = Response.ok(keshig.getServer(serverId)).build();
@@ -79,17 +80,17 @@ public class KeshigRestServiceImpl implements KeshigRestService {
     public Response addServer(String serverId, String serverName, String serverType) {
 
         if (Strings.isNullOrEmpty(serverId)) {
-            Response response = Response.status(Response.Status.BAD_REQUEST).entity("Invalid server id").build();
+            Response response = Response.status(BAD_REQUEST).entity("Invalid server id").build();
             return response;
         }
 
         if (Strings.isNullOrEmpty(serverName)) {
-            Response response = Response.status(Response.Status.BAD_REQUEST).entity("Invalid server name").build();
+            Response response = Response.status(BAD_REQUEST).entity("Invalid server name").build();
             return response;
         }
 
         if (Strings.isNullOrEmpty(serverType)) {
-            Response response = Response.status(Response.Status.BAD_REQUEST).entity("Invalid server type").build();
+            Response response = Response.status(BAD_REQUEST).entity("Invalid server type").build();
             return response;
         }
 
@@ -111,7 +112,7 @@ public class KeshigRestServiceImpl implements KeshigRestService {
     public Response deleteServer(String serverId) {
 
         if (Strings.isNullOrEmpty(serverId)) {
-            Response response = Response.status(Response.Status.BAD_REQUEST).entity("Invalid server id").build();
+            Response response = Response.status(BAD_REQUEST).entity("Invalid server id").build();
             return response;
         }
         keshig.removeServer(serverId);
@@ -164,7 +165,7 @@ public class KeshigRestServiceImpl implements KeshigRestService {
     @Override
     public Response getOptionsByType(String type) {
 
-        OperationType operationType = valueOf(type.toUpperCase());
+        OperationType operationType = OperationType.valueOf(type.toUpperCase());
 
         switch (operationType) {
 
@@ -185,8 +186,7 @@ public class KeshigRestServiceImpl implements KeshigRestService {
                 return Response.ok().entity(testOptions).build();
             }
             default: {
-                Response response = Response.status(Response.Status.BAD_REQUEST).entity("Invalid option type").build();
-                return response;
+                return Response.status(BAD_REQUEST).entity("Invalid option type").build();
             }
         }
 
@@ -197,15 +197,15 @@ public class KeshigRestServiceImpl implements KeshigRestService {
 
         if (Strings.isNullOrEmpty(type)) {
 
-            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid option type").build();
+            return Response.status(BAD_REQUEST).entity("Invalid option type").build();
 
         }
         if (Strings.isNullOrEmpty(optionName)) {
 
-            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid option name").build();
+            return Response.status(BAD_REQUEST).entity("Invalid option name").build();
         }
 
-        Response response = Response.ok().entity(keshig.getOption(optionName, valueOf(type.toUpperCase()))).build();
+        Response response = Response.ok().entity(keshig.getOption(optionName, OperationType.valueOf(type.toUpperCase()))).build();
 
         return response;
     }
@@ -213,8 +213,8 @@ public class KeshigRestServiceImpl implements KeshigRestService {
     @Override
     public Response runOption(String type, String optionName) {
 
-
-        return null;
+        keshig.runOption(optionName, type);
+        return Response.ok().build();
     }
 
     @Override
@@ -286,15 +286,15 @@ public class KeshigRestServiceImpl implements KeshigRestService {
 
         if (Strings.isNullOrEmpty(type)) {
 
-            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid option type").build();
+            return Response.status(BAD_REQUEST).entity("Invalid option type").build();
 
         }
         if (Strings.isNullOrEmpty(optionName)) {
 
-            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid option name").build();
+            return Response.status(BAD_REQUEST).entity("Invalid option name").build();
         }
 
-        keshig.deleteOption(optionName, valueOf(type.toUpperCase()));
+        keshig.deleteOption(optionName, OperationType.valueOf(type.toUpperCase()));
 
         return Response.ok().build();
     }
@@ -309,10 +309,18 @@ public class KeshigRestServiceImpl implements KeshigRestService {
     @Override
     public Response getHistory(String id) {
         if (Strings.isNullOrEmpty(id)) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid id").build();
+            return Response.status(BAD_REQUEST).entity("Invalid id").build();
         }
 
         return Response.ok().entity(keshig.getHistory(id)).build();
+    }
+
+    @Override
+    public Response runProfile(String profileName) {
+
+        keshig.runProfile(profileName);
+
+        return Response.ok().build();
     }
 
     @Override
@@ -324,7 +332,7 @@ public class KeshigRestServiceImpl implements KeshigRestService {
     public Response getProfile(String profileName) {
 
         if (Strings.isNullOrEmpty(profileName)) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid profile name").build();
+            return Response.status(BAD_REQUEST).entity("Invalid profile name").build();
         }
 
         return Response.ok().entity(keshig.getProfile(profileName)).build();
@@ -338,7 +346,7 @@ public class KeshigRestServiceImpl implements KeshigRestService {
 
         } catch (Exception e) {
 
-            return Response.status(Response.Status.BAD_REQUEST).entity("Error happened while saving profile info").build();
+            return Response.status(BAD_REQUEST).entity("Error happened while saving profile info").build();
 
         }
         return Response.ok().build();
