@@ -109,7 +109,7 @@ public class KeshigRestServiceImpl implements KeshigRestService {
     public Response deleteServer(String serverName) {
 
         if (Strings.isNullOrEmpty(serverName)) {
-            return Response.status(BAD_REQUEST).entity("Invalid server name").build();
+           return Response.status(BAD_REQUEST).entity("Invalid server name").build();
         }
         keshig.removeServer(serverName);
 

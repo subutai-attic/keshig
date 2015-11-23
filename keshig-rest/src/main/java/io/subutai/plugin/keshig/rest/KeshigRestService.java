@@ -77,7 +77,6 @@ public interface KeshigRestService {
 
     //---------------------------------------------------------------------------------------------------//
     @POST
-    @Consumes(MediaType.APPLICATION_JSON)
     @Path("option/clone")
     @Consumes( MediaType.APPLICATION_JSON )
     public Response addCloneOption(CloneOption option);

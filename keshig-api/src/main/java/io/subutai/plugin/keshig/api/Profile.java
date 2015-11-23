@@ -1,21 +1,24 @@
 package io.subutai.plugin.keshig.api;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Profile {
-    private String name;
 
+    private String name;
     private String cloneOption;
     private String buildOption;
     private String deployOption;
     private String testOption;
-
     private String cbServer;
     private String deployServer;
     private String testServer;
 
+    public Profile() {
+    }
 
-    public Profile( final String name, final String cloneOption, final String buildOption, final String deployOption,
-                    final String testOption, final String cbServer, final String deployServer, final String testServer )
+    public Profile(final String name, final String cloneOption, final String buildOption, final String deployOption,
+                   final String testOption, final String cbServer, final String deployServer, final String testServer )
     {
         this.name = name;
         this.cloneOption = cloneOption;
@@ -27,16 +30,6 @@ public class Profile {
         this.testServer = testServer;
     }
 
-
-    public Profile( String name, String cloneOption, String buildOption, String deployOption, String testOption ) {
-        this.name = name;
-        this.cloneOption = cloneOption;
-        this.buildOption = buildOption;
-        this.deployOption = deployOption;
-        this.testOption = testOption;
-
-
-    }
 
     public String getName() {
         return name;
