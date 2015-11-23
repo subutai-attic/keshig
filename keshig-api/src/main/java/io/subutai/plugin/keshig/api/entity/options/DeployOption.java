@@ -3,6 +3,7 @@ package io.subutai.plugin.keshig.api.entity.options;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Lists;
 
 import io.subutai.plugin.keshig.api.entity.Command;
@@ -14,24 +15,28 @@ public class DeployOption
     private String name;
     private int numberOfPeers;
     private int numberOfRhsPerPeer;
+
     private String buildName;
+
     private boolean active;
+    @JsonIgnore
+    private OperationType type = OperationType.DEPLOY;
     private int timeOut;
 
-    private OperationType type = OperationType.DEPLOY;
     public DeployOption()
     {
     }
 
 
-    public DeployOption( final String name, final int numberOfPeers, final int numberOfRhsPerPeer,
-                         final String buildName, final boolean isActive )
+    public DeployOption( final String name, int numberOfPeers, int numberOfRhsPerPeer,
+                         final String buildName, boolean isActive, int timeOut )
     {
         this.name = name;
         this.numberOfPeers = numberOfPeers;
         this.numberOfRhsPerPeer = numberOfRhsPerPeer;
         this.buildName = buildName;
         this.active = isActive;
+        this.timeOut = timeOut;
     }
 
 

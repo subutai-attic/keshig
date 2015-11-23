@@ -79,26 +79,31 @@ public interface KeshigRestService {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("option/clone")
+    @Consumes( MediaType.APPLICATION_JSON )
     public Response addCloneOption(CloneOption option);
 
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Path("option/clone")
+    @Consumes( MediaType.APPLICATION_JSON )
     public Response updateCloneOption(CloneOption option);
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("option/build")
+    @Consumes( MediaType.APPLICATION_JSON )
     public Response addBuildOption(BuildOption option);
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("option/test")
+    @Consumes( MediaType.APPLICATION_JSON )
     public Response addTestOption(TestOption option);
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("option/deploy")
+    @Consumes( MediaType.APPLICATION_JSON )
     public Response addDeployOption(DeployOption option);
 
 
@@ -106,14 +111,17 @@ public interface KeshigRestService {
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Path("option/build")
+    @Consumes( MediaType.APPLICATION_JSON )
     public Response updateBuildOption(BuildOption option);
 
     @PUT
     @Path("option/test")
+    @Consumes( MediaType.APPLICATION_JSON )
     public Response updateTestOption(TestOption option);
 
     @PUT
     @Path("option/deploy")
+    @Consumes( MediaType.APPLICATION_JSON )
     public Response updateDeployOption(DeployOption option);
 
     @DELETE
@@ -161,15 +169,15 @@ public interface KeshigRestService {
 
     @POST
     @Path("profiles")
+    @Consumes( MediaType.APPLICATION_JSON )
     public Response addProfile(Profile profile);
 
     @PUT
     @Path("profiles")
+    @Consumes( MediaType.APPLICATION_JSON )
     public Response updateProfile(Profile profile);
 
     @DELETE
     @Path("profiles/{profileName}")
     public Response deleteProfile(@PathParam("profileName") String profileName);
-
-
 }

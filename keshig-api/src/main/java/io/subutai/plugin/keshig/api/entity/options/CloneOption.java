@@ -3,6 +3,8 @@ package io.subutai.plugin.keshig.api.entity.options;
 
 import java.util.List;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 import com.google.common.collect.Lists;
 
 import io.subutai.plugin.keshig.api.entity.Command;
@@ -14,11 +16,13 @@ public class CloneOption
     private String name;
     private String url;
     private String branch;
+    @JsonIgnore
     private String output;
     private boolean active;
+    @JsonIgnore
+    private OperationType type = OperationType.CLONE;
     private int timeOut;
 
-    private OperationType type = OperationType.CLONE;
     public CloneOption()
     {
     }
