@@ -4,12 +4,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
     <groupId>io.subutai</groupId>
-    <artifactId>keshigqd-plugin</artifactId>
+    <artifactId>keshig-plugin</artifactId>
     <version>4.0.0-RC3</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>keshigqd-api</artifactId>
+  <artifactId>keshig-api</artifactId>
   <packaging>bundle</packaging>
   <name>Keshig Plugin Module Api</name>
   <description>Keshig Plugin Module Api</description>

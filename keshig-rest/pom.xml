@@ -3,13 +3,13 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>keshigqd-plugin</artifactId>
+        <artifactId>keshig-plugin</artifactId>
         <groupId>io.subutai</groupId>
         <version>4.0.0-RC3</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>keshigqd-rest</artifactId>
+    <artifactId>keshig-rest</artifactId>
     <packaging>bundle</packaging>
     <name>Keshig Plugin Module REST</name>
     <description>Keshig Plugin Module REST</description>
@@ -17,7 +17,7 @@
 
         <dependency>
             <groupId>io.subutai</groupId>
-            <artifactId>keshigqd-api</artifactId>
+            <artifactId>keshig-api</artifactId>
             <version>4.0.0-RC3</version>
         </dependency>
 
