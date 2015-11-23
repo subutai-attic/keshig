@@ -34,6 +34,8 @@ import java.util.concurrent.ExecutorService;
 
 import static io.subutai.plugin.keshig.api.KeshigQDConfig.*;
 import static io.subutai.plugin.keshig.api.KeshigQDConfig.PRODUCT_HISTORY;
+import static io.subutai.plugin.keshig.api.entity.OperationType.*;
+import static io.subutai.plugin.keshig.api.entity.ServerType.*;
 
 public class KeshigImpl implements Keshig {
 
@@ -269,25 +271,25 @@ public class KeshigImpl implements Keshig {
     @Override
     public void runOption(String optionName, String optionType) {
 
-        OperationType type = OperationType.valueOf(optionType.toUpperCase());
+        OperationType type = valueOf(optionType.toUpperCase());
 
         switch (type) {
             
             case CLONE: {
-                final CloneOption cloneOption = (CloneOption) getOption(optionName, OperationType.valueOf(optionType.toUpperCase()));
+                final CloneOption cloneOption = (CloneOption) getOption(optionName, valueOf(optionType.toUpperCase()));
 
                 break;
             }
             case BUILD: {
-                final BuildOption buildOption = (BuildOption) getOption(optionName, OperationType.valueOf(optionType.toUpperCase()));
+                final BuildOption buildOption = (BuildOption) getOption(optionName, valueOf(optionType.toUpperCase()));
                 break;
             }
             case DEPLOY: {
-                final DeployOption deployOption = (DeployOption) getOption(optionName, OperationType.valueOf(optionType.toUpperCase()));
+                final DeployOption deployOption = (DeployOption) getOption(optionName, valueOf(optionType.toUpperCase()));
                 break;
             }
             case TEST: {
-                final TestOption testOption = (TestOption) getOption(optionName, OperationType.valueOf(optionType.toUpperCase()));
+                final TestOption testOption = (TestOption) getOption(optionName, valueOf(optionType.toUpperCase()));
                 break;
             }
         }
