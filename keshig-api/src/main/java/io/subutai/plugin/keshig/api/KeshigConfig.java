@@ -8,7 +8,7 @@ import java.util.UUID;
 import io.subutai.common.settings.Common;
 
 
-public class KeshigQDConfig
+public class KeshigConfig
 {
 
 
@@ -27,7 +27,7 @@ public class KeshigQDConfig
     private UUID environmnetId;
 
 
-    public KeshigQDConfig()
+    public KeshigConfig()
     {
         domainName = Common.DEFAULT_DOMAIN_NAME;
         servers = new ArrayList<>();

@@ -1,9 +1,9 @@
-<features name="keshigqd-module" version="4.0.0-RC3">
-  <feature name="keshigqd-module" version="4.0.0-RC3">
-    <bundle> mvn:io.subutai/keshigqd-api/4.0.0-RC3</bundle>
-    <bundle> mvn:io.subutai/keshigqd-impl/4.0.0-RC3</bundle>
-    <!--<bundle> mvn:io.subutai.keshigqd/keshigqd-plugin-ui/4.0.0-RC2</bundle>-->
-    <bundle> mvn:io.subutai/keshigqd-cli/4.0.0-RC3</bundle>
-    <bundle> mvn:io.subutai/keshigqd-rest/4.0.0-RC3</bundle>
+<features name="keshig-module" version="4.0.0-RC4">
+  <feature name="keshig-module" version="4.0.0-RC4">
+    <bundle> mvn:io.subutai/keshig-api/4.0.0-RC4</bundle>
+    <bundle> mvn:io.subutai/keshig-impl/4.0.0-RC4</bundle>
+    <!--<bundle> mvn:io.subutai/keshig-webui/4.0.0-RC4</bundle>-->
+    <bundle> mvn:io.subutai/keshig-cli/4.0.0-RC4</bundle>
+    <bundle> mvn:io.subutai/keshig-rest/4.0.0-RC4</bundle>
   </feature>
 </features>

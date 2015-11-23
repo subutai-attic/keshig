@@ -5,11 +5,10 @@ import io.subutai.common.command.RequestBuilder;
 import io.subutai.common.peer.HostNotFoundException;
 import io.subutai.common.peer.ResourceHost;
 import io.subutai.common.tracker.TrackerOperation;
-import io.subutai.plugin.keshig.api.KeshigQDConfig;
+import io.subutai.plugin.keshig.api.KeshigConfig;
 import io.subutai.plugin.keshig.api.entity.History;
 import io.subutai.plugin.keshig.api.entity.OperationType;
 import io.subutai.plugin.keshig.api.entity.Server;
-import io.subutai.plugin.keshig.api.entity.ServerType;
 import io.subutai.plugin.keshig.impl.KeshigImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +34,7 @@ public class OperationHandler implements Runnable {
         this.command = command;
         this.serverId = serverId;
         this.keshig = keshig;
-        this.trackerOperation = keshig.getTracker().createTrackerOperation(KeshigQDConfig.PRODUCT_KEY, String.format("Creating %s %s tracker object", KeshigQDConfig.PRODUCT_KEY, operationType.toString()));
+        this.trackerOperation = keshig.getTracker().createTrackerOperation(KeshigConfig.PRODUCT_KEY, String.format("Creating %s %s tracker object", KeshigConfig.PRODUCT_KEY, operationType.toString()));
     }
 
     @Override
@@ -66,7 +65,7 @@ public class OperationHandler implements Runnable {
             this.trackerOperation.addLog(String.format("Starting %s", this.operationType));
             this.history = new History(UUID.randomUUID().toString(), this.operationType.toString(), System.currentTimeMillis(), this.command, (this.serverId == null) ? this.server.getServerId() : this.serverId);
 
-            this.keshig.getPluginDAO().saveInfo(KeshigQDConfig.PRODUCT_HISTORY, this.history.getId(), this.history);
+            this.keshig.getPluginDAO().saveInfo(KeshigConfig.PRODUCT_HISTORY, this.history.getId(), this.history);
             final ResourceHost buildHost = this.keshig.getPeerManager().getLocalPeer().getResourceHostById((this.serverId == null) ? this.server.getServerId() : this.serverId);
             this.trackerOperation.addLog(String.format("Server used %s", buildHost.toString()));
 
@@ -82,7 +81,7 @@ public class OperationHandler implements Runnable {
                     this.history.setStdOut(commandResult.getStdOut());
                     this.history.setStdErr((response.getStdErr() == null) ? "" : response.getStdErr());
                     this.history.setEndTime(System.currentTimeMillis());
-                    this.keshig.getPluginDAO().saveInfo(KeshigQDConfig.PRODUCT_HISTORY, this.history.getId(), this.history);
+                    this.keshig.getPluginDAO().saveInfo(KeshigConfig.PRODUCT_HISTORY, this.history.getId(), this.history);
 
                     return;
                 }

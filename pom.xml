@@ -17,7 +17,7 @@
 
     <groupId>io.subutai</groupId>
     <artifactId>keshig-plugin</artifactId>
-    <version>4.0.0-RC3</version>
+    <version>4.0.0-RC4</version>
 
     <properties>
         <subutai.mgmt.parent.version>4.0.0-RC4</subutai.mgmt.parent.version>

@@ -32,8 +32,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 
-import static io.subutai.plugin.keshig.api.KeshigQDConfig.*;
-import static io.subutai.plugin.keshig.api.KeshigQDConfig.PRODUCT_HISTORY;
+import static io.subutai.plugin.keshig.api.KeshigConfig.*;
+import static io.subutai.plugin.keshig.api.KeshigConfig.PRODUCT_HISTORY;
 import static io.subutai.plugin.keshig.api.entity.OperationType.*;
 import static io.subutai.plugin.keshig.api.entity.ServerType.*;
 

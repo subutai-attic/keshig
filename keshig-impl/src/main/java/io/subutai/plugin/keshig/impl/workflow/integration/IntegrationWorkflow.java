@@ -2,7 +2,7 @@ package io.subutai.plugin.keshig.impl.workflow.integration;
 
 import io.subutai.common.command.RequestBuilder;
 import io.subutai.common.tracker.TrackerOperation;
-import io.subutai.plugin.keshig.api.KeshigQDConfig;
+import io.subutai.plugin.keshig.api.KeshigConfig;
 import io.subutai.plugin.keshig.api.Profile;
 import io.subutai.plugin.keshig.api.entity.Command;
 import io.subutai.plugin.keshig.api.entity.Server;
@@ -43,10 +43,10 @@ public class IntegrationWorkflow implements Runnable {
     
     public IntegrationWorkflow(final KeshigImpl keshigQD) {
         this.keshigQD = keshigQD;
-        operationTracker = keshigQD.getTracker().createTrackerOperation(KeshigQDConfig.PRODUCT_KEY,
+        operationTracker = keshigQD.getTracker().createTrackerOperation(KeshigConfig.PRODUCT_KEY,
 
 
-                String.format("Creating %s tracker object for Integration Workflow", KeshigQDConfig.PRODUCT_KEY));
+                String.format("Creating %s tracker object for Integration Workflow", KeshigConfig.PRODUCT_KEY));
         //get default options
         cloneOption = (CloneOption) keshigQD.getActiveOption(CLONE);
         buildOption = (BuildOption) keshigQD.getActiveOption(BUILD);
@@ -63,9 +63,9 @@ public class IntegrationWorkflow implements Runnable {
 
     public IntegrationWorkflow(final KeshigImpl keshigQD, Profile profile) {
 
-        operationTracker = keshigQD.getTracker().createTrackerOperation(KeshigQDConfig.PRODUCT_KEY,
+        operationTracker = keshigQD.getTracker().createTrackerOperation(KeshigConfig.PRODUCT_KEY,
                 String.format("Creating %s tracker object for Integration Workflow with profile %s ",
-                        KeshigQDConfig.PRODUCT_KEY,
+                        KeshigConfig.PRODUCT_KEY,
                         profile.getName()));
 
         this.profile = profile;
@@ -149,14 +149,14 @@ public class IntegrationWorkflow implements Runnable {
         final OperationHandler cloneOperation = new OperationHandler(keshigQD, new RequestBuilder(Command.getCloneCommand()).withCmdArgs(cloneOption.getArgs()).withTimeout(cloneOption.getTimeOut()), CLONE, cloneServer.getServerId());
         cloneOperation.run();
 
-        return !keshigQD.getTracker().getTrackerOperation(KeshigQDConfig.PRODUCT_KEY, cloneOperation.getTrackerId()).getState().toString().equalsIgnoreCase("FAILED");
+        return !keshigQD.getTracker().getTrackerOperation(KeshigConfig.PRODUCT_KEY, cloneOperation.getTrackerId()).getState().toString().equalsIgnoreCase("FAILED");
     }
 
     public boolean build() {
         
         final OperationHandler operationHandler = new OperationHandler(keshigQD, new RequestBuilder(Command.getBuildCommand()).withCmdArgs(buildOption.getArgs()).withTimeout(buildOption.getTimeOut()), BUILD, cloneServer.getServerId());
         operationHandler.run();
-        return !keshigQD.getTracker().getTrackerOperation(KeshigQDConfig.PRODUCT_KEY, operationHandler.getTrackerId()).getState().toString().equalsIgnoreCase("FAILED");
+        return !keshigQD.getTracker().getTrackerOperation(KeshigConfig.PRODUCT_KEY, operationHandler.getTrackerId()).getState().toString().equalsIgnoreCase("FAILED");
     }
 
     public boolean deploy() {
@@ -168,11 +168,11 @@ public class IntegrationWorkflow implements Runnable {
         final OperationHandler operationHandler = new OperationHandler(keshigQD, new RequestBuilder(Command.getDeployCommand()).withCmdArgs(deployOption.getArgs()).withTimeout(deployOption.getTimeOut()).withRunAs("ubuntu"), DEPLOY, deployServer.getServerId());
         operationHandler.run();
 
-        if (keshigQD.getTracker().getTrackerOperation(KeshigQDConfig.PRODUCT_KEY, operationHandler.getTrackerId()).getState().toString().equalsIgnoreCase("FAILED")) {
+        if (keshigQD.getTracker().getTrackerOperation(KeshigConfig.PRODUCT_KEY, operationHandler.getTrackerId()).getState().toString().equalsIgnoreCase("FAILED")) {
             return false;
         }
-        if (keshigQD.getTracker().getTrackerOperation(KeshigQDConfig.PRODUCT_KEY, operationHandler.getTrackerId()).getState().toString().equalsIgnoreCase("SUCCEEDED")) {
-            extractServers(keshigQD.getTracker().getTrackerOperation(KeshigQDConfig.PRODUCT_KEY, operationHandler.getTrackerId()).getLog(), deployOption.getBuildName());
+        if (keshigQD.getTracker().getTrackerOperation(KeshigConfig.PRODUCT_KEY, operationHandler.getTrackerId()).getState().toString().equalsIgnoreCase("SUCCEEDED")) {
+            extractServers(keshigQD.getTracker().getTrackerOperation(KeshigConfig.PRODUCT_KEY, operationHandler.getTrackerId()).getLog(), deployOption.getBuildName());
         }
         return true;
     }
@@ -191,7 +191,7 @@ public class IntegrationWorkflow implements Runnable {
         final OperationHandler operationHandler = new OperationHandler(keshigQD, new RequestBuilder(Command.getTestComand()).withCmdArgs(testOption.getArgs()).withTimeout(testOption.getTimeOut()), TEST, testServer.getServerId());
         operationHandler.run();
 
-        return !keshigQD.getTracker().getTrackerOperation(KeshigQDConfig.PRODUCT_KEY, operationHandler.getTrackerId()).getState().toString().equalsIgnoreCase("FAILED");
+        return !keshigQD.getTracker().getTrackerOperation(KeshigConfig.PRODUCT_KEY, operationHandler.getTrackerId()).getState().toString().equalsIgnoreCase("FAILED");
     }
 
     private void extractServers(final String stdOut, final String buildName) {
