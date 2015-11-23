@@ -19,6 +19,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static io.subutai.plugin.keshig.api.entity.OperationType.*;
+import static io.subutai.plugin.keshig.api.entity.ServerType.*;
+
 public class IntegrationWorkflow implements Runnable {
 
     private static final Logger LOG = LoggerFactory.getLogger((Class) IntegrationWorkflow.class);

@@ -14,6 +14,8 @@ import io.subutai.plugin.keshig.impl.KeshigImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static io.subutai.plugin.keshig.api.entity.ServerType.*;
+
 import java.util.UUID;
 
 public class OperationHandler implements Runnable {
@@ -42,15 +44,15 @@ public class OperationHandler implements Runnable {
         if (this.serverId == null) {
             switch (this.operationType) {
                 case BUILD: {
-                    this.server = this.keshig.getServer(ServerType.BUILD_SERVER);
+                    this.server = this.keshig.getServer(BUILD_SERVER);
                     break;
                 }
                 case DEPLOY: {
-                    this.server = this.keshig.getServer(ServerType.DEPLOY_SERVER);
+                    this.server = this.keshig.getServer(DEPLOY_SERVER);
                     break;
                 }
                 case TEST: {
-                    this.server = this.keshig.getServer(ServerType.TEST_SERVER);
+                    this.server = this.keshig.getServer(TEST_SERVER);
                     break;
                 }
             }
