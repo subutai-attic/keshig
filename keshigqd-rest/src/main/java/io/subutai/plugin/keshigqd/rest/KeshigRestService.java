@@ -134,20 +134,20 @@ public interface KeshigRestService {
     public Response listProfiles();
 
     @GET
-    @Path("profile/{profileName}")
+    @Path("profiles/{profileName}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getProfile(@PathParam("profileName") String profileName);
 
     @POST
-    @Path("profile")
+    @Path("profiles")
     public Response addProfile(Profile profile);
 
     @PUT
-    @Path("profile")
+    @Path("profiles")
     public Response updateProfile(Profile profile);
 
     @DELETE
-    @Path("profile/{profileName}")
+    @Path("profiles/{profileName}")
     public Response deleteProfile(@PathParam("profileName") String profileName);
 
 

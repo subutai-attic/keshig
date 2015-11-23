@@ -7,31 +7,27 @@ keshigSrv.$inject = ['$http'];
 
 function keshigSrv($http) {
 
-    var baseURL = serverUrl + 'keshig/';
-
+    var baseURL = serverUrl + 'keshig/v1';
+	var serverUrl = baseUrl + 'server/';
     var optionUrl = baseURL + 'option/';
+    var profilesUrl = baseURL + 'profiles/';
 
-    var profileUrl = baseURL + 'profile/';
-    var cloneOptionUrl = optionUrl + 'clone/';
-    var buildOptionUrl = optionUrl + 'build/';
-    var deployOptionUrl = optionUrl + 'deploy/';
-    var testOptionUrl = optionUrl + 'test/';
-
-    var serverUrl = baseUrl + 'server/';
-
-    var clustersURL = baseURL + 'clusters/';
-    var environmentsURL = serverUrl + 'environments_ui/';
 
     var keshigSrv = {
-        getClusters: getClusters,
-        createCassandra: createCassandra,
-        changeClusterScaling: changeClusterScaling,
-        deleteCluster: deleteCluster,
-        addNode: addNode,
-        deleteNode: deleteNode,
-        startNodes: startNodes,
-        stopNodes: stopNodes,
-        getEnvironments: getEnvironments
+        getProfiles : getProfiles,
+		addProfile : addProfile,
+		removeProfile : removeProfile,
+		getServers : getServers,
+		addServer : addServer,
+        removeServer : removeServer,
+        updateServer : updateServer,
+        getServerTypes : getServerTypes,
+        getAllOptions : getAllOptions,
+        getOptionTypes : getOptionTypes,
+        getOptionsByType : getOptionsByType,
+        startOption : startOption,
+        addOption : addOption,
+        updateOption : updateOption
     };
 
     return keshigSrv;
@@ -40,131 +36,102 @@ function keshigSrv($http) {
     *   Keshig Server Services
     * */
 
-    function getServers() {
-        return $http.get(serverUrl, {
-            withCredentials: true,
-            headers: {'Content-Type': 'application/json'}
-        });
-    }
+	function getProfiles()
+	{
+		return $http.get(profilesUrl, {
+			withCredentials: true
+		});
+	}
 
-    function getServer(serverId) {
-        return $http.get(serverUrl + serverId, {
-            withCredentials: true,
-            headers: {'Content-Type': 'application/json'}
-        });
-    }
+	function addProfile( profile )
+	{
+		return $http.post(profilesUrl, profile, {
+			withCredentials: true,
+			headers: {'Content-Type': 'application/json'}
+		});
+	}
+
+	function removeProfile( name )
+	{
+		return $http.delete(profilesUrl + name, {
+			withCredentials: true
+		});
+	}
+
+	function getServers()
+	{
+		return $http.get(serverUrl, {
+			withCredentials: true
+		});
+	}
+
+	function addServer( server )
+	{
+		return $http.post(serverUrl, server, {
+			withCredentials: true,
+			headers: {'Content-Type': 'application/json'}
+		});
+	}
+
+	function removeServer(id)
+	{
+		return $http.remove(serverUrl + id, {
+			withCredentials: true
+		});
+	}
+
 
     function getServerTypes() {
         return $http.get(serverUrl + 'types', {
-            withCredentials: true,
-            headers: {'Content-Type': 'application/json'}
+            withCredentials: true
         });
     }
 
-    function addServer(serverId, serverName, serverType) {
-        var postData = 'serverId=' + serverId + '&serverName=' + serverName + '&serverType=' + serverType;
-        return $http.post(serverUrl,
-            postData,
-            {
-                withCredentials: true,
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                }
-            });
-    }
 
-    function updateServer(serverId, serverName, serverType) {
-        var postData = 'serverId=' + serverId + '&serverName=' + serverName + '&serverType=' + serverType;
-        return $http.put(serverUrl,
-            postData,
-            {
+    function updateServer( server ) {
+        return $http.put(serverUrl, server, {
                 withCredentials: true,
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                }
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
             });
-    }
-
-    function deleteServer(serverId) {
-        return $http.delete(serverUrl + serverId);
     }
 
     function getAllOptions() {
         return $http.get(optionUrl, {
-            withCredentials: true,
-            headers: {'Content-Type': 'application/json'}
+            withCredentials: true
         });
     }
 
     function getOptionTypes() {
         return $http.get(optionUrl + 'types', {
-            withCredentials: true,
-            headers: {'Content-Type': 'application/json'}
+            withCredentials: true
         });
     }
 
     function getOptionsByType(type) {
         return $http.get(optionUrl + 'type/' + type, {
-            withCredentials: true,
-            headers: {'Content-Type': 'application/json'}
-        });
-    }
-
-    function getOption(type, optionName) {
-        return $http.get(optionUrl + type + '/' + optionName, {
-            withCredentials: true,
-            headers: {'Content-Type': 'application/json'}
+            withCredentials: true
         });
     }
 
     function startOption(type, optionName) {
         return $http.get(optionUrl + type + '/' + optionName + '/' + 'start', {
+            withCredentials: true
+        });
+    }
+
+    function addOption( type, object )
+    {
+        return $http.post(optionUrl + type.toLowerCase(), object, {
             withCredentials: true,
             headers: {'Content-Type': 'application/json'}
         });
     }
 
-
-    function startNodes(clusterName, nodesArray) {
-        var postData = 'clusterName=' + clusterName + '&lxcHosts=' + nodesArray;
-        return $http.post(
-            clustersURL + 'nodes/start',
-            postData,
-            {withCredentials: true, headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
-        );
-    }
-
-    function stopNodes(clusterName, nodesArray) {
-        var postData = 'clusterName=' + clusterName + '&lxcHosts=' + nodesArray;
-        return $http.post(
-            clustersURL + 'nodes/stop',
-            postData,
-            {withCredentials: true, headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
-        );
-    }
-
-    function changeClusterScaling(clusterName, scale) {
-        return $http.post(clustersURL + clusterName + '/auto_scale/' + scale);
-    }
-
-    function deleteCluster(clusterName) {
-        return $http.delete(clustersURL + clusterName);
-    }
-
-    function deleteNode(clusterName, nodeId) {
-        return $http.delete(clustersURL + clusterName + '/node/' + nodeId);
-    }
-
-    function getEnvironments() {
-        return $http.get(environmentsURL, {withCredentials: true, headers: {'Content-Type': 'application/json'}});
-    }
-
-    function createCassandra(cassandraJson) {
-        var postData = 'clusterConfJson=' + cassandraJson;
-        return $http.post(
-            clustersURL + 'create',
-            postData,
-            {withCredentials: true, headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
-        );
+    function updateOption( type, object )
+    {
+        return $http.put(optionUrl + type.toLowerCase(), object, {
+            withCredentials: true,
+            headers: {'Content-Type': 'application/json'}
+        });
     }
 }
