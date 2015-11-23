@@ -58,19 +58,19 @@ public class KeshigRestServiceImpl implements KeshigRestService {
     }
 
     @Override
-    public Response getServer(String serverId) {
+    public Response getServer(String serverName) {
 
-        if (Strings.isNullOrEmpty(serverId)) {
-            Response response = Response.status(BAD_REQUEST).entity("Invalid server id").build();
+        if (Strings.isNullOrEmpty(serverName)) {
+            Response response = Response.status(BAD_REQUEST).entity("Invalid server name").build();
             return response;
         }
-        Server server = keshig.getServer(serverId);
+        Server server = keshig.getServer(serverName);
 
         if (server == null) {
-            return Response.status(NOT_FOUND).entity(String.format("Server with id: %s not found", serverId)).build();
+            return Response.status(NOT_FOUND).entity(String.format("Server with name: %s not found", serverName)).build();
         }
 
-        return Response.ok(keshig.getServer(serverId)).build();
+        return Response.ok(keshig.getServer(serverName)).build();
 
     }
 
@@ -106,12 +106,12 @@ public class KeshigRestServiceImpl implements KeshigRestService {
     }
 
     @Override
-    public Response deleteServer(String serverId) {
+    public Response deleteServer(String serverName) {
 
-        if (Strings.isNullOrEmpty(serverId)) {
-           return Response.status(BAD_REQUEST).entity("Invalid server id").build();
+        if (Strings.isNullOrEmpty(serverName)) {
+           return Response.status(BAD_REQUEST).entity("Invalid server name").build();
         }
-        keshig.removeServer(serverId);
+        keshig.removeServer(serverName);
 
         return Response.ok().build();
     }

@@ -15,9 +15,9 @@ public interface Keshig {
     * */
     void addServer(Server server) throws Exception;
 
-    void removeServer(String serverId);
+    void removeServer(String serverName);
 
-    Server getServer(String serverId);
+    Server getServer(String serverName);
 
     List<Server> getServers(ServerType serverType);
 

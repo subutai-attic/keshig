@@ -20,9 +20,9 @@ public interface KeshigRestService {
     public Response listServers();
 
     @GET
-    @Path("server/{serverId}")
+    @Path("server/{serverName}")
     @Produces({MediaType.APPLICATION_JSON})
-    public Response getServer(@PathParam("serverId") String serverId);
+    public Response getServer(@PathParam("serverName") String serverName);
 
     @GET
     @Path("server/types")
@@ -43,8 +43,8 @@ public interface KeshigRestService {
                                  @FormParam("serverType") String serverType);
 
     @DELETE
-    @Path("server/{serverId}")
-    public Response deleteServer(@PathParam("serverId") String serverId);
+    @Path("server/{serverName}")
+    public Response deleteServer(@PathParam("serverName") String serverName);
 
     //OPTION CRUD
     //CLONE,BUILD,DEPLOY,TEST

@@ -67,14 +67,14 @@ public class KeshigImpl implements Keshig {
 
         Preconditions.checkNotNull(server);
 
-        if (!this.getPluginDAO().saveInfo(PRODUCT_KEY, server.getServerId(), server)) {
+        if (!this.getPluginDAO().saveInfo(PRODUCT_KEY, server.getServerName(), server)) {
             throw new Exception("Could not save server info");
         }
     }
 
-    public void removeServer(final String serverId) {
+    public void removeServer(final String serverName) {
 
-        this.pluginDAO.deleteInfo(PRODUCT_KEY, serverId);
+        this.pluginDAO.deleteInfo(PRODUCT_KEY, serverName);
 
     }
 
@@ -96,10 +96,10 @@ public class KeshigImpl implements Keshig {
         return typedServers;
     }
 
-    public Server getServer(final String serverId) {
+    public Server getServer(final String serverName) {
 
-        Preconditions.checkNotNull(serverId);
-        return (Server) this.pluginDAO.getInfo(PRODUCT_KEY, serverId, Server.class);
+        Preconditions.checkNotNull(serverName);
+        return (Server) this.pluginDAO.getInfo(PRODUCT_KEY, serverName, Server.class);
     }
 
     public List<Server> getServers() {
