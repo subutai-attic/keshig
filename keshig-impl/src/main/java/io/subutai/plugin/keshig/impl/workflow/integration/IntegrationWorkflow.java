@@ -205,6 +205,7 @@ public class IntegrationWorkflow implements Runnable {
         while (matcher.find()) {
             final String match = matcher.group();
             IntegrationWorkflow.LOG.info(String.format("Found Server address \"%s\" starting at index and ending at index ", match));
+
             final String[] s = match.split("=");
             final Server server = new Server(s[1].trim(), s[0].trim(), s[1].trim(), PEER_SERVER, String.format("Auto-deployed Subutai Management Server:%s", buildName));
             IntegrationWorkflow.LOG.info(String.format("Saving server info: %s", server.toString()));

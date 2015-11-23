@@ -109,7 +109,7 @@ public class KeshigRestServiceImpl implements KeshigRestService {
     public Response deleteServer(String serverName) {
 
         if (Strings.isNullOrEmpty(serverName)) {
-           return Response.status(BAD_REQUEST).entity("Invalid server name").build();
+            return Response.status(BAD_REQUEST).entity("Invalid server name").build();
         }
         keshig.removeServer(serverName);
 
@@ -291,6 +291,16 @@ public class KeshigRestServiceImpl implements KeshigRestService {
         keshig.deleteOption(optionName, OperationType.valueOf(type.toUpperCase()));
 
         return Response.ok().build();
+    }
+
+    @Override
+    public Response getBuilds() {
+        return Response.ok().entity(keshig.getBuilds()).build();
+    }
+
+    @Override
+    public Response getTests() {
+        return Response.ok().entity(keshig.getPlaybooks()).build();
     }
 
     @Override

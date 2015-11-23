@@ -77,6 +77,7 @@ public interface Keshig {
 
     History getHistory(String historyId);
 
+    List<String> getPlaybooks();
     /*
     *  Keshig Profile Handlers
     * */

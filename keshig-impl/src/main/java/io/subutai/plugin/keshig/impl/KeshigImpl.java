@@ -31,6 +31,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static io.subutai.plugin.keshig.api.KeshigConfig.*;
 import static io.subutai.plugin.keshig.api.KeshigConfig.PRODUCT_HISTORY;
@@ -182,6 +184,7 @@ public class KeshigImpl implements Keshig {
     public List<Build> getBuilds() {
 
         final Server buildServer = this.getServer(DEPLOY_SERVER);
+
         if (buildServer == null) {
             KeshigImpl.LOG.error("Failed to obtain build server");
             return null;
@@ -203,6 +206,50 @@ public class KeshigImpl implements Keshig {
             return null;
         }
     }
+
+    public List<String> getPlaybooks() {
+
+        final Server testServer = this.getServer(TEST_SERVER);
+        if (testServer == null) {
+            KeshigImpl.LOG.error("Failed to obtain build server");
+            return null;
+        }
+        try {
+            final ResourceHost testHost = this.getPeerManager().getLocalPeer().getResourceHostById(testServer.getServerId());
+
+            final CommandResult result = testHost.execute(new RequestBuilder(Command.getTestComand())
+                    .withCmdArgs(Lists.newArrayList("-l"))
+                    .withTimeout(30));
+
+            if (result.hasSucceeded()) {
+
+                return this.parsePlaybooks(result.getStdOut());
+
+            }
+
+            return Lists.newArrayList("");
+
+        } catch (CommandException | HostNotFoundException e) {
+
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private List<String> parsePlaybooks(String stdOut) {
+
+        String playbookRegEx = ".*.playbook";
+        final Pattern pattern = Pattern.compile(playbookRegEx);
+        final Matcher matcher = pattern.matcher(stdOut);
+        List<String> playbooks = new ArrayList<>();
+
+        while(matcher.find()){
+            final String match = matcher.group();
+            playbooks.add(match);
+        }
+        return playbooks;
+    }
+
 
     public Build getLatestBuild() {
 

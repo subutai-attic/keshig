@@ -114,8 +114,18 @@ public interface KeshigRestService {
     @Path("option/{type}/{optionName}")
     public Response deleteOption(@PathParam("type") String type, @PathParam("optionName") String optionName);
 
-    //HISTORY CRUD
+    //BUILDS
+    @GET
+    @Path("build")
+    public Response getBuilds();
+    //TESTS
 
+    @GET
+    @Path("tests")
+    public Response getTests();
+
+
+    //HISTORY CRUD
     @GET
     @Path("history")
     @Produces(MediaType.APPLICATION_JSON)

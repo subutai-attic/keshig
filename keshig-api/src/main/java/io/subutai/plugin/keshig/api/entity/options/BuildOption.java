@@ -14,9 +14,11 @@ public class BuildOption
 
     private boolean cleanInstall;
     private boolean runTests;
+    private int timeOut;
     private String name;
     private boolean active;
-    private int timeOut;
+
+
 
 
     private OperationType type = OperationType.BUILD;

@@ -12,8 +12,10 @@ import io.subutai.plugin.keshig.api.entity.OperationType;
 public class TestOption {
     private String name;
     private boolean all;
+
     private List<String> targetIps;
     private List<String> playbooks;
+
     private boolean active;
     private int timeOut;
 
