@@ -5,11 +5,12 @@
   <parent>
     <groupId>io.subutai</groupId>
     <artifactId>keshig-plugin</artifactId>
-    <version>4.0.0-RC3</version>
+    <version>4.0.0-RC4</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>keshig-api</artifactId>
+
   <packaging>bundle</packaging>
   <name>Keshig Plugin Module Api</name>
   <description>Keshig Plugin Module Api</description>
