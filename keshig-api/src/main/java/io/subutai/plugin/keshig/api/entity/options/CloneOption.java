@@ -16,9 +16,9 @@ public class CloneOption
     private String branch;
     private String output;
     private boolean active;
-    private OperationType type = OperationType.CLONE;
     private int timeOut;
 
+    private OperationType type = OperationType.CLONE;
     public CloneOption()
     {
     }

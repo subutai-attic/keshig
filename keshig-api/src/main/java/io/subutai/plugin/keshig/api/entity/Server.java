@@ -4,13 +4,9 @@ package io.subutai.plugin.keshig.api.entity;
 public class Server
 {
     private String serverId;
-
     private String serverName;
-
     private String serverAddress;
-
     private ServerType type;
-
     private String description;
 
 

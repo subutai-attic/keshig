@@ -77,28 +77,34 @@ public interface KeshigRestService {
 
     //---------------------------------------------------------------------------------------------------//
     @POST
+    @Consumes(MediaType.APPLICATION_JSON)
     @Path("option/clone")
     public Response addCloneOption(CloneOption option);
 
     @PUT
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("option/clone")
     public Response updateCloneOption(CloneOption option);
 
     @POST
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("option/build")
     public Response addBuildOption(BuildOption option);
 
     @POST
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("option/test")
     public Response addTestOption(TestOption option);
 
     @POST
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("option/deploy")
     public Response addDeployOption(DeployOption option);
 
 
 
     @PUT
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("option/build")
     public Response updateBuildOption(BuildOption option);
 

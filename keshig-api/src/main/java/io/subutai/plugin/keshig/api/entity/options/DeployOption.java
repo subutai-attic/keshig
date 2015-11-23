@@ -14,13 +14,11 @@ public class DeployOption
     private String name;
     private int numberOfPeers;
     private int numberOfRhsPerPeer;
-
     private String buildName;
-
     private boolean active;
-    private OperationType type = OperationType.DEPLOY;
     private int timeOut;
 
+    private OperationType type = OperationType.DEPLOY;
     public DeployOption()
     {
     }
