@@ -17,6 +17,11 @@ import org.slf4j.LoggerFactory;
 import javax.ws.rs.core.Response;
 import java.util.*;
 
+import static io.subutai.plugin.keshig.api.entity.OperationType.*;
+import static io.subutai.plugin.keshig.api.entity.OperationType.BUILD;
+import static io.subutai.plugin.keshig.api.entity.OperationType.CLONE;
+import static io.subutai.plugin.keshig.api.entity.OperationType.TEST;
+
 public class KeshigRestServiceImpl implements KeshigRestService {
 
     private static final Logger LOG = LoggerFactory.getLogger(KeshigRestServiceImpl.class);
@@ -200,7 +205,7 @@ public class KeshigRestServiceImpl implements KeshigRestService {
             return Response.status(Response.Status.BAD_REQUEST).entity("Invalid option name").build();
         }
 
-        Response response = Response.ok().entity(keshig.getOption(optionName, OperationType.valueOf(type.toUpperCase()))).build();
+        Response response = Response.ok().entity(keshig.getOption(optionName, valueOf(type.toUpperCase()))).build();
 
         return response;
     }
@@ -289,7 +294,7 @@ public class KeshigRestServiceImpl implements KeshigRestService {
             return Response.status(Response.Status.BAD_REQUEST).entity("Invalid option name").build();
         }
 
-        keshig.deleteOption(optionName, OperationType.valueOf(type.toUpperCase()));
+        keshig.deleteOption(optionName, valueOf(type.toUpperCase()));
 
         return Response.ok().build();
     }
