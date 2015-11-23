@@ -10,7 +10,7 @@
   <reference id="pluginDAO" interface="io.subutai.plugin.common.api.PluginDAO" />
   <!-- ************************************************************************************************** -->
 
-  <bean id="keshigqd-impl" scope="singleton" class="io.subutai.plugin.keshigqd.impl.KeshigImpl"
+  <bean id="keshigqd-impl" scope="singleton" class="io.subutai.plugin.keshig.impl.KeshigImpl"
         init-method="init" destroy-method="destroy">
     <property name="tracker" ref="tracker" />
     <property name="peerManager" ref="peerManager" />
@@ -18,12 +18,12 @@
     <argument ref="pluginDAO" />
   </bean>
 
-  <service ref="keshigqd-impl" interface="io.subutai.plugin.keshigqd.api.Keshig" />
+  <service ref="keshigqd-impl" interface="io.subutai.plugin.keshig.api.Keshig" />
 
 
   <service ref="module" interface="io.subutai.webui.api.WebuiModule" />
 
-  <bean id="module" scope="singleton" class="io.subutai.plugin.keshigqd.impl.KeshigWebModule">
+  <bean id="module" scope="singleton" class="io.subutai.plugin.keshig.impl.KeshigWebModule">
   </bean>
 
 </blueprint>

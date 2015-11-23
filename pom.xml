@@ -3,20 +3,20 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <name>BDT Plugin Module Parent</name>
-    <description>Build Deploy Test Subutai Plugin</description>
+    <name>Subutai Keshig Plugin</name>
+    <description>Subutai Keshig Plugin</description>
     <modules>
-        <module>keshigqd-api</module>
-        <module>keshigqd-rest</module>
-        <module>keshigqd-cli</module>
-        <module>keshigqd-impl</module>
-        <module>keshigqd-kar</module>
-        <module>keshigqd-webui</module>
+        <module>keshig-api</module>
+        <module>keshig-rest</module>
+        <module>keshig-cli</module>
+        <module>keshig-impl</module>
+        <module>keshig-kar</module>
+        <module>keshig-webui</module>
     </modules>
     <packaging>pom</packaging>
 
     <groupId>io.subutai</groupId>
-    <artifactId>keshigqd-plugin</artifactId>
+    <artifactId>keshig-plugin</artifactId>
     <version>4.0.0-RC3</version>
 
     <properties>
