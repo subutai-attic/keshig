@@ -22,6 +22,11 @@
 						ng-class="keshigCtrl.activeTab == 'profiles' ? 'b-tabs-menu__item_active' : ''">
 					Profiles
 				</li>
+				<li class="b-tabs-menu__item"
+						ng-click="keshigCtrl.changeTab('history')"
+						ng-class="keshigCtrl.activeTab == 'history' ? 'b-tabs-menu__item_active' : ''">
+					History
+				</li>				
 			</ul>
 		</div>
 
@@ -36,6 +41,10 @@
 		<div
 				ng-if="keshigCtrl.activeTab == 'profiles'"
 				ng-include="'plugins/keshig/partials/profiles.html'">
+		</div>
+		<div
+				ng-if="keshigCtrl.activeTab == 'history'"
+				ng-include="'plugins/keshig/partials/history.html'">
 		</div>
 
 	</div>

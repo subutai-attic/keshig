@@ -26,6 +26,14 @@
 					Server
 				</h2>
 
+				<div class="b-form__wrapper b-form__wrapper_between">
+					<select class="b-form-input b-form-input_full" ng-model="keshigCtrl.profiles2Add.cbServer" required>
+						<option ng-repeat="server in keshigCtrl.serversByType['BUILD_SERVER']" value="{{ server.serverName }}">
+							{{ server.serverName }}
+						</option>
+					</select>
+				</div>
+
 				<div class="b-form__wrapper b-form__wrapper_margin-bottom">
 					<select class="b-form-input b-form-input_full" ng-model="keshigCtrl.profiles2Add.testServer" required>
 						<option ng-repeat="server in keshigCtrl.serversByType['TEST_SERVER']" value="{{ server.serverName }}">
@@ -42,14 +50,6 @@
 					</select>
 				</div>
 
-				<div class="b-form__wrapper b-form__wrapper_between">
-					<select class="b-form-input b-form-input_full" ng-model="keshigCtrl.profiles2Add.cbServer" required>
-						<option ng-repeat="server in keshigCtrl.serversByType['BUILD_SERVER']" value="{{ server.serverName }}">
-							{{ server.serverName }}
-						</option>
-					</select>
-				</div>
-
 			</div>
 
 			<div class="b-form-col-2 g-right">
@@ -57,6 +57,32 @@
 				<h2 class="b-workspace-content-row-h2" style="padding-left: 80px;">
 					Options
 				</h2>
+
+				<div class="b-form__wrapper b-form__wrapper_margin-bottom">
+					<label class="b-form-label b-form-label_fix-size-2 g-left">Clone</label>
+
+					<div class="b-form__wrapper b-form-wrapper_margin-size-2">
+						<select class="b-form-input b-form-input_full" ng-model="keshigCtrl.profiles2Add.cloneOption" required>
+							<option ng-repeat="option in keshigCtrl.optionsByType.CLONE" value="{{ option.name }}">
+								{{ option.name }}
+							</option>
+						</select>
+					</div>
+					<div class="clear"></div>
+				</div>				
+
+				<div class="b-form__wrapper b-form__wrapper_margin-bottom">
+					<label class="b-form-label b-form-label_fix-size-2 g-left">Build</label>
+
+					<div class="b-form__wrapper b-form-wrapper_margin-size-2">
+						<select class="b-form-input b-form-input_full" ng-model="keshigCtrl.profiles2Add.buildOption" required>
+							<option ng-repeat="option in keshigCtrl.optionsByType.BUILD" value="{{ option.name }}">
+								{{ option.name }}
+							</option>
+						</select>
+					</div>
+					<div class="clear"></div>
+				</div>
 
 				<div class="b-form__wrapper b-form__wrapper_margin-bottom">
 					<label class="b-form-label b-form-label_fix-size-2 g-left">Test</label>
@@ -84,32 +110,6 @@
 					<div class="clear"></div>
 				</div>
 
-				<div class="b-form__wrapper b-form__wrapper_margin-bottom">
-					<label class="b-form-label b-form-label_fix-size-2 g-left">Build</label>
-
-					<div class="b-form__wrapper b-form-wrapper_margin-size-2">
-						<select class="b-form-input b-form-input_full" ng-model="keshigCtrl.profiles2Add.buildOption" required>
-							<option ng-repeat="option in keshigCtrl.optionsByType.BUILD" value="{{ option.name }}">
-								{{ option.name }}
-							</option>
-						</select>
-					</div>
-					<div class="clear"></div>
-				</div>
-
-				<div class="b-form__wrapper b-form__wrapper_margin-bottom">
-					<label class="b-form-label b-form-label_fix-size-2 g-left">Clone</label>
-
-					<div class="b-form__wrapper b-form-wrapper_margin-size-2">
-						<select class="b-form-input b-form-input_full" ng-model="keshigCtrl.profiles2Add.cloneOption" required>
-							<option ng-repeat="option in keshigCtrl.optionsByType.CLONE" value="{{ option.name }}">
-								{{ option.name }}
-							</option>
-						</select>
-					</div>
-					<div class="clear"></div>
-				</div>				
-				
 				<button type="submit" class="b-btn b-btn_green g-right">Save</button>
 				<div class="clear"></div>
 			</div>

@@ -11,6 +11,7 @@ function keshigSrv($http) {
 	var SERVERS_URL = BASE_URL + 'server/';
 	var OPTIONS_URL = BASE_URL + 'option/';
 	var PROFILES_URL = BASE_URL + 'profiles/';
+	var HISTORY_URL = BASE_URL + 'history/';
 
 
 	var keshigSrv = {
@@ -37,7 +38,8 @@ function keshigSrv($http) {
 
 		getServersUrl : function(){ return SERVERS_URL; },
 		getOptionsUrl : function(){ return OPTIONS_URL; },
-		getProfilesUrl : function(){ return PROFILES_URL }
+		getProfilesUrl : function(){ return PROFILES_URL },
+		getHistoryUrl : function(){ return HISTORY_URL }
 	};
 
 	return keshigSrv;
