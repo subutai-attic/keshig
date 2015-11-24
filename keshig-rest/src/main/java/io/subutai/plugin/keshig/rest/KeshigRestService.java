@@ -179,4 +179,10 @@ public interface KeshigRestService {
     @DELETE
     @Path("profiles/{profileName}")
     public Response deleteProfile(@PathParam("profileName") String profileName);
+
+    //Serenity Results
+    @GET
+    @Path("serenity/{id}")
+    @Produces( { MediaType.APPLICATION_JSON } )
+    public Response getIndexHtml(@PathParam("id") String id);
 }

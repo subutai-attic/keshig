@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.core.Response;
+import java.io.File;
 import java.util.*;
 
 import static io.subutai.plugin.keshig.api.entity.OperationType.*;
@@ -109,7 +110,7 @@ public class KeshigRestServiceImpl implements KeshigRestService {
     public Response deleteServer(String serverName) {
 
         if (Strings.isNullOrEmpty(serverName)) {
-           return Response.status(BAD_REQUEST).entity("Invalid server name").build();
+            return Response.status(BAD_REQUEST).entity("Invalid server name").build();
         }
         keshig.removeServer(serverName);
 
@@ -370,4 +371,29 @@ public class KeshigRestServiceImpl implements KeshigRestService {
 
         return Response.ok().build();
     }
+
+    @Override
+    public Response getIndexHtml(String id) {
+
+        final String serenityDirectoryPath = "/home/ubuntu/serenity/";
+
+        File scriptFile = new File(serenityDirectoryPath + id + "/" + "index.html");
+
+        if (scriptFile.exists()) {
+            if (scriptFile.isFile()) {
+
+                return Response.ok(scriptFile)
+                        .header("Content-Disposition", String.format("attachment; filename=%s", "index.html"))
+                        .build();
+            } else {
+                return Response.status(Response.Status.BAD_REQUEST).entity("File is directory").build();
+            }
+
+        } else {
+
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
+
 }
