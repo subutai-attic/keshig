@@ -1,9 +1,11 @@
 package io.subutai.plugin.keshig.rest;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import io.subutai.plugin.keshig.api.Keshig;
 import io.subutai.plugin.keshig.api.Profile;
+import io.subutai.plugin.keshig.api.entity.History;
 import io.subutai.plugin.keshig.api.entity.OperationType;
 import io.subutai.plugin.keshig.api.entity.Server;
 import io.subutai.plugin.keshig.api.entity.ServerType;
@@ -305,8 +307,19 @@ public class KeshigRestServiceImpl implements KeshigRestService {
 
     @Override
     public Response listHistory() {
+        List< History > histories = Lists.newArrayList();
+        History h = new History(null, "TEST", (long)1448383051 * 1000, null, "TeST_SERVER");
+        h.setEndTime( (long)1448383051 * 1000 );
+        h.setStdOut( "http://svetofor.kg" );
+        histories.add( h );
+        h = new History(null, "DEPLOY", (long)1448383053 * 1000, null, "DE_SERVER");
+        h.setEndTime( (long)1448383053 * 1000 );
+        h.setStdErr( "SUKA ERROR" );
+        histories.add( h );
 
-        return Response.ok().entity(keshig.listHistory()).build();
+
+        return Response.ok( histories ).build();
+//        return Response.ok().entity(keshig.listHistory()).build();
 
     }
 
