@@ -6,7 +6,7 @@ import io.subutai.webui.api.WebuiModule;
 
 public class KeshigWebModule implements WebuiModule {
     public static String NAME = "Keshig";
-    public static String IMG = "plugins/cassandra/cassandra.png";
+    public static String IMG = "plugins/keshig/keshig.png";
 
     @Override
     public String getName() {
