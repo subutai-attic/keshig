@@ -7,10 +7,10 @@ keshigSrv.$inject = ['$http'];
 
 function keshigSrv($http) {
 
-	var baseURL = SERVER_URL + 'v1/keshig/';
-	var serversUrl = baseURL + 'server/';
-	var optionUrl = baseURL + 'option/';
-	var profilesUrl = baseURL + 'profiles/';
+	var BASE_URL = SERVER_URL + 'rest/v1/keshig/';
+	var SERVERS_URL = BASE_URL + 'server/';
+	var OPTIONS_URL = BASE_URL + 'option/';
+	var PROFILES_URL = BASE_URL + 'profiles/';
 
 
 	var keshigSrv = {
@@ -32,7 +32,12 @@ function keshigSrv($http) {
 		deleteOption : deleteOption,
 		getBuilds: getBuilds,
 		getPlaybooks: getPlaybooks,
-		updateOption : updateOption
+		updateOption : updateOption,
+
+
+		getServersUrl : function(){ return SERVERS_URL; },
+		getOptionsUrl : function(){ return OPTIONS_URL; },
+		getProfilesUrl : function(){ return PROFILES_URL }
 	};
 
 	return keshigSrv;
@@ -42,47 +47,47 @@ function keshigSrv($http) {
 	 * */
 
 	function getBuilds() {
-		return $http.get(baseURL + 'build', {withCredentials: true, headers: {'Content-Type': 'application/json'}});
+		return $http.get(BASE_URL + 'build', {withCredentials: true, headers: {'Content-Type': 'application/json'}});
 	}
 
 	function getPlaybooks() {
-		return $http.get(baseURL + 'tests', {withCredentials: true, headers: {'Content-Type': 'application/json'}});
+		return $http.get(BASE_URL + 'tests', {withCredentials: true, headers: {'Content-Type': 'application/json'}});
 	}
 
 	function getProfiles() {
-		return $http.get(profilesUrl, {
+		return $http.get(PROFILES_URL, {
 			withCredentials: true
 		});
 	}
 
 	function startProfile(profileName) {
-		return $http.get(profilesUrl + profileName + '/start', {
+		return $http.get(PROFILES_URL + profileName + '/start', {
 			withCredentials: true
 		});
 	}
 
 	function addProfile( profile ) {
-		return $http.post(profilesUrl, profile, {
+		return $http.post(PROFILES_URL, profile, {
 			withCredentials: true,
 			headers: {'Content-Type': 'application/json'}
 		});
 	}
 
 	function updateProfile( profile ) {
-		return $http.put(profilesUrl, profile, {
+		return $http.put(PROFILES_URL, profile, {
 			withCredentials: true,
 			headers: {'Content-Type': 'application/json'}
 		});
 	}
 
 	function removeProfile( name ) {
-		return $http.delete(profilesUrl + name, {
+		return $http.delete(PROFILES_URL + name, {
 			withCredentials: true
 		});
 	}
 
 	function getServers() {
-		return $http.get(serversUrl, {
+		return $http.get(SERVERS_URL, {
 			withCredentials: true
 		});
 	}
@@ -91,21 +96,21 @@ function keshigSrv($http) {
 		var postData = 'serverName=' + server.serverName 
 			+ '&serverType=' + server.serverType 
 			+ '&serverId=' + server.serverId;
-		return $http.post(serversUrl, postData, {
+		return $http.post(SERVERS_URL, postData, {
 			withCredentials: true,
 			headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 		});
 	}
 
 	function removeServer(hostId) {
-		return $http.delete(serversUrl + hostId, {
+		return $http.delete(SERVERS_URL + hostId, {
 			withCredentials: true
 		});
 	}
 
 
 	function getServerTypes() {
-		return $http.get(serversUrl + 'types', {
+		return $http.get(SERVERS_URL + 'types', {
 			withCredentials: true
 		});
 	}
@@ -114,51 +119,51 @@ function keshigSrv($http) {
 		var postData = 'serverName=' + server.serverName 
 			+ '&serverType=' + server.serverType 
 			+ '&serverId=' + server.serverId;		
-		return $http.put(serversUrl, postData, {
+		return $http.put(SERVERS_URL, postData, {
 			withCredentials: true,
 			headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
 		});
 	}
 
 	function getAllOptions() {
-		return $http.get(optionUrl, {
+		return $http.get(OPTIONS_URL, {
 			withCredentials: true
 		});
 	}
 
 	function getOptionTypes() {
-		return $http.get(optionUrl + 'types', {
+		return $http.get(OPTIONS_URL + 'types', {
 			withCredentials: true
 		});
 	}
 
 	function getOptionsByType(type) {
-		return $http.get(optionUrl + 'type/' + type.toLowerCase(), {
+		return $http.get(OPTIONS_URL + 'type/' + type.toLowerCase(), {
 			withCredentials: true
 		});
 	}
 
 	function deleteOption(type, optionName) {
-		return $http.delete(optionUrl + type.toLowerCase() + '/' + optionName, {
+		return $http.delete(OPTIONS_URL + type.toLowerCase() + '/' + optionName, {
 			withCredentials: true
 		});
 	}
 
 	function startOption(type, optionName) {
-		return $http.get(optionUrl + type.toLowerCase() + '/' + optionName + '/' + 'start', {
+		return $http.get(OPTIONS_URL + type.toLowerCase() + '/' + optionName + '/' + 'start', {
 			withCredentials: true
 		});
 	}
 
 	function addOption( type, object ) {
-		return $http.post(optionUrl + type.toLowerCase(), object, {
+		return $http.post(OPTIONS_URL + type.toLowerCase(), object, {
 			withCredentials: true,
 			headers: { 'Content-Type': 'application/json' }
 		});
 	}
 
 	function updateOption( type, object ) {
-		return $http.put(optionUrl + type.toLowerCase(), object, {
+		return $http.put(OPTIONS_URL + type.toLowerCase(), object, {
 			withCredentials: true,
 			headers: { 'Content-Type': 'application/json' }
 		});
