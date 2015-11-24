@@ -1,0 +1,8 @@
+Package: qnd
+Version: 1.0.6
+Section: custom
+Priority: optional
+Architecture: all
+Essential: no
+Maintainer: subutai.io
+Description: qnd deploy scripts
