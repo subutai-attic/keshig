@@ -59,8 +59,7 @@ function KeshigCtrl($scope, keshigSrv, DTOptionsBuilder, DTColumnBuilder, $resou
 
 	keshigSrv.getBuilds().success(function (data) {
 		for(var i = 0; i < data.length; i++) {
-			var buildDate = new Date(data[i].date);
-			data[i].dateFormated = buildDate.getMonth() + '/' + buildDate.getDate();
+			data[i].dateFormated = dateToFormat(data[i].date);
 		}
 		vm.optionsDeployBuilds = data;
 	});
@@ -117,6 +116,10 @@ function KeshigCtrl($scope, keshigSrv, DTOptionsBuilder, DTColumnBuilder, $resou
 
 	function changeOptionsType() {
 		vm.option2Add = {};
+
+		if(vm.optionType == 'DEPLOY') {
+			vm.option2Add.buildName = 'LATEST';
+		}
 
 		vm.dtInstance = {};
 		vm.dtOptions = DTOptionsBuilder
@@ -220,7 +223,7 @@ function KeshigCtrl($scope, keshigSrv, DTOptionsBuilder, DTColumnBuilder, $resou
 			contentOutput = data.stdErr;
 		} else {
 			if(data.type == 'TEST') {
-				contentOutput = '<a href="' + data.stdOut + '" target="_blank">' + data.stdOut + '</a>';
+				contentOutput = '<a href="' + getBaseUrl() + ':80' + data.stdOut + '" target="_blank">' + data.stdOut + '</a>';
 			} else {
 				contentOutput = data.stdOut;
 			}
@@ -229,11 +232,7 @@ function KeshigCtrl($scope, keshigSrv, DTOptionsBuilder, DTColumnBuilder, $resou
 	}
 
 	function dateToFormat(data, type, full, meta) {
-		var historyDate = new Date(data);
-		return historyDate.getMonth() + '/' 
-			+ historyDate.getDate() + '/' 
-			+ historyDate.getFullYear() + ' ' 
-			+ historyDate.getHours() + ':' + historyDate.getMinutes() + ':' + historyDate.getSeconds();
+		return dateToFormat(data);
 	}
 
 	function playbooksTags(data, type, full, meta) {
@@ -253,19 +252,35 @@ function KeshigCtrl($scope, keshigSrv, DTOptionsBuilder, DTColumnBuilder, $resou
 	}
 
 	function profileBuildButton(data, type, full, meta) {
-		return '<a href class="b-btn b-btn_blue" ng-click="keshigCtrl.runOption(\'' + data + '\', \'build\')">Build</a>';
+		if(data !== undefined && data !== null) {
+			return '<a href class="b-btn b-btn_blue" ng-click="keshigCtrl.runOption(\'' + data + '\', \'build\')">Build</a>';
+		} else {
+			return 'Empty';
+		}
 	}
 
 	function profileTestButton(data, type, full, meta) {
-		return '<a href class="b-btn b-btn_blue" ng-click="keshigCtrl.runOption(\'' + data + '\', \'test\')">Test</a>';
+		if(data !== undefined && data !== null) {
+			return '<a href class="b-btn b-btn_blue" ng-click="keshigCtrl.runOption(\'' + data + '\', \'test\')">Test</a>';
+		} else {
+			return 'Empty';
+		}
 	}
 
 	function profileDeployButton(data, type, full, meta) {
-		return '<a href class="b-btn b-btn_blue" ng-click="keshigCtrl.runOption(\'' + data + '\', \'deploy\')">Deploy</a>';
+		if(data !== undefined && data !== null) {
+			return '<a href class="b-btn b-btn_blue" ng-click="keshigCtrl.runOption(\'' + data + '\', \'deploy\')">Deploy</a>';
+		} else {
+			return 'Empty';
+		}
 	}
 
 	function profileCloneButton(data, type, full, meta) {
-		return '<a href class="b-btn b-btn_blue" ng-click="keshigCtrl.runOption(\'' + data + '\', \'clone\')">Clone</a>';
+		if(data !== undefined && data !== null) {
+			return '<a href class="b-btn b-btn_blue" ng-click="keshigCtrl.runOption(\'' + data + '\', \'clone\')">Clone</a>';
+		} else {
+			return 'Empty';
+		}
 	}
 
 	function runProfileButton(data, type, full, meta) {
@@ -323,9 +338,13 @@ function KeshigCtrl($scope, keshigSrv, DTOptionsBuilder, DTColumnBuilder, $resou
 
 	function updateOption() {
 
-		if(vm.option2Add.targetIps !== undefined) {
-			var targetIps = vm.option2Add.targetIps.split(',');
-			vm.option2Add.targetIps = targetIps;
+		if(vm.optionType == 'TEST') {
+			if(vm.option2Add.latest === true) {
+				vm.option2Add.targetIps = 'LATEST';
+			} else if(vm.option2Add.targetIps !== undefined) {
+				var targetIps = vm.option2Add.targetIps.split(',');
+				vm.option2Add.targetIps = targetIps;
+			}
 		}
 
 		if( vm.optionFormUpdate ) {
@@ -514,6 +533,23 @@ function KeshigCtrl($scope, keshigSrv, DTOptionsBuilder, DTColumnBuilder, $resou
 					DTColumnBuilder.newColumn(null).withTitle('').notSortable().renderWith(deleteAction)
 				];
 		}
+	}
+
+	function dateToFormat(date) {
+		var dateFormat = new Date(date);
+		return dateFormat.getMonth() + '/' 
+			+ dateFormat.getDate() + '/' 
+			+ dateFormat.getFullYear() + ' ' 
+			+ dateFormat.getHours() + ':' + dateFormat.getMinutes() + ':' + dateFormat.getSeconds();
+	}
+
+	function getBaseUrl() {
+		var pathArray = location.href.split( '/' );
+		var protocol = pathArray[0];
+		var hostWithPort = pathArray[2].split(':');
+		var host = hostWithPort[0];
+		var url = protocol + '//' + host;
+		return url;
 	}
 }
 

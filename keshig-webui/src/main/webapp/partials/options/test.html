@@ -19,7 +19,21 @@
 				<label class="b-form-label b-form-label_fix-size-2 g-left">IP</label>
 
 				<div class="b-form-wrapper b-form-wrapper_margin-size-2">
-					<input class="b-form-input b-form-input_full" type="text" ng-model="keshigCtrl.option2Add.targetIps" required>
+					<input class="b-form-input b-form-input_full" 
+						type="text" 
+						ng-disabled="keshigCtrl.option2Add.latest" 
+						ng-model="keshigCtrl.option2Add.targetIps" required>
+				</div>
+			</div>
+
+			<div class="b-form__wrapper b-form__wrapper_margin-bottom">
+				<label class="b-form-label b-form-label_fix-size-2 g-left" for="test-latest">Latest</label>
+
+				<div class="b-form-wrapper b-form-wrapper_margin-size-2">
+					<input id="test-latest" 
+						class="b-form-checkbox" 
+						type="checkbox" 
+						ng-model="keshigCtrl.option2Add.latest">
 				</div>
 			</div>
 
