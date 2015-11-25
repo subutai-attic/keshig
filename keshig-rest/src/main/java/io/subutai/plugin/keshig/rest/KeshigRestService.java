@@ -183,6 +183,6 @@ public interface KeshigRestService {
     //Serenity Results
     @GET
     @Path("serenity/{id}")
-    @Produces( { MediaType.APPLICATION_JSON } )
+    @Produces( { MediaType.APPLICATION_OCTET_STREAM } )
     public Response getIndexHtml(@PathParam("id") String id);
 }

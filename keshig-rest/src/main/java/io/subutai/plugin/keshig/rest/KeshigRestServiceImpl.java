@@ -3,6 +3,7 @@ package io.subutai.plugin.keshig.rest;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import io.subutai.common.settings.Common;
 import io.subutai.plugin.keshig.api.Keshig;
 import io.subutai.plugin.keshig.api.Profile;
 import io.subutai.plugin.keshig.api.entity.History;
@@ -311,11 +312,11 @@ public class KeshigRestServiceImpl implements KeshigRestService {
         List< History > histories = Lists.newArrayList();
         History h = new History(null, "TEST", (long)1448383051 * 1000, null, "TeST_SERVER");
         h.setEndTime( (long)1448383051 * 1000 );
-        h.setStdOut( "http://svetofor.kg" );
+        h.setStdOut( "/serenity/index.html" );
         histories.add( h );
         h = new History(null, "DEPLOY", (long)1448383053 * 1000, null, "DE_SERVER");
         h.setEndTime( (long)1448383053 * 1000 );
-        h.setStdErr( "SUKA ERROR" );
+        h.setStdErr( "SOME ERROR" );
         histories.add( h );
 
 
@@ -390,12 +391,12 @@ public class KeshigRestServiceImpl implements KeshigRestService {
 
         final String serenityDirectoryPath = "/home/ubuntu/serenity/";
 
-        File scriptFile = new File(serenityDirectoryPath + id + "/" + "index.html");
+        File htmlFile = new File(serenityDirectoryPath + id + "/" + "index.html");
 
-        if (scriptFile.exists()) {
-            if (scriptFile.isFile()) {
+        if (htmlFile.exists()) {
+            if (htmlFile.isFile()) {
 
-                return Response.ok(scriptFile)
+                return Response.ok(htmlFile)
                         .header("Content-Disposition", String.format("attachment; filename=%s", "index.html"))
                         .build();
             } else {

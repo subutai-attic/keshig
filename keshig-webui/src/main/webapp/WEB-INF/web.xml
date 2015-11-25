@@ -24,4 +24,14 @@
 
   <display-name>Subutai Keshig Plugin</display-name>
 
+  <servlet>
+    <servlet-name>serenity</servlet-name>
+    <servlet-class>io.subutai.plugin.keshig.servlet.SerenityResultsServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>serenity</servlet-name>
+    <url-pattern>/serenity</url-pattern>
+  </servlet-mapping>
+
 </web-app>

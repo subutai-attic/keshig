@@ -121,7 +121,7 @@ function KeshigCtrl($scope, keshigSrv, DTOptionsBuilder, DTColumnBuilder, $resou
 		vm.dtInstance = {};
 		vm.dtOptions = DTOptionsBuilder
 			.fromFnPromise(function() {
-				return $resource( keshigSrv.getOptionsUrl() + '/type/' + vm.optionType ).query().$promise;
+				return $resource( keshigSrv.getOptionsUrl() + 'type/' + vm.optionType ).query().$promise;
 			})
 			.withPaginationType('full_numbers')
 			.withOption('stateSave', true)

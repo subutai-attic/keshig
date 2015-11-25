@@ -217,9 +217,7 @@ public class KeshigImpl implements Keshig {
         try {
             final ResourceHost testHost = this.getPeerManager().getLocalPeer().getResourceHostById(testServer.getServerId());
 
-            final CommandResult result = testHost.execute(new RequestBuilder(Command.getTestComand())
-                    .withCmdArgs(Lists.newArrayList("-l"))
-                    .withTimeout(30));
+            final CommandResult result = testHost.execute(new RequestBuilder(Command.getTestComand()));
 
             if (result.hasSucceeded()) {
 
