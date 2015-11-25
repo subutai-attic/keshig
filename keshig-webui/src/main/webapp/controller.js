@@ -340,7 +340,7 @@ function KeshigCtrl($scope, keshigSrv, DTOptionsBuilder, DTColumnBuilder, $resou
 
 		if(vm.optionType == 'TEST') {
 			if(vm.option2Add.latest === true) {
-				vm.option2Add.targetIps = 'LATEST';
+				vm.option2Add.targetIps = ['LATEST'];
 			} else if(vm.option2Add.targetIps !== undefined) {
 				var targetIps = vm.option2Add.targetIps.split(',');
 				vm.option2Add.targetIps = targetIps;
