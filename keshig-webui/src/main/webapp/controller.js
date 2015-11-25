@@ -547,7 +547,8 @@ function KeshigCtrl($scope, keshigSrv, DTOptionsBuilder, DTColumnBuilder, $resou
 
 	function getBaseUrl() {
 		var pathArray = location.href.split( '/' );
-		var protocol = pathArray[0];
+		//var protocol = pathArray[0];
+		var protocol = 'http';
 		var hostWithPort = pathArray[2].split(':');
 		var host = hostWithPort[0];
 		var url = protocol + '//' + host;
