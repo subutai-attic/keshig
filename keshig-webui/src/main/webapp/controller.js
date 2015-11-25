@@ -237,8 +237,10 @@ function KeshigCtrl($scope, keshigSrv, DTOptionsBuilder, DTColumnBuilder, $resou
 
 	function playbooksTags(data, type, full, meta) {
 		var playbooksHTML = '';
-		for(var i = 0; i < data.length; i++) {
-			playbooksHTML += '<span class="b-tags">' + data[i] + '</span>';
+		if(data !== undefined && data !== null && data.length > 0) {
+			for(var i = 0; i < data.length; i++) {
+				playbooksHTML += '<span class="b-tags">' + data[i] + '</span>';
+			}
 		}
 		return playbooksHTML;
 	}
