@@ -21,7 +21,7 @@ import io.subutai.plugin.keshig.api.entity.options.BuildOption;
 import io.subutai.plugin.keshig.api.entity.options.CloneOption;
 import io.subutai.plugin.keshig.api.entity.options.DeployOption;
 import io.subutai.plugin.keshig.api.entity.options.TestOption;
-import io.subutai.plugin.keshig.impl.handler.OperationHandler;
+import io.subutai.plugin.keshig.impl.handler.*;
 import io.subutai.plugin.keshig.impl.workflow.integration.IntegrationWorkflow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -217,7 +217,8 @@ public class KeshigImpl implements Keshig {
         try {
             final ResourceHost testHost = this.getPeerManager().getLocalPeer().getResourceHostById(testServer.getServerId());
 
-            final CommandResult result = testHost.execute(new RequestBuilder(Command.getTestComand()));
+            final CommandResult result = testHost.execute(new RequestBuilder(Command.getTestComand()).
+                    withCmdArgs(Lists.newArrayList("-l")));
 
             if (result.hasSucceeded()) {
 
@@ -234,14 +235,29 @@ public class KeshigImpl implements Keshig {
         }
     }
 
-    private List<String> parsePlaybooks(String stdOut) {
+    @Override
+    public void saveHistory(History history) {
 
+        Preconditions.checkNotNull(history);
+
+        if (!this.getPluginDAO().saveInfo(PRODUCT_HISTORY, history.getId(), history)) {
+
+            try {
+                throw new Exception("Could not save server info");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+    private List<String> parsePlaybooks(String stdOut) {
         String playbookRegEx = ".*.playbook";
         final Pattern pattern = Pattern.compile(playbookRegEx);
         final Matcher matcher = pattern.matcher(stdOut);
         List<String> playbooks = new ArrayList<>();
 
-        while(matcher.find()){
+        while (matcher.find()) {
             final String match = matcher.group();
             playbooks.add(match);
         }
@@ -254,6 +270,39 @@ public class KeshigImpl implements Keshig {
         final List<Build> builds = this.getBuilds();
         return builds.get(builds.size() - 1);
 
+    }
+
+    @Override
+    public UUID runCloneOption(String serverId, String optionName) {
+
+        CloneOption cloneOption = (CloneOption) getOption(optionName, CLONE);
+        CloneOperationHandler cloneOperationHandler = new CloneOperationHandler(serverId, cloneOption, this);
+
+        return cloneOperationHandler.getTrackerId();
+    }
+
+    @Override
+    public UUID runBuildOption(String serverId, String optionName) {
+        BuildOption buildOption = (BuildOption) getOption(optionName,BUILD);
+        BuildOperationHandler buildOperationHandler = new BuildOperationHandler(serverId,buildOption,this);
+
+        return buildOperationHandler.getTrackerId();
+    }
+
+    @Override
+    public UUID runDeployOption(String serverId, String optionName) {
+        DeployOption deployOption = (DeployOption) getOption(optionName,DEPLOY);
+        DeployOperationHandler deployOperationHandler = new DeployOperationHandler(serverId,deployOption,this);
+
+        return deployOperationHandler.getTrackerId();
+    }
+
+    @Override
+    public UUID runTestOption(String serverId, String optionName) {
+        TestOption testOption = (TestOption) getOption(optionName,TEST);
+        TestOperationHandler testOperationHandler = new TestOperationHandler(serverId,testOption,this);
+
+        return testOperationHandler.getTrackerId();
     }
 
     private List<Build> parseBuilds(final String stdout) {
@@ -324,42 +373,34 @@ public class KeshigImpl implements Keshig {
 
                 final CloneOption cloneOption = (CloneOption) getOption(optionName, OperationType.valueOf(optionType.toUpperCase()));
                 Server cloneServer = getServers(BUILD_SERVER).get(0);
-                OperationHandler cloneOperation = new OperationHandler(this, new RequestBuilder(Command.getCloneCommand()).
-                        withCmdArgs(cloneOption.getArgs()).
-                        withTimeout(cloneOption.getTimeOut()), CLONE, cloneServer.getServerId());
-
+                CloneOperationHandler cloneOperation = new CloneOperationHandler(cloneServer.getServerId(), cloneOption, this);
                 executor.execute(cloneOperation);
+
                 break;
             }
             case BUILD: {
 
                 final BuildOption buildOption = (BuildOption) getOption(optionName, OperationType.valueOf(optionType.toUpperCase()));
                 Server buildServer = getServers(BUILD_SERVER).get(0);
-                final OperationHandler operationHandler = new OperationHandler(this, new RequestBuilder(Command.getBuildCommand()).
-                        withCmdArgs(buildOption.getArgs()).
-                        withTimeout(buildOption.getTimeOut()), BUILD, buildServer.getServerId());
+                final BuildOperationHandler operationHandler = new BuildOperationHandler(buildServer.getServerId(), buildOption, this);
                 executor.execute(operationHandler);
+
                 break;
             }
             case DEPLOY: {
 
                 final DeployOption deployOption = (DeployOption) getOption(optionName, OperationType.valueOf(optionType.toUpperCase()));
                 Server deployServer = getServers(DEPLOY_SERVER).get(0);
-
-                final OperationHandler operationHandler = new OperationHandler(this, new RequestBuilder(Command.getDeployCommand()).
-                        withCmdArgs(deployOption.getArgs()).
-                        withTimeout(deployOption.getTimeOut()).
-                        withRunAs("ubuntu"), DEPLOY, deployServer.getServerId());
+                final DeployOperationHandler operationHandler = new DeployOperationHandler(deployServer.getServerId(), deployOption, this);
                 executor.execute(operationHandler);
+
                 break;
             }
             case TEST: {
 
                 final TestOption testOption = (TestOption) getOption(optionName, OperationType.valueOf(optionType.toUpperCase()));
                 Server testServer = getServers(TEST_SERVER).get(0);
-                final OperationHandler operationHandler = new OperationHandler(this, new RequestBuilder(Command.getTestComand()).
-                        withCmdArgs(testOption.getArgs()).
-                        withTimeout(testOption.getTimeOut()), TEST, testServer.getServerId());
+                final TestOperationHandler operationHandler = new TestOperationHandler(testServer.getServerId(), testOption, this);
                 executor.execute(operationHandler);
                 break;
             }
@@ -377,7 +418,9 @@ public class KeshigImpl implements Keshig {
 
     @Override
     public List<History> listHistory() {
-        return this.pluginDAO.getInfo(PRODUCT_HISTORY, History.class);
+        List<History> allHistory = Lists.newArrayList();
+        allHistory = this.pluginDAO.getInfo(PRODUCT_HISTORY, History.class);
+        return allHistory;
     }
 
     @Override

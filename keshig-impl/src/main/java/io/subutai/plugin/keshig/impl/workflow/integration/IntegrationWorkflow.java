@@ -5,17 +5,19 @@ import io.subutai.common.tracker.TrackerOperation;
 import io.subutai.plugin.keshig.api.KeshigConfig;
 import io.subutai.plugin.keshig.api.Profile;
 import io.subutai.plugin.keshig.api.entity.Command;
+import io.subutai.plugin.keshig.api.entity.History;
 import io.subutai.plugin.keshig.api.entity.Server;
 import io.subutai.plugin.keshig.api.entity.options.BuildOption;
 import io.subutai.plugin.keshig.api.entity.options.CloneOption;
 import io.subutai.plugin.keshig.api.entity.options.DeployOption;
 import io.subutai.plugin.keshig.api.entity.options.TestOption;
 import io.subutai.plugin.keshig.impl.KeshigImpl;
-import io.subutai.plugin.keshig.impl.handler.OperationHandler;
+import io.subutai.plugin.keshig.impl.handler.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,7 +42,7 @@ public class IntegrationWorkflow implements Runnable {
     private Server deployServer;
     private Server testServer;
 
-    
+
     public IntegrationWorkflow(final KeshigImpl keshigQD) {
         this.keshigQD = keshigQD;
         operationTracker = keshigQD.getTracker().createTrackerOperation(KeshigConfig.PRODUCT_KEY,
@@ -73,7 +75,7 @@ public class IntegrationWorkflow implements Runnable {
 
         //profile set options
         cloneOption = (CloneOption) keshigQD.getOption(profile.getCloneOption(), CLONE);
-        buildOption = (BuildOption)keshigQD.getOption(profile.getBuildOption(), BUILD);
+        buildOption = (BuildOption) keshigQD.getOption(profile.getBuildOption(), BUILD);
         deployOption = (DeployOption) keshigQD.getOption(profile.getDeployOption(), DEPLOY);
         testOption = (TestOption) keshigQD.getOption(profile.getTestOption(), TEST);
 
@@ -145,27 +147,34 @@ public class IntegrationWorkflow implements Runnable {
     }
 
     public boolean fetch() {
-        
-        final OperationHandler cloneOperation = new OperationHandler(keshigQD, new RequestBuilder(Command.getCloneCommand()).withCmdArgs(cloneOption.getArgs()).withTimeout(cloneOption.getTimeOut()), CLONE, cloneServer.getServerId());
+        operationTracker.addLog("Starting clone operation");
+        final CloneOperationHandler cloneOperation = new CloneOperationHandler(cloneServer.getServerId(),cloneOption,keshigQD);
         cloneOperation.run();
 
         return !keshigQD.getTracker().getTrackerOperation(KeshigConfig.PRODUCT_KEY, cloneOperation.getTrackerId()).getState().toString().equalsIgnoreCase("FAILED");
     }
 
     public boolean build() {
-        
-        final OperationHandler operationHandler = new OperationHandler(keshigQD, new RequestBuilder(Command.getBuildCommand()).withCmdArgs(buildOption.getArgs()).withTimeout(buildOption.getTimeOut()), BUILD, cloneServer.getServerId());
+
+        operationTracker.addLog("Starting build operation");
+        final BuildOperationHandler operationHandler = new BuildOperationHandler(cloneServer.getServerId(),buildOption,keshigQD);
+
         operationHandler.run();
+
         return !keshigQD.getTracker().getTrackerOperation(KeshigConfig.PRODUCT_KEY, operationHandler.getTrackerId()).getState().toString().equalsIgnoreCase("FAILED");
     }
 
     public boolean deploy() {
+
+        operationTracker.addLog("Starting deploy");
+
         if (deployOption.getBuildName().equalsIgnoreCase("latest")) {
             IntegrationWorkflow.LOG.info(String.format("Using build name :%s", keshigQD.getLatestBuild().getId()));
             deployOption.setBuildName(keshigQD.getLatestBuild().getId());
         }
-        
-        final OperationHandler operationHandler = new OperationHandler(keshigQD, new RequestBuilder(Command.getDeployCommand()).withCmdArgs(deployOption.getArgs()).withTimeout(deployOption.getTimeOut()).withRunAs("ubuntu"), DEPLOY, deployServer.getServerId());
+
+        final DeployOperationHandler operationHandler = new DeployOperationHandler(deployServer.getServerId(), deployOption, keshigQD);
+
         operationHandler.run();
 
         if (keshigQD.getTracker().getTrackerOperation(KeshigConfig.PRODUCT_KEY, operationHandler.getTrackerId()).getState().toString().equalsIgnoreCase("FAILED")) {
@@ -178,9 +187,11 @@ public class IntegrationWorkflow implements Runnable {
     }
 
     public boolean test() {
-        if (testOption.getTargetIps().toString().contains("latest")) {
+        operationTracker.addLog("Starting tests");
+        if (testOption.getTargetIps().toString().toLowerCase().contains("latest")) {
             testOption.getTargetIps().clear();
             final List<Server> serverList = keshigQD.getServers(PEER_SERVER);
+
             for (final Server server : serverList) {
                 if (server.getDescription().contains(keshigQD.getLatestBuild().getId())) {
                     testOption.getTargetIps().add(server.getServerAddress());
@@ -188,10 +199,15 @@ public class IntegrationWorkflow implements Runnable {
             }
         }
 
-        final OperationHandler operationHandler = new OperationHandler(keshigQD, new RequestBuilder(Command.getTestComand()).withCmdArgs(testOption.getArgs()).withTimeout(testOption.getTimeOut()), TEST, testServer.getServerId());
+        final TestOperationHandler operationHandler = new TestOperationHandler(testServer.getServerId(), testOption, keshigQD);
+
         operationHandler.run();
 
-        return !keshigQD.getTracker().getTrackerOperation(KeshigConfig.PRODUCT_KEY, operationHandler.getTrackerId()).getState().toString().equalsIgnoreCase("FAILED");
+        if (keshigQD.getTracker().getTrackerOperation(KeshigConfig.PRODUCT_KEY, operationHandler.getTrackerId()).getState().toString().equalsIgnoreCase("FAILED")) {
+
+            return false;
+        }
+        return true;
     }
 
     private void extractServers(final String stdOut, final String buildName) {

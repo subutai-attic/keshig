@@ -4,12 +4,21 @@ package io.subutai.plugin.keshig.api.entity.options;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Lists;
 
 import io.subutai.plugin.keshig.api.entity.OperationType;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
-
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class TestOption {
+
+    @JsonIgnore
+    private String indexHtml = "/home/ubuntu/repo/%s";
+
+    @JsonIgnore
+    private String testId;
+
     private String name;
     private boolean all;
     private List<String> targetIps;
@@ -17,9 +26,8 @@ public class TestOption {
     private boolean active;
     private int timeOut;
 
+
     private OperationType type = OperationType.TEST;
-
-
     public TestOption() {
 
     }
@@ -106,26 +114,52 @@ public class TestOption {
         this.playbooks = playbooks;
     }
 
+    public String getTestId() {
+        return testId;
+    }
+
+    public void setTestId(String testId) {
+        this.testId = testId;
+    }
+
+    public String getOutputPath() {
+        return indexHtml;
+    }
+
+    public void setOutputPath(String outputPath) {
+        this.indexHtml = outputPath;
+    }
 
     public List<String> getArgs() {
 //
         List<String> args = Lists.newArrayList();
-//
-//        args.add("m");
-//        if (targetIps.size() > 0) {
-//            args.add(targetIps.get(0));
-//        }
-//        args.add("M");
-//        if (targetIps.size() > 1) {
-//            args.add(targetIps.get(1));
-//        }
-//        args.add("-s");
-//
-//        if (all) {
-//            args.add("all");
-//        } else {
-//            args.add(String.join(" ", "\"" + playbooks + "\""));
-//        }
+
+        if (targetIps.size() > 0) {
+            args.add("-m");
+            args.add(targetIps.get(0));
+        }
+        if (targetIps.size() > 1) {
+            args.add("-M");
+            args.add(targetIps.get(1));
+        }
+
+        args.add("-s");
+        if (all) {
+
+            args.add("all");
+
+        } else {
+
+            args.add(String.join(" ", "\"" + playbooks + "\""));
+
+        }
+
+        args.add("-r");
+
+        args.add("-o");
+
+        args.add(String.format(indexHtml, getTestId()));
+
         return args;
 
     }

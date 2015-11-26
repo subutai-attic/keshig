@@ -15,10 +15,9 @@ public class DeployOption
     private String name;
     private int numberOfPeers;
     private int numberOfRhsPerPeer;
-
     private String buildName;
-
     private boolean active;
+
     @JsonIgnore
     private OperationType type = OperationType.DEPLOY;
     private int timeOut;

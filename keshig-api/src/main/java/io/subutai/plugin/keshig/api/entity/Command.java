@@ -48,7 +48,7 @@ public class Command
 
     public static String getTestComand()
     {
-        return "/home/ubuntu/playbooks/run_tests.sh";
+        return "/home/ubuntu/playbooks-newui/run_tests.sh";
     }
 
 }
