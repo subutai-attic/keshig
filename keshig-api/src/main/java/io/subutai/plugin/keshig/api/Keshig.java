@@ -48,6 +48,13 @@ public interface Keshig {
 
     Build getLatestBuild();
 
+    UUID runCloneOption(String serverId, String optionName);
+
+    UUID runBuildOption(String serverId, String optionName);
+
+    UUID runDeployOption(String serverId, String optionName);
+
+    UUID runTestOption(String serverId, String optionName);
     /*
     *   Keshig Operation Handlers
     * */
@@ -78,6 +85,8 @@ public interface Keshig {
     History getHistory(String historyId);
 
     List<String> getPlaybooks();
+
+    void saveHistory(History history);
     /*
     *  Keshig Profile Handlers
     * */

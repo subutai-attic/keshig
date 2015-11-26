@@ -75,6 +75,13 @@ public interface KeshigRestService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response runOption(@PathParam("type") String type, @PathParam("optionName") String optionName);
 
+    @GET
+    @Path("option/{type}/{optionName}/start/{serverId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response runOptionOnTargetServer(@PathParam("type") String type,
+                                            @PathParam("optionName") String optionName,
+                                            @PathParam("serverId")String serverId);
+
     //---------------------------------------------------------------------------------------------------//
     @POST
     @Path("option/clone")
@@ -179,10 +186,4 @@ public interface KeshigRestService {
     @DELETE
     @Path("profiles/{profileName}")
     public Response deleteProfile(@PathParam("profileName") String profileName);
-
-    //Serenity Results
-    @GET
-    @Path("serenity/{id}")
-    @Produces( { MediaType.APPLICATION_OCTET_STREAM } )
-    public Response getIndexHtml(@PathParam("id") String id);
 }

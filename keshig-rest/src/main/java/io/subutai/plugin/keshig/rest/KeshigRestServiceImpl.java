@@ -216,6 +216,36 @@ public class KeshigRestServiceImpl implements KeshigRestService {
     }
 
     @Override
+    public Response runOptionOnTargetServer(String type, String optionName, String serverId) {
+
+        OperationType operationType = OperationType.valueOf(type.toUpperCase());
+
+        switch (operationType) {
+
+            case CLONE: {
+                keshig.runCloneOption(serverId,optionName);
+                return Response.ok().build();
+            }
+            case BUILD: {
+                keshig.runBuildOption(serverId,optionName);
+                return Response.ok().build();
+            }
+            case DEPLOY: {
+                keshig.runDeployOption(serverId,optionName);
+                return Response.ok().build();
+            }
+            case TEST: {
+                keshig.runTestOption(serverId,optionName);
+                return Response.ok().build();
+            }
+            default: {
+                return Response.status(BAD_REQUEST).entity("Invalid option type").build();
+            }
+        }
+
+    }
+
+    @Override
     public Response addCloneOption(CloneOption option) {
 
         keshig.saveOption(option, CLONE);
@@ -309,20 +339,7 @@ public class KeshigRestServiceImpl implements KeshigRestService {
 
     @Override
     public Response listHistory() {
-        List< History > histories = Lists.newArrayList();
-        History h = new History(null, "TEST", (long)1448383051 * 1000, null, "TeST_SERVER");
-        h.setEndTime( (long)1448383051 * 1000 );
-        h.setStdOut( "/serenity/index.html" );
-        histories.add( h );
-        h = new History(null, "DEPLOY", (long)1448383053 * 1000, null, "DE_SERVER");
-        h.setEndTime( (long)1448383053 * 1000 );
-        h.setStdErr( "SOME ERROR" );
-        histories.add( h );
-
-
-        return Response.ok( histories ).build();
-//        return Response.ok().entity(keshig.listHistory()).build();
-
+        return Response.ok().entity(keshig.listHistory()).build();
     }
 
     @Override
@@ -385,29 +402,5 @@ public class KeshigRestServiceImpl implements KeshigRestService {
 
         return Response.ok().build();
     }
-
-    @Override
-    public Response getIndexHtml(String id) {
-
-        final String serenityDirectoryPath = "/home/ubuntu/serenity/";
-
-        File htmlFile = new File(serenityDirectoryPath + id + "/" + "index.html");
-
-        if (htmlFile.exists()) {
-            if (htmlFile.isFile()) {
-
-                return Response.ok(htmlFile)
-                        .header("Content-Disposition", String.format("attachment; filename=%s", "index.html"))
-                        .build();
-            } else {
-                return Response.status(Response.Status.BAD_REQUEST).entity("File is directory").build();
-            }
-
-        } else {
-
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-    }
-
 
 }

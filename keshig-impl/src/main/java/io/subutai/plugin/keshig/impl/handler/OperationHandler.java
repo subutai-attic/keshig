@@ -27,7 +27,7 @@ public class OperationHandler implements Runnable {
     private History history;
     private RequestBuilder command;
     private OperationType operationType;
-    ;
+
 
     public OperationHandler(final KeshigImpl keshig, final RequestBuilder command, final OperationType operationType, final String serverId) {
         this.operationType = operationType;
@@ -63,7 +63,7 @@ public class OperationHandler implements Runnable {
         }
         try {
             this.trackerOperation.addLog(String.format("Starting %s", this.operationType));
-            this.history = new History(UUID.randomUUID().toString(), this.operationType.toString(), System.currentTimeMillis(), this.command, (this.serverId == null) ? this.server.getServerId() : this.serverId);
+            this.history = new History(UUID.randomUUID().toString(), this.operationType.toString(), System.currentTimeMillis(), (this.serverId == null) ? this.server.getServerId() : this.serverId);
 
             this.keshig.getPluginDAO().saveInfo(KeshigConfig.PRODUCT_HISTORY, this.history.getId(), this.history);
             final ResourceHost buildHost = this.keshig.getPeerManager().getLocalPeer().getResourceHostById((this.serverId == null) ? this.server.getServerId() : this.serverId);
@@ -78,8 +78,6 @@ public class OperationHandler implements Runnable {
                     }
 
                     this.history.setExitCode(commandResult.getExitCode().toString());
-                    this.history.setStdOut(commandResult.getStdOut());
-                    this.history.setStdErr((response.getStdErr() == null) ? "" : response.getStdErr());
                     this.history.setEndTime(System.currentTimeMillis());
                     this.keshig.getPluginDAO().saveInfo(KeshigConfig.PRODUCT_HISTORY, this.history.getId(), this.history);
 
@@ -90,6 +88,10 @@ public class OperationHandler implements Runnable {
         } catch (HostNotFoundException | CommandException e) {
             e.printStackTrace();
         }
+    }
+
+    public History getHistory() {
+        return history;
     }
 
     public UUID getTrackerId() {

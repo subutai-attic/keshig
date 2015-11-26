@@ -1,10 +1,5 @@
 package io.subutai.plugin.keshig.api.entity;
 
-
-
-import io.subutai.common.command.RequestBuilder;
-
-
 public class History
 {
     private String id;
@@ -16,18 +11,28 @@ public class History
     private String server;
     private String stdOut;
     private String stdErr;
-    private RequestBuilder requestBuilder;
 
-    public History( final String id, final String type, final Long startTime, final RequestBuilder requestBuilder,
-                    final String server )
-    {
+    public History() {
+
+    }
+
+    public History(String id, String type, Long startTime, String server) {
         this.id = id;
         this.type = type;
         this.startTime = startTime;
-        this.requestBuilder = requestBuilder;
         this.server = server;
     }
 
+    public History(String id, String type, Long startTime, Long endTime, String exitCode, String server, String stdOut, String stdErr) {
+        this.id = id;
+        this.type = type;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.exitCode = exitCode;
+        this.server = server;
+        this.stdOut = stdOut;
+        this.stdErr = stdErr;
+    }
 
     public String getStdOut()
     {
@@ -123,32 +128,17 @@ public class History
         this.server = server;
     }
 
-
-    public RequestBuilder getRequestBuilder()
-    {
-        return requestBuilder;
-    }
-
-
-    public void setRequestBuilder( final RequestBuilder requestBuilder )
-    {
-        this.requestBuilder = requestBuilder;
-    }
-
-
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "History{" +
-                "id='" + id + '\'' +
-                ", type='" + type + '\'' +
-                ", startTime=" + startTime +
-                ", endTime=" + endTime +
-                ", requestBuilder=" + requestBuilder +
-                ", exitCode='" + exitCode + '\'' +
-                ", server='" + server + '\'' +
+                "stdErr='" + stdErr + '\'' +
                 ", stdOut='" + stdOut + '\'' +
-                ", stdErr='" + stdErr + '\'' +
+                ", server='" + server + '\'' +
+                ", exitCode='" + exitCode + '\'' +
+                ", endTime=" + endTime +
+                ", startTime=" + startTime +
+                ", type='" + type + '\'' +
+                ", id='" + id + '\'' +
                 '}';
     }
 }
