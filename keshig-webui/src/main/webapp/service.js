@@ -151,8 +151,8 @@ function keshigSrv($http) {
 		});
 	}
 
-	function startOption(type, optionName) {
-		return $http.get(OPTIONS_URL + type.toLowerCase() + '/' + optionName + '/' + 'start', {
+	function startOption(type, optionName, server) {
+		return $http.get(OPTIONS_URL + type.toLowerCase() + '/' + optionName + '/' + 'start/' + server, {
 			withCredentials: true
 		});
 	}

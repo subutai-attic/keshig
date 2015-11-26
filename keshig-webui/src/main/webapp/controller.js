@@ -4,8 +4,8 @@ angular.module('subutai.plugins.keshig.controller', [])
     .controller('KeshigCtrl', KeshigCtrl)
 	.directive('checkboxListDropdown', checkboxListDropdown);
 
-KeshigCtrl.$inject = ['$scope', 'keshigSrv', 'DTOptionsBuilder', 'DTColumnBuilder', '$resource', '$compile', 'SweetAlert', 'peerRegistrationService'];
-function KeshigCtrl($scope, keshigSrv, DTOptionsBuilder, DTColumnBuilder, $resource, $compile, SweetAlert, peerRegistrationService) {
+KeshigCtrl.$inject = ['$scope', 'keshigSrv', 'DTOptionsBuilder', 'DTColumnBuilder', '$resource', '$compile', 'SweetAlert', 'peerRegistrationService', 'ngDialog'];
+function KeshigCtrl($scope, keshigSrv, DTOptionsBuilder, DTColumnBuilder, $resource, $compile, SweetAlert, peerRegistrationService, ngDialog) {
     var vm = this;
 
 	vm.activeTab = 'servers';
@@ -22,6 +22,7 @@ function KeshigCtrl($scope, keshigSrv, DTOptionsBuilder, DTColumnBuilder, $resou
 	vm.optionsType = [];
 	vm.optionsDeployBuilds = [];
 	vm.option2Add = {};
+	vm.option2Run = '';
 	vm.options = {};
 	vm.optionFormUpdate = false;
 
@@ -48,6 +49,7 @@ function KeshigCtrl($scope, keshigSrv, DTOptionsBuilder, DTColumnBuilder, $resou
 	vm.runOption = runOption;
 	vm.pushPlaybook = pushPlaybook;
 	vm.runProfile = runProfile;
+	vm.runOptionForm = runOptionForm;
 
 	keshigSrv.getServerTypes().success(function (data) {
 		vm.serverTypes = data;
@@ -105,6 +107,7 @@ function KeshigCtrl($scope, keshigSrv, DTOptionsBuilder, DTColumnBuilder, $resou
 		if(vm.activeTab == 'servers') {
 			serversTable();
 		} else if(vm.activeTab == 'options') {
+			getProfileValues();
 			changeOptionsType();
 		} else if(vm.activeTab == 'profiles') {
 			getProfileValues();
@@ -250,7 +253,7 @@ function KeshigCtrl($scope, keshigSrv, DTOptionsBuilder, DTColumnBuilder, $resou
 	}
 
 	function runOptionButton(data, type, full, meta) {
-		return '<a href class="b-btn b-btn_green" ng-click="keshigCtrl.runOption(\'' + data.name + '\')">Run</a>';
+		return '<a href class="b-btn b-btn_green" ng-click="keshigCtrl.runOptionForm(\'' + data.name + '\')">Run</a>';
 	}
 
 	function profileBuildButton(data, type, full, meta) {
@@ -328,14 +331,33 @@ function KeshigCtrl($scope, keshigSrv, DTOptionsBuilder, DTColumnBuilder, $resou
 		vm.profilesFormUpdate = true;
 	}
 
-	function runOption(optionName, customOptionType) {
+	function runOptionForm(optionName) {
+		vm.servers2Test = [];		
+		if(vm.optionType == 'DEPLOY') {
+			vm.servers2Test = vm.serversByType['DEPLOY_SERVER'];
+		} else if(vm.optionType == 'TEST') {
+			vm.servers2Test = vm.serversByType['TEST_SERVER'];
+		} else {
+			vm.servers2Test = vm.serversByType['BUILD_SERVER'];
+		}
+		vm.option2Run = optionName;
+
+		ngDialog.open({
+			template: 'plugins/keshig/partials/options/optionServerSelectPopup.html',
+			scope: $scope
+		});
+	}
+
+	function runOption(optionName, customOptionType, server) {
 		if(customOptionType === undefined || customOptionType === null) customOptionType = vm.optionType;
-		keshigSrv.startOption( customOptionType, optionName ).success(function(data){
+		if(server === undefined || server === null) server = '';
+		keshigSrv.startOption( customOptionType, optionName, server ).success(function(data){
 			SweetAlert.swal("Success!", '"' + optionName + '" option start running.', "success");
 			//vm.dtInstance.reloadData(null, false);
 		}).error(function (data) {
 			SweetAlert.swal("ERROR!", '"' + optionName + '" option run error. Error: ' + data.ERROR, 'error');
 		});
+		ngDialog.closeAll();
 	}
 
 	function updateOption() {
