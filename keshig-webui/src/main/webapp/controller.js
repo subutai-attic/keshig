@@ -560,6 +560,7 @@ function KeshigCtrl($scope, keshigSrv, DTOptionsBuilder, DTColumnBuilder, $resou
 	}
 
 	function dateToFormat(date) {
+		if(date === undefined || date === null) return 'In progress';
 		var dateFormat = new Date(date);
 		return dateFormat.getMonth() + '/' 
 			+ dateFormat.getDate() + '/' 
