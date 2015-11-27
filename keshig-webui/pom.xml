@@ -12,8 +12,8 @@
     <artifactId>keshig-webui</artifactId>
     <packaging>war</packaging>
 
-    <name>Subutai Keshig Plugin Web UI</name>
-    <description>Subutai Keshig Web UI</description>
+    <name> Keshig Plugin Web UI</name>
+    <description> Keshig Web UI</description>
 
     <build>
         <plugins>
