@@ -252,7 +252,7 @@ public class KeshigImpl implements Keshig {
     }
 
     private List<String> parsePlaybooks(String stdOut) {
-        String playbookRegEx = ".*.playbook";
+        String playbookRegEx = ".*.story";
         final Pattern pattern = Pattern.compile(playbookRegEx);
         final Matcher matcher = pattern.matcher(stdOut);
         List<String> playbooks = new ArrayList<>();
@@ -268,7 +268,7 @@ public class KeshigImpl implements Keshig {
     public Build getLatestBuild() {
 
         final List<Build> builds = this.getBuilds();
-        return builds.get(builds.size() - 1);
+        return builds.get(0);
 
     }
 
@@ -277,22 +277,29 @@ public class KeshigImpl implements Keshig {
 
         CloneOption cloneOption = (CloneOption) getOption(optionName, CLONE);
         CloneOperationHandler cloneOperationHandler = new CloneOperationHandler(serverId, cloneOption, this);
-
+        executor.execute(cloneOperationHandler);
         return cloneOperationHandler.getTrackerId();
+
     }
 
     @Override
     public UUID runBuildOption(String serverId, String optionName) {
+
         BuildOption buildOption = (BuildOption) getOption(optionName,BUILD);
         BuildOperationHandler buildOperationHandler = new BuildOperationHandler(serverId,buildOption,this);
-
+        executor.execute(buildOperationHandler);
         return buildOperationHandler.getTrackerId();
+
     }
 
     @Override
     public UUID runDeployOption(String serverId, String optionName) {
+
         DeployOption deployOption = (DeployOption) getOption(optionName,DEPLOY);
+
         DeployOperationHandler deployOperationHandler = new DeployOperationHandler(serverId,deployOption,this);
+
+        executor.execute(deployOperationHandler);
 
         return deployOperationHandler.getTrackerId();
     }
@@ -301,7 +308,7 @@ public class KeshigImpl implements Keshig {
     public UUID runTestOption(String serverId, String optionName) {
         TestOption testOption = (TestOption) getOption(optionName,TEST);
         TestOperationHandler testOperationHandler = new TestOperationHandler(serverId,testOption,this);
-
+        executor.execute(testOperationHandler);
         return testOperationHandler.getTrackerId();
     }
 
@@ -411,6 +418,7 @@ public class KeshigImpl implements Keshig {
     public void runProfile(String profileName) {
 
         Profile profile = this.getProfile(profileName);
+
         IntegrationWorkflow integrationWorkflow = new IntegrationWorkflow(this, profile);
 
         executor.execute(integrationWorkflow);

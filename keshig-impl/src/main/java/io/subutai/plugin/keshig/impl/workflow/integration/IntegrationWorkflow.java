@@ -44,22 +44,19 @@ public class IntegrationWorkflow implements Runnable {
 
 
     public IntegrationWorkflow(final KeshigImpl keshigQD) {
+
         this.keshigQD = keshigQD;
         operationTracker = keshigQD.getTracker().createTrackerOperation(KeshigConfig.PRODUCT_KEY,
-
-
-                String.format("Creating %s tracker object for Integration Workflow", KeshigConfig.PRODUCT_KEY));
+            String.format("Creating %s tracker object for Integration Workflow", KeshigConfig.PRODUCT_KEY));
         //get default options
         cloneOption = (CloneOption) keshigQD.getActiveOption(CLONE);
         buildOption = (BuildOption) keshigQD.getActiveOption(BUILD);
         deployOption = (DeployOption) keshigQD.getActiveOption(DEPLOY);
         testOption = (TestOption) keshigQD.getActiveOption(TEST);
-
         //get default servers
         cloneServer = keshigQD.getServers(BUILD_SERVER).get(0);
         deployServer = keshigQD.getServers(DEPLOY_SERVER).get(0);
         testServer = keshigQD.getServers(TEST_SERVER).get(0);
-
         profile = null;
     }
 
@@ -147,6 +144,7 @@ public class IntegrationWorkflow implements Runnable {
     }
 
     public boolean fetch() {
+
         operationTracker.addLog("Starting clone operation");
         final CloneOperationHandler cloneOperation = new CloneOperationHandler(cloneServer.getServerId(),cloneOption,keshigQD);
         cloneOperation.run();
