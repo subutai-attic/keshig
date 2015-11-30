@@ -39,6 +39,6 @@ sudo /etc/init.d/vboxweb-service start
 my_dir="$(dirname "$0")"
 vagrant box add sn $my_dir/snappy_rh.box
 sudo dpkg -i $my_dir/qnd.deb
-sudo dpkg -i $my_dir/subutaideploy-cli_2.1.0-192_all.deb
+sudo dpkg -i $my_dir/subutaideploy-cli_2.1.1-192_all.deb
 sudo apt-get -f install -y
-sudo dpkg -i $my_dir/subutaideploy-cli_2.1.0-192_all.deb
+sudo dpkg -i $my_dir/subutaideploy-cli_2.1.1-192_all.deb
