@@ -219,7 +219,9 @@ public class KeshigRestServiceImpl implements KeshigRestService {
     public Response runOptionOnTargetServer(String type, String optionName, String serverId) {
 
         OperationType operationType = OperationType.valueOf(type.toUpperCase());
-        LOG.info(String.format("Request type:%s Option to Run:%s Target Server:%s", type, optionName, serverId));
+
+        LOG.info(String.format("Request type:%s Option to Run:%s Target Server:%s", operationType.toString(), optionName, serverId));
+
         switch (operationType) {
 
             case CLONE: {
@@ -353,7 +355,7 @@ public class KeshigRestServiceImpl implements KeshigRestService {
 
     @Override
     public Response runProfile(String profileName) {
-        LOG.info(String.format("Running Profile:%s", profileName));
+        LOG.warn(String.format("Running Profile:%s", profileName));
         keshig.runProfile(profileName);
 
         return Response.ok().build();
