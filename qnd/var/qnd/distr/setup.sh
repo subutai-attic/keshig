@@ -2,8 +2,17 @@
 
 type=$1
 set -x
+#sudo systemctl stop snappy-autopilot.timer
+#sudo systemctl disable snappy-autopilot.timer
+
+sudo systemctl stop snappy-autopilot.service
+sudo systemctl disable snappy-autopilot.service
 sudo systemctl stop snappy-autopilot.timer
 sudo systemctl disable snappy-autopilot.timer
+sudo mount -o remount,rw /
+sudo rm -rf /lib/systemd/system/snappy-autopilot.timer
+
+
 distr="/home/ubuntu/distr"
 
 if [[ $type = "mgmt"  ]]
