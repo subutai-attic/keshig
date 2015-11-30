@@ -9,9 +9,9 @@ rdpPort=3490
 pushd $my_dir
 vagrant destroy -f
 
-vboxmanage list vms | awk -F" " '{print $1}' | tr -d '"' | awk  '{print "vboxmanage controlvm "$1" poweroff && vboxmanage unregistervm "$1" --delete "}' | bash > /dev/null 2>&1
-vboxmanage list vms | awk -F" " '{print $1}' | tr -d '"' | awk  '{print "vboxmanage unregistervm "$1" --delete "}' | bash > /dev/null 2>&1
-rm -rf "/home/ubuntu/VirtualBox VMs/"
+#vboxmanage list vms | awk -F" " '{print $1}' | tr -d '"' | awk  '{print "vboxmanage controlvm "$1" poweroff && vboxmanage unregistervm "$1" --delete "}' | bash > /dev/null 2>&1
+#vboxmanage list vms | awk -F" " '{print $1}' | tr -d '"' | awk  '{print "vboxmanage unregistervm "$1" --delete "}' | bash > /dev/null 2>&1
+#rm -rf "/home/ubuntu/VirtualBox VMs/"
 
 #cat $my_dir/Vagrantfile | grep v.name | awk -F"=" '{print $2}' | tr -d '"' | awk  '{print "vboxmanage controlvm "$1" poweroff && vboxmanage unregistervm "$1" --delete "}' | bash > /dev/null 2>&1
 #cat $my_dir/Vagrantfile | grep v.name | awk -F"=" '{print $2}' | tr -d '"' | awk  '{print "vboxmanage unregistervm "$1" --delete "}' | bash > /dev/null 2>&1
