@@ -4,7 +4,7 @@ my_dir="$(dirname "$0")"
 
 mgmt_folder=$1
 SNAP_DISTR="../SNAPS/$mgmt_folder"
-rdpPort=3490
+rdpPort=3498
 
 pushd $my_dir
 vagrant destroy -f

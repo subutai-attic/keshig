@@ -37,7 +37,10 @@ echo "VBOXWEB_USER=ubuntu" | sudo tee -a  /etc/default/virtualbox
 sudo /etc/init.d/vboxweb-service start
 
 my_dir="$(dirname "$0")"
-vagrant box add sn $my_dir/snappy_rh.box
+pushd $my_dir
+wget https://s3.eu-central-1.amazonaws.com/vagrant-export-playbook/snappy.box
+popd
+vagrant box add sn $my_dir/snappy.box
 sudo dpkg -i $my_dir/qnd.deb
 sudo dpkg -i $my_dir/subutaideploy-cli_2.1.1-192_all.deb
 sudo apt-get -f install -y
