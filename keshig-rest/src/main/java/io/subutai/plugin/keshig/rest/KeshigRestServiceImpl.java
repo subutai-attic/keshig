@@ -220,22 +220,24 @@ public class KeshigRestServiceImpl implements KeshigRestService {
 
         OperationType operationType = OperationType.valueOf(type.toUpperCase());
 
+        LOG.info(String.format("Request type:%s Option to Run:%s Target Server:%s", operationType.toString(), optionName, serverId));
+
         switch (operationType) {
 
             case CLONE: {
-                keshig.runCloneOption(serverId,optionName);
+                keshig.runCloneOption(serverId, optionName);
                 return Response.ok().build();
             }
             case BUILD: {
-                keshig.runBuildOption(serverId,optionName);
+                keshig.runBuildOption(serverId, optionName);
                 return Response.ok().build();
             }
             case DEPLOY: {
-                keshig.runDeployOption(serverId,optionName);
+                keshig.runDeployOption(serverId, optionName);
                 return Response.ok().build();
             }
             case TEST: {
-                keshig.runTestOption(serverId,optionName);
+                keshig.runTestOption(serverId, optionName);
                 return Response.ok().build();
             }
             default: {
@@ -353,7 +355,7 @@ public class KeshigRestServiceImpl implements KeshigRestService {
 
     @Override
     public Response runProfile(String profileName) {
-
+        LOG.warn(String.format("Running Profile:%s", profileName));
         keshig.runProfile(profileName);
 
         return Response.ok().build();

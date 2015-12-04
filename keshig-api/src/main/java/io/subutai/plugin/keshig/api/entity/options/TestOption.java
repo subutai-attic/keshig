@@ -28,6 +28,7 @@ public class TestOption {
 
 
     private OperationType type = OperationType.TEST;
+
     public TestOption() {
 
     }
@@ -130,6 +131,7 @@ public class TestOption {
         this.indexHtml = outputPath;
     }
 
+    @JsonIgnore
     public List<String> getArgs() {
 //
         List<String> args = Lists.newArrayList();
@@ -149,9 +151,7 @@ public class TestOption {
             args.add("all");
 
         } else {
-
-            args.add(String.join(" ", "\"" + playbooks + "\""));
-
+            args.add(String.format("\"%s\"", String.join(" ", playbooks)));
         }
 
         args.add("-r");

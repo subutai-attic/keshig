@@ -149,7 +149,7 @@ public class DeployOperationHandler implements Runnable {
             found = true;
         }
         if (!found) {
-            trackerOperation.addLog("Deployed server(s) not found");
+            trackerOperation.addLogDone("Deployed server(s) not found");
         }
         return ips;
     }
