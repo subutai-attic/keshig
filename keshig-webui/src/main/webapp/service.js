@@ -56,7 +56,7 @@ function keshigSrv($http) {
 	}
 
 	function exportBuild(build) {
-		return $http.get(BASE_URL + 'export/' + build.serverId + '/' + build.buildName, {
+		return $http.get(BASE_URL + 'export/' + build.serverId + '/' + build.buildName + '/start', {
 			withCredentials: true
 		});
 	}

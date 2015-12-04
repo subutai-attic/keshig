@@ -2,7 +2,7 @@
 	<div class="b-workspace-content__row">
 		<div class="">
 			<h2 class="b-workspace-content-row-h2">
-				Create server
+				Export server
 			</h2>
 
 			<div class="b-form b-form_border">
@@ -40,7 +40,6 @@
 								<div class="b-form-wrapper b-form-wrapper_margin-size-2">
 									<select ng-model="exportObj.buildName" 
 									class="b-form-input b-form-input_full" required>
-										<option value="LATEST" selected>Latest</option>
 										<option ng-repeat="build in keshigCtrl.optionsDeployBuilds" 
 										value="{{ build.id }}">
 											{{ build.name }} - {{ build.dateFormated }}
