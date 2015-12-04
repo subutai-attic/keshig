@@ -26,7 +26,17 @@
 						ng-click="keshigCtrl.changeTab('history')"
 						ng-class="keshigCtrl.activeTab == 'history' ? 'b-tabs-menu__item_active' : ''">
 					History
-				</li>				
+				</li>
+				<li class="b-tabs-menu__item"
+						ng-click="keshigCtrl.changeTab('export')"
+						ng-class="keshigCtrl.activeTab == 'export' ? 'b-tabs-menu__item_active' : ''">
+					Export
+				</li>
+				<li class="b-tabs-menu__item"
+						ng-click="keshigCtrl.changeTab('tpr')"
+						ng-class="keshigCtrl.activeTab == 'tpr' ? 'b-tabs-menu__item_active' : ''">
+					TPR	
+				</li>
 			</ul>
 		</div>
 
@@ -45,6 +55,14 @@
 		<div
 				ng-if="keshigCtrl.activeTab == 'history'"
 				ng-include="'plugins/keshig/partials/history.html'">
+		</div>
+		<div
+				ng-if="keshigCtrl.activeTab == 'export'"
+				ng-include="'plugins/keshig/partials/export.html'">
+		</div>
+		<div
+				ng-if="keshigCtrl.activeTab == 'tpr'"
+				ng-include="'plugins/keshig/partials/tpr.html'">
 		</div>
 
 	</div>

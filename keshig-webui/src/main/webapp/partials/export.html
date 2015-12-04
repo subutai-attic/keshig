@@ -1,0 +1,64 @@
+<div class="b-workspace-content b-workspace-content_border">
+	<div class="b-workspace-content__row">
+		<div class="">
+			<h2 class="b-workspace-content-row-h2">
+				Create server
+			</h2>
+
+			<div class="b-form b-form_border">
+
+				<div class="b-form__cols">
+					<form ng-submit="keshigCtrl.exportBuild(exportObj)">
+
+						<div class="b-form-col-2">
+
+							<div class="b-form__wrapper b-form__wrapper_margin-bottom">
+								<label class="b-form-label b-form-label_fix-size-2 g-left">Server</label>
+
+								<div class="b-form-wrapper b-form-wrapper_margin-size-2">
+									<select 
+										class="b-form-input b-form-input_full" 
+										ng-model="exportObj.serverId" 
+										required>
+										<option 
+										ng-repeat="server in keshigCtrl.serversByType['DEPLOY_SERVER']" 
+										value="{{ server.serverId }}">
+											{{ server.serverName }}
+										</option>
+									</select>								
+								</div>
+								<div class="clear"></div>
+							</div>
+							
+						</div>
+
+						<div class="b-form-col-2">
+
+							<div class="b-form__wrapper b-form__wrapper_margin-bottom">
+								<label class="b-form-label b-form-label_fix-size-2 g-left">Build Name</label>
+
+								<div class="b-form-wrapper b-form-wrapper_margin-size-2">
+									<select ng-model="exportObj.buildName" 
+									class="b-form-input b-form-input_full" required>
+										<option value="LATEST" selected>Latest</option>
+										<option ng-repeat="build in keshigCtrl.optionsDeployBuilds" 
+										value="{{ build.id }}">
+											{{ build.name }} - {{ build.dateFormated }}
+										</option>
+									</select>
+								</div>
+								<div class="clear"></div>
+							</div>
+
+							<button type="submit" class="b-btn b-btn_green g-right">Export</button>
+						</div>
+
+					</form>
+				</div>
+
+			</div>
+		</div>
+
+		<div class="clear"></div>
+	</div>
+</div>

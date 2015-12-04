@@ -51,6 +51,9 @@ function KeshigCtrl($scope, keshigSrv, DTOptionsBuilder, DTColumnBuilder, $resou
 	vm.runProfile = runProfile;
 	vm.runOptionForm = runOptionForm;
 
+	vm.exportBuild = exportBuild;
+	vm.getTPR = getTPR;
+
 	keshigSrv.getServerTypes().success(function (data) {
 		vm.serverTypes = data;
 	});
@@ -69,6 +72,14 @@ function KeshigCtrl($scope, keshigSrv, DTOptionsBuilder, DTColumnBuilder, $resou
 	keshigSrv.getPlaybooks().success(function (data) {
 		vm.playbooks = data;
 	});
+
+	function exportBuild(build) {
+		keshigSrv.exportBuild(build).success(function (data) {
+			SweetAlert.swal("Success!", 'Build "' + deploy.buildName + '" start export.', "success");
+		}).error(function(error){
+			SweetAlert.swal("ERROR!", 'Error: ' + error.replace(/\\n/g, ' '), 'error');
+		});
+	}
 
 	function getProfileValues() {
 		vm.serversByType = [];
@@ -114,7 +125,17 @@ function KeshigCtrl($scope, keshigSrv, DTOptionsBuilder, DTColumnBuilder, $resou
 			profilesTable();
 		} else if(vm.activeTab == 'history') {
 			historyTable();
+		} else if(vm.activeTab == 'export') {
+			getProfileValues();
 		}
+	}
+
+	function getTPR() {
+		keshigSrv.getTPR().success(function (data) {
+			SweetAlert.swal("Success!", 'Request has been sent successfully.', "success");
+		}).error(function(error){
+			SweetAlert.swal("ERROR!", 'Error: ' + error.replace(/\\n/g, ' '), 'error');
+		});
 	}
 
 	function changeOptionsType() {
@@ -310,8 +331,8 @@ function KeshigCtrl($scope, keshigSrv, DTOptionsBuilder, DTColumnBuilder, $resou
 	function runProfile(profileName) {
 		keshigSrv.startProfile( profileName ).success(function(data){
 			SweetAlert.swal("Success!", '"' + profileName + '" profile start running.', "success");
-		}).error(function (data) {
-			SweetAlert.swal("ERROR!", '"' + profileName + '" profile run error. Error: ' + data.ERROR, 'error');
+		}).error(function (error) {
+			SweetAlert.swal("ERROR!", '"' + profileName + '" profile run error. Error: ' + error.replace(/\\n/g, ' '), 'error');
 		});
 	}
 
@@ -354,8 +375,8 @@ function KeshigCtrl($scope, keshigSrv, DTOptionsBuilder, DTColumnBuilder, $resou
 		keshigSrv.startOption( customOptionType, optionName, server ).success(function(data){
 			SweetAlert.swal("Success!", '"' + optionName + '" option start running.', "success");
 			//vm.dtInstance.reloadData(null, false);
-		}).error(function (data) {
-			SweetAlert.swal("ERROR!", '"' + optionName + '" option run error. Error: ' + data.ERROR, 'error');
+		}).error(function (error) {
+			SweetAlert.swal("ERROR!", '"' + optionName + '" option run error. Error: ' + error.replace(/\\n/g, ' '), 'error');
 		});
 		ngDialog.closeAll();
 	}
@@ -376,15 +397,15 @@ function KeshigCtrl($scope, keshigSrv, DTOptionsBuilder, DTColumnBuilder, $resou
 			keshigSrv.updateOption( vm.optionType, JSON.stringify(vm.option2Add) ).success(function(data){
 				SweetAlert.swal("Success!", vm.optionType + " option successfully updated.", "success");
 				vm.dtInstance.reloadData(null, false);
-			}).error(function (data) {
-				SweetAlert.swal("ERROR!", vm.optionType + " option update error. Error: " + data.ERROR, "error");
+			}).error(function (error) {
+				SweetAlert.swal("ERROR!", vm.optionType + " option update error. Error: " + error.replace(/\\n/g, ' '), "error");
 			});
 		} else {
 			keshigSrv.addOption( vm.optionType, JSON.stringify(vm.option2Add) ).success(function(data){
 				SweetAlert.swal("Success!", vm.optionType + " option successfully added.", "success");
 				vm.dtInstance.reloadData(null, false);
-			}).error(function (data) {
-				SweetAlert.swal("ERROR!", vm.optionType + " option add error. Error: " + data.ERROR, "error");
+			}).error(function (error) {
+				SweetAlert.swal("ERROR!", vm.optionType + " option add error. Error: " + error.replace(/\\n/g, ' '), "error");
 			});
 		}
 		vm.option2Add = {};
@@ -409,8 +430,8 @@ function KeshigCtrl($scope, keshigSrv, DTOptionsBuilder, DTColumnBuilder, $resou
 				keshigSrv.removeProfile(profileName).success(function (data) {
 					SweetAlert.swal("Deleted!", "Your profile has been deleted.", "success");
 					vm.dtInstance.reloadData(null, false);
-				}).error(function (data) {
-					SweetAlert.swal("ERROR!", "Your profile is safe. Error: " + data.ERROR, "error");
+				}).error(function (error) {
+					SweetAlert.swal("ERROR!", "Your profile is safe. Error: " + error.replace(/\\n/g, ' '), "error");
 				});
 			}
 		});
@@ -435,8 +456,8 @@ function KeshigCtrl($scope, keshigSrv, DTOptionsBuilder, DTColumnBuilder, $resou
 				keshigSrv.deleteOption(vm.optionType, optionName).success(function (data) {
 					SweetAlert.swal("Deleted!", "Your option has been deleted.", "success");
 					vm.dtInstance.reloadData(null, false);
-				}).error(function (data) {
-					SweetAlert.swal("ERROR!", "Your option is safe. Error: " + data.ERROR, "error");
+				}).error(function (error) {
+					SweetAlert.swal("ERROR!", "Your option is safe. Error: " + error.replace(/\\n/g, ' '), "error");
 				});
 			}
 		});
@@ -461,8 +482,8 @@ function KeshigCtrl($scope, keshigSrv, DTOptionsBuilder, DTColumnBuilder, $resou
 				keshigSrv.removeServer(serverName).success(function (data) {
 					SweetAlert.swal("Deleted!", "Your server has been deleted.", "success");
 					vm.dtInstance.reloadData(null, false);
-				}).error(function (data) {
-					SweetAlert.swal("ERROR!", "Your server is safe. Error: " + data.ERROR, "error");
+				}).error(function (error) {
+					SweetAlert.swal("ERROR!", "Your server is safe. Error: " + error.replace(/\\n/g, ' '), "error");
 				});
 			}
 		});
@@ -478,15 +499,15 @@ function KeshigCtrl($scope, keshigSrv, DTOptionsBuilder, DTColumnBuilder, $resou
 			keshigSrv.updateServer( vm.server2Add ).success(function(data){
 				SweetAlert.swal("Success!", "Keshig server successfully updated.", "success");
 				vm.dtInstance.reloadData(null, false);
-			}).error(function (data) {
-				SweetAlert.swal("ERROR!", "Keshig server update error. Error: " + data.ERROR, "error");
+			}).error(function (error) {
+				SweetAlert.swal("ERROR!", "Keshig server update error. Error: " + error.replace(/\\n/g, ' '), "error");
 			});
 		} else {
 			keshigSrv.addServer( vm.server2Add ).success(function(data){
 				SweetAlert.swal("Success!", "Keshig server successfully added.", "success");
 				vm.dtInstance.reloadData(null, false);
-			}).error(function (data) {
-				SweetAlert.swal("ERROR!", "Keshig server add error. Error: " + data.ERROR, "error");
+			}).error(function (error) {
+				SweetAlert.swal("ERROR!", "Keshig server add error. Error: " + error.replace(/\\n/g, ' '), "error");
 			});
 		}
 		vm.server2Add = {};
@@ -499,15 +520,15 @@ function KeshigCtrl($scope, keshigSrv, DTOptionsBuilder, DTColumnBuilder, $resou
 			keshigSrv.updateProfile( JSON.stringify(vm.profiles2Add) ).success(function(data){
 				SweetAlert.swal("Success!", vm.profiles2Add.name + " profile successfully updated.", "success");
 				vm.dtInstance.reloadData(null, false);
-			}).error(function (data) {
-				SweetAlert.swal("ERROR!", vm.profiles2Add.name + " profile update error. Error: " + data.ERROR, "error");
+			}).error(function (error) {
+				SweetAlert.swal("ERROR!", vm.profiles2Add.name + " profile update error. Error: " + error.replace(/\\n/g, ' '), "error");
 			});
 		} else {
 			keshigSrv.addProfile( JSON.stringify(vm.profiles2Add) ).success(function(data){
 				SweetAlert.swal("Success!", vm.profiles2Add.name + " profile successfully added.", "success");
 				vm.dtInstance.reloadData(null, false);
-			}).error(function (data) {
-				SweetAlert.swal("ERROR!", vm.profiles2Add.name + " profile add error. Error: " + data.ERROR, "error");
+			}).error(function (error) {
+				SweetAlert.swal("ERROR!", vm.profiles2Add.name + " profile add error. Error: " + error.replace(/\\n/g, ' '), "error");
 			});
 		}
 		//vm.profiles2Add = {};
@@ -562,7 +583,7 @@ function KeshigCtrl($scope, keshigSrv, DTOptionsBuilder, DTColumnBuilder, $resou
 	function dateToFormat(date) {
 		if(date === undefined || date === null) return 'In progress';
 		var dateFormat = new Date(date);
-		return dateFormat.getMonth() + '/' 
+		return (dateFormat.getMonth() + 1) + '/' 
 			+ dateFormat.getDate() + '/' 
 			+ dateFormat.getFullYear() + ' ' 
 			+ dateFormat.getHours() + ':' + dateFormat.getMinutes() + ':' + dateFormat.getSeconds();
