@@ -100,5 +100,16 @@ public interface Keshig {
     void deleteProfile(String profileName);
 
     void addProfile(Profile profile) throws Exception;
+
+    /*
+    *  Release
+    * */
+
+    void export(String buildName, String serverId);
+
+    void publish(String boxName, String serverId);
+
+    void tpr(String serverId);
+
 }
 

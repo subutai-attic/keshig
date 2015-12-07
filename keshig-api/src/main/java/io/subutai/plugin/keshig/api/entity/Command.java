@@ -25,6 +25,7 @@ public class Command
 
     public static final String ouput     = "-o";
 
+    public static final String export = "-x";
     //@formatter:on
 
 
@@ -50,5 +51,4 @@ public class Command
     {
         return "/home/ubuntu/playbooks-newui/run_tests.sh";
     }
-
 }

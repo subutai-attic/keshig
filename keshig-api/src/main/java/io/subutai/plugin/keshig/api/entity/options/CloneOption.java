@@ -12,6 +12,7 @@ import io.subutai.plugin.keshig.api.entity.OperationType;
 
 
 public class CloneOption {
+
     @JsonIgnore
     private String output;
     @JsonIgnore

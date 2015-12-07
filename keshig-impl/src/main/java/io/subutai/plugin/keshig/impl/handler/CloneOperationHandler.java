@@ -25,8 +25,8 @@ public class CloneOperationHandler implements Runnable {
 
     private CloneOption cloneOption;
     private String serverId;
-    private History history;
     private TrackerOperation trackerOperation;
+    private History history;
     private KeshigImpl keshig;
     private Server server;
 

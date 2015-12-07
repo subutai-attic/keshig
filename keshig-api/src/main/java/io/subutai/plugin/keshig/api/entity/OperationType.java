@@ -7,4 +7,6 @@ public enum OperationType
     BUILD,
     DEPLOY,
     TEST,
+    TPR,
+    EXPORT
 }

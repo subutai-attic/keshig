@@ -247,6 +247,25 @@ public class KeshigRestServiceImpl implements KeshigRestService {
 
     }
 
+
+    @Override
+    public Response export( final String serverId, final String buildName )
+    {
+        keshig.export( buildName,serverId );
+
+        return Response.ok().build();
+    }
+
+
+    @Override
+    public Response tpr(final String serverId)
+    {
+        keshig.tpr(serverId);
+
+        return Response.ok().build();
+    }
+
+
     @Override
     public Response addCloneOption(CloneOption option) {
 

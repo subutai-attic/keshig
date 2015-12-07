@@ -14,13 +14,6 @@
     <name>Keshig Plugin Module REST</name>
     <description>Keshig Plugin Module REST</description>
     <dependencies>
-
-        <dependency>
-            <groupId>io.subutai</groupId>
-            <artifactId>keshig-api</artifactId>
-            <version>4.0.0-RC4</version>
-        </dependency>
-
         <dependency>
             <groupId>javax.ws.rs</groupId>
             <artifactId>javax.ws.rs-api</artifactId>
