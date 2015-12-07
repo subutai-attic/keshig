@@ -132,7 +132,7 @@ function KeshigCtrl($scope, keshigSrv, DTOptionsBuilder, DTColumnBuilder, $resou
 
 	function getTPR() {
 		keshigSrv.getTPR().success(function (data) {
-			SweetAlert.swal("Success!", 'Request has been sent successfully.', "success");
+			SweetAlert.swal("Success!", 'Generating TPR... Link for the file will appear in History tab.', "success");
 		}).error(function(error){
 			SweetAlert.swal("ERROR!", 'Error: ' + error.replace(/\\n/g, ' '), 'error');
 		});
@@ -246,7 +246,7 @@ function KeshigCtrl($scope, keshigSrv, DTOptionsBuilder, DTColumnBuilder, $resou
 		if(data.stdOut === undefined || data.stdOut == null || data.stdOut.length < 1) {
 			contentOutput = data.stdErr;
 		} else {
-			if(data.type == 'TEST') {
+			if(data.type == 'TEST' || data.type == 'TPR') {
 				contentOutput = '<a href="' + getBaseUrl() + ':80' + data.stdOut + '" target="_blank">' + data.stdOut + '</a>';
 			} else {
 				contentOutput = data.stdOut;
