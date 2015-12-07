@@ -53,7 +53,11 @@
 				<label class="b-form-label b-form-label_fix-size-2 g-left" for="test-all">All</label>
 
 				<div class="b-form-wrapper b-form-wrapper_margin-size-2">
-					<input id="test-all" class="b-form-checkbox" type="checkbox" ng-model="keshigCtrl.option2Add.all">
+					<input id="test-all" 
+						class="b-form-checkbox" 
+						type="checkbox" 
+						ng-model="addAll" 
+						ng-change="keshigCtrl.addAllPlaybooks()">
 				</div>
 			</div>
 

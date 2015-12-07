@@ -85,11 +85,11 @@
 				</div>
 
 				<div class="b-form__wrapper b-form__wrapper_margin-bottom">
-					<label class="b-form-label b-form-label_fix-size-2 g-left">Test</label>
+					<label class="b-form-label b-form-label_fix-size-2 g-left">Deploy</label>
 
 					<div class="b-form__wrapper b-form-wrapper_margin-size-2">
-						<select class="b-form-input b-form-input_full" ng-model="keshigCtrl.profiles2Add.testOption" required>
-							<option ng-repeat="option in keshigCtrl.optionsByType.TEST" value="{{ option.name }}">
+						<select class="b-form-input b-form-input_full" ng-model="keshigCtrl.profiles2Add.deployOption" required>
+							<option ng-repeat="option in keshigCtrl.optionsByType.DEPLOY" value="{{ option.name }}">
 								{{ option.name }}
 							</option>
 						</select>
@@ -98,11 +98,11 @@
 				</div>
 
 				<div class="b-form__wrapper b-form__wrapper_margin-bottom">
-					<label class="b-form-label b-form-label_fix-size-2 g-left">Deploy</label>
+					<label class="b-form-label b-form-label_fix-size-2 g-left">Test</label>
 
 					<div class="b-form__wrapper b-form-wrapper_margin-size-2">
-						<select class="b-form-input b-form-input_full" ng-model="keshigCtrl.profiles2Add.deployOption" required>
-							<option ng-repeat="option in keshigCtrl.optionsByType.DEPLOY" value="{{ option.name }}">
+						<select class="b-form-input b-form-input_full" ng-model="keshigCtrl.profiles2Add.testOption" required>
+							<option ng-repeat="option in keshigCtrl.optionsByType.TEST" value="{{ option.name }}">
 								{{ option.name }}
 							</option>
 						</select>
