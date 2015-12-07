@@ -116,7 +116,7 @@ function KeshigCtrl($scope, keshigSrv, DTOptionsBuilder, DTColumnBuilder, $resou
 
 	function addAllPlaybooks(push) {
 		if(push) {
-			vm.option2Add.playbooks = vm.playbooks;
+			vm.option2Add.playbooks = angular.copy(vm.playbooks);
 		} else {
 			vm.option2Add.playbooks = [];
 		}
