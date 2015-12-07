@@ -1,19 +1,39 @@
 <div class="b-workspace-content b-workspace-content_border">
 	<div class="b-workspace-content__row">
+		<h2 class="b-workspace-content-row-h2">
+			Generate TPR
+		</h2>
 
-		<div class="b-form__cols">
+		<div class="b-form b-form_border">
 
-			<div class="b-form-col-2">
+			<div class="b-form__cols">
+				<form ng-submit="keshigCtrl.getTPR(serverId)">
 
-				<div class="b-form__wrapper b-form__wrapper_margin-bottom">
+					<div class="b-form-col-2">
 
-					<button type="submit" class="b-btn b-btn_green g-right" ng-click="keshigCtrl.getTPR()">
-						Generate TPR
-					</button>
-					
-					<div class="clear"></div>
-				</div>
-				
+						<div class="b-form__wrapper b-form__wrapper_margin-bottom">
+							<label class="b-form-label b-form-label_fix-size-2 g-left">Server</label>
+
+							<div class="b-form-wrapper b-form-wrapper_margin-size-2">
+								<select 
+									class="b-form-input b-form-input_full" 
+									ng-model="serverId" 
+									required>
+									<option 
+									ng-repeat="server in keshigCtrl.servers" 
+									value="{{ server.serverId }}">
+										{{ server.serverName }}
+									</option>
+								</select>								
+							</div>
+							<div class="clear"></div>
+						</div>
+						
+						<button type="submit" class="b-btn b-btn_green g-right">Generate TPR</button>
+						
+					</div>
+
+				</form>
 			</div>
 
 		</div>

@@ -130,8 +130,8 @@ function KeshigCtrl($scope, keshigSrv, DTOptionsBuilder, DTColumnBuilder, $resou
 		}
 	}
 
-	function getTPR() {
-		keshigSrv.getTPR().success(function (data) {
+	function getTPR(serverId) {
+		keshigSrv.getTPR(serverId).success(function (data) {
 			SweetAlert.swal("Success!", 'Generating TPR... Link for the file will appear in History tab.', "success");
 		}).error(function(error){
 			SweetAlert.swal("ERROR!", 'Error: ' + error.replace(/\\n/g, ' '), 'error');

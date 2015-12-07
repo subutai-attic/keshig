@@ -61,8 +61,8 @@ function keshigSrv($http) {
 		});
 	}
 
-	function getTPR() {
-		return $http.get(BASE_URL + 'tpr/', {
+	function getTPR(serverId) {
+		return $http.get(BASE_URL + 'tpr/' + serverId, {
 			withCredentials: true
 		});
 	}
