@@ -35,16 +35,16 @@
 				</div>
 
 				<div class="b-form__wrapper b-form__wrapper_margin-bottom">
-					<select class="b-form-input b-form-input_full" ng-model="keshigCtrl.profiles2Add.testServer" required>
-						<option ng-repeat="server in keshigCtrl.serversByType['TEST_SERVER']" value="{{ server.serverName }}">
+					<select class="b-form-input b-form-input_full" ng-model="keshigCtrl.profiles2Add.deployServer" required>
+						<option ng-repeat="server in keshigCtrl.serversByType['DEPLOY_SERVER']" value="{{ server.serverName }}">
 							{{ server.serverName }}
 						</option>
 					</select>
 				</div>
 
 				<div class="b-form__wrapper b-form__wrapper_margin-bottom">
-					<select class="b-form-input b-form-input_full" ng-model="keshigCtrl.profiles2Add.deployServer" required>
-						<option ng-repeat="server in keshigCtrl.serversByType['DEPLOY_SERVER']" value="{{ server.serverName }}">
+					<select class="b-form-input b-form-input_full" ng-model="keshigCtrl.profiles2Add.testServer" required>
+						<option ng-repeat="server in keshigCtrl.serversByType['TEST_SERVER']" value="{{ server.serverName }}">
 							{{ server.serverName }}
 						</option>
 					</select>
