@@ -5,7 +5,11 @@ my_dir="$(dirname "$0")"
 mgmt_folder=$1
 SNAP_DISTR="../SNAPS/$mgmt_folder"
 rdpPort=3499
-VAGRANT_BOX_VERSION=$(echo $mgmt_folder | awk -F"_" '{print $2}' )
+BOX_VERSION=$(echo $mgmt_folder | awk -F"_" '{print $2}' | awk -F"." '{print $1"."$2}' )
+timeshift=$(echo $mgmt_folder | awk -F"_" '{print $3}' )
+#echo "$VAGRANT_BOX_VERSION.$timeshift"
+
+VAGRANT_BOX_VERSION="$BOX_VERSION.$timeshift"
 
 pushd $my_dir
 source "../qnd_vars.conf"

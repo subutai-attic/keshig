@@ -19,6 +19,8 @@ sudo snappy install --allow-unauthenticated $distr/*.snap
 systemctl | grep subutai-mng_subutai-mng | awk -F" " '{print $1}' | awk -F"." '{print " sudo systemctl stop "$1}'  | bash
 sudo find /var/lib/apps/subutai-mng  -name db -type d | awk '{print "sudo rm -rf "$1}' | bash
 sudo bash -c "echo 'Defaults secure_path="/apps/bin/:/apps/subutai/current/bin:/apps/subutai-mng/current/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"' > /etc/sudoers.d/subutai"
+    sed '/Delete me after export/d' -i /apps/subutai-mng/current/bin/start
+    rm -rf /var/lib/apps/subutai-mng/current/*
 rm -rf $distr
 else
 
