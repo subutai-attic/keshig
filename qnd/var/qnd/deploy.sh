@@ -76,6 +76,7 @@ done < <(cat $my_dir/Vagrantfile | grep v.name | awk -F"=" '{print $2}'  | tr -d
 wait
 
 vagrant halt
+wait
 popd
 while IFS= read -r line; do
 echo "Configure and Run $line  rdp:$rdpPort"
