@@ -9,8 +9,54 @@ public class Build implements Comparable<Build>
     private String id;
     private String name;
     private String version;
+    private String commitId;
+    private String branch;
     private Date date;
 
+
+    public Build( final String id, final String name, final String version, final String commitId, final String branch,
+                  final Date date )
+    {
+        this.id = id;
+        this.name = name;
+        this.version = version;
+        this.commitId = commitId;
+        this.branch = branch;
+        this.date = date;
+    }
+
+
+    public Build( final String id, final String name, final String version, final Date date )
+    {
+        this.id = id;
+        this.name = name;
+        this.version = version;
+        this.date = date;
+    }
+
+
+    public String getBranch()
+    {
+        return branch;
+    }
+
+
+    public void setBranch( final String branch )
+    {
+        this.branch = branch;
+    }
+
+
+    public String getCommitId()
+    {
+        return commitId;
+    }
+
+
+    public void setCommitId( final String commitId )
+    {
+        this.commitId = commitId;
+    }
 
 
     public String getId()
@@ -57,15 +103,6 @@ public class Build implements Comparable<Build>
 
     public void setDate( final Date date )
     {
-        this.date = date;
-    }
-
-
-    public Build( final String id, final String name, final String version, final Date date )
-    {
-        this.id = id;
-        this.name = name;
-        this.version = version;
         this.date = date;
     }
 

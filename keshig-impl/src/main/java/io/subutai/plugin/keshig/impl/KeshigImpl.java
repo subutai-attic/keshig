@@ -266,12 +266,11 @@ public class KeshigImpl implements Keshig
         PeerInfo peerInfo = keshigServer.getPeers().get( serverIp );
 
         peerInfo.setFree( false );
-        peerInfo.setUsedBy(usedBy);
+        peerInfo.setUsedBy( usedBy );
 
-        keshigServer.getPeers().put( peerInfo.getIp(),peerInfo );
+        keshigServer.getPeers().put( peerInfo.getIp(), peerInfo );
 
         updateKeshigServer( keshigServer );
-
     }
 
 
@@ -573,11 +572,11 @@ public class KeshigImpl implements Keshig
         for ( final String line : split )
         {
             final String[] build = line.split( "_" );
-            if ( build.length == 3 )
+            if ( build.length == 5 )
             {
-                final Date date = new Date( Long.valueOf( build[2] ) * 1000L );
-                LOG.info( "Adding following build  : %s ", line );
-                list.add( new Build( line, build[0], build[1], date ) );
+                final Date date = new Date( Long.valueOf( build[3] ) * 1000L );
+
+                list.add( new Build( line, build[0], build[1], build[3], build[2], date ) );
             }
         }
         return list;
