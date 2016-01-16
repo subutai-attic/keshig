@@ -97,8 +97,8 @@ public interface KeshigRestService
     public Response export( @PathParam( "serverId" ) String serverId, @PathParam( "buildName" ) String buildName );
 
     @GET
-    @Path("tpr/{serverId}")
-    public Response tpr(@PathParam( "serverId" ) String serverId);
+    @Path( "tpr/{serverId}" )
+    public Response tpr( @PathParam( "serverId" ) String serverId );
 
     //---------------------------------------------------------------------------------------------------//
     @POST
@@ -160,10 +160,16 @@ public interface KeshigRestService
     @GET
     @Path( "tests" )
     public Response getTests();
+
     //UPDATE STATUS
     @PUT
-    @Path("statuses")
+    @Path( "statuses" )
     public Response updateStatuses();
+
+    @POST
+    @Path( "statuses" )
+    public Response updateReserved( @FormParam( "hostname" ) String hostName, @FormParam( "serverIp" ) String serverIp,
+                                    @FormParam( "usedBy" ) String usedBy );
 
     @GET
     @Path( "statuses" )

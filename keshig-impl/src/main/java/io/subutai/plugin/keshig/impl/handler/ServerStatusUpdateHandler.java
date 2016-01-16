@@ -20,7 +20,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
@@ -32,8 +31,6 @@ import io.subutai.common.peer.ResourceHost;
 import io.subutai.plugin.keshig.api.entity.KeshigServer;
 import io.subutai.plugin.keshig.api.entity.PeerInfo;
 import io.subutai.plugin.keshig.impl.KeshigImpl;
-
-import static java.net.HttpURLConnection.HTTP_OK;
 
 
 public class ServerStatusUpdateHandler implements Runnable
@@ -108,6 +105,7 @@ public class ServerStatusUpdateHandler implements Runnable
             KeshigServer keshigServer = new KeshigServer( resourceHost.getHostname() );
 
             keshigServer.setLastUpdated( new Date( System.currentTimeMillis() ) );
+
             keshigServer.setPeers( peerInfos );
 
             keshigServers.put( keshigServer.getHostname(), keshigServer );

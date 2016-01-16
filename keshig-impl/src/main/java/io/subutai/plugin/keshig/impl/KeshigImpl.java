@@ -36,6 +36,7 @@ import io.subutai.plugin.keshig.api.entity.Command;
 import io.subutai.plugin.keshig.api.entity.History;
 import io.subutai.plugin.keshig.api.entity.KeshigServer;
 import io.subutai.plugin.keshig.api.entity.OperationType;
+import io.subutai.plugin.keshig.api.entity.PeerInfo;
 import io.subutai.plugin.keshig.api.entity.Server;
 import io.subutai.plugin.keshig.api.entity.ServerType;
 import io.subutai.plugin.keshig.api.entity.options.BuildOption;
@@ -255,6 +256,22 @@ public class KeshigImpl implements Keshig
                 e.printStackTrace();
             }
         }
+    }
+
+
+    @Override
+    public void updateReserved( final String hostName, final String serverIp, final String usedBy )
+    {
+        KeshigServer keshigServer = getKeshigServer( hostName );
+        PeerInfo peerInfo = keshigServer.getPeers().get( serverIp );
+
+        peerInfo.setFree( false );
+        peerInfo.setUsedBy(usedBy);
+
+        keshigServer.getPeers().put( peerInfo.getIp(),peerInfo );
+
+        updateKeshigServer( keshigServer );
+
     }
 
 

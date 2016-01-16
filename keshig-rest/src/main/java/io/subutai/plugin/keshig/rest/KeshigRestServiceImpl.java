@@ -19,6 +19,7 @@ import io.subutai.plugin.keshig.api.entity.options.TestOption;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.ws.rs.FormParam;
 import javax.ws.rs.core.Response;
 import java.io.File;
 import java.util.*;
@@ -366,6 +367,16 @@ public class KeshigRestServiceImpl implements KeshigRestService {
     {
         keshig.updateKeshigServerStatuses();
         return Response.ok().build();
+    }
+
+
+    @Override
+    public Response updateReserved( final String hostName,
+                                    final String serverIp,
+                                    final String usedBy )
+    {
+
+        return null;
     }
 
 
