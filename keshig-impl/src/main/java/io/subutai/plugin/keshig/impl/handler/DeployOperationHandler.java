@@ -124,7 +124,7 @@ public class DeployOperationHandler implements Runnable {
 
     }
 
-    private List<String> extractServers(final String stdOut, final String buildName) {
+    public List<String> extractServers(final String stdOut, final String buildName) {
 
         List<String> ips = new ArrayList<>();
 

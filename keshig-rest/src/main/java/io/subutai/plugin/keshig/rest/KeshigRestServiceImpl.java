@@ -3,6 +3,8 @@ package io.subutai.plugin.keshig.rest;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+
+import io.subutai.common.peer.ResourceHost;
 import io.subutai.common.settings.Common;
 import io.subutai.plugin.keshig.api.Keshig;
 import io.subutai.plugin.keshig.api.Profile;
@@ -357,6 +359,22 @@ public class KeshigRestServiceImpl implements KeshigRestService {
     public Response getTests() {
         return Response.ok().entity(keshig.getPlaybooks()).build();
     }
+
+
+    @Override
+    public Response updateStatuses()
+    {
+        keshig.updateKeshigServerStatuses();
+        return Response.ok().build();
+    }
+
+
+    @Override
+    public Response getStatuses()
+    {
+        return Response.ok(keshig.getAllKeshigServers()).build();
+    }
+
 
     @Override
     public Response listHistory() {

@@ -27,6 +27,22 @@ public interface Keshig {
 
     void setServer(String serverId, String serverType, String serverName);
 
+    //Keshig Server -> Hosting VM with Peer details
+    void addKeshigServer(KeshigServer keshigServer) throws Exception;
+
+    void removeKeshigServer(String hostname);
+
+    void updateKeshigServer(KeshigServer keshigServer);
+
+    KeshigServer getKeshigServer(String hostname);
+
+    List<KeshigServer> getAllKeshigServers();
+
+    void dropAllServers();
+
+    void updateKeshigServerStatuses();
+
+    void addKeshigServers(List<KeshigServer> servers);
     /*
     *   Keshig Option handlers
     * */

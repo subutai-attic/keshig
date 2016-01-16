@@ -9,7 +9,6 @@ public class Server
     private ServerType type;
     private String description;
 
-
     public Server( final String serverId, final String serverName, final String serverAddress, final ServerType type,
                    final String description )
     {
@@ -27,6 +26,12 @@ public class Server
         this.serverAddress = serverAddress;
         this.type = type;
 
+    }
+
+
+    public void setType( final ServerType type )
+    {
+        this.type = type;
     }
 
 

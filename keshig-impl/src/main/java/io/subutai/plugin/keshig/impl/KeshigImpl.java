@@ -34,6 +34,7 @@ import io.subutai.plugin.keshig.api.Profile;
 import io.subutai.plugin.keshig.api.entity.Build;
 import io.subutai.plugin.keshig.api.entity.Command;
 import io.subutai.plugin.keshig.api.entity.History;
+import io.subutai.plugin.keshig.api.entity.KeshigServer;
 import io.subutai.plugin.keshig.api.entity.OperationType;
 import io.subutai.plugin.keshig.api.entity.Server;
 import io.subutai.plugin.keshig.api.entity.ServerType;
@@ -46,9 +47,11 @@ import io.subutai.plugin.keshig.impl.handler.CloneOperationHandler;
 import io.subutai.plugin.keshig.impl.handler.DeployOperationHandler;
 import io.subutai.plugin.keshig.impl.handler.ExportOperationHandler;
 import io.subutai.plugin.keshig.impl.handler.OperationHandler;
+import io.subutai.plugin.keshig.impl.handler.ServerStatusUpdateHandler;
 import io.subutai.plugin.keshig.impl.handler.TestOperationHandler;
 import io.subutai.plugin.keshig.impl.workflow.integration.IntegrationWorkflow;
 
+import static io.subutai.plugin.keshig.api.KeshigConfig.KESHIG_SERVER;
 import static io.subutai.plugin.keshig.api.KeshigConfig.PRODUCT_HISTORY;
 import static io.subutai.plugin.keshig.api.KeshigConfig.PRODUCT_KEY;
 import static io.subutai.plugin.keshig.api.KeshigConfig.PROFILE;
@@ -141,13 +144,13 @@ public class KeshigImpl implements Keshig
     {
 
         Preconditions.checkNotNull( serverName );
-        return ( Server ) this.pluginDAO.getInfo( PRODUCT_KEY, serverName, Server.class );
+        return this.pluginDAO.getInfo( PRODUCT_KEY, serverName, Server.class );
     }
 
 
     public List<Server> getServers()
     {
-        return ( List<Server> ) this.pluginDAO.getInfo( PRODUCT_KEY, Server.class );
+        return this.pluginDAO.getInfo( PRODUCT_KEY, Server.class );
     }
 
 
@@ -174,6 +177,83 @@ public class KeshigImpl implements Keshig
         catch ( Exception e )
         {
             e.printStackTrace();
+        }
+    }
+
+
+    @Override
+    public void addKeshigServer( final KeshigServer server ) throws Exception
+    {
+        Preconditions.checkNotNull( server );
+
+        if ( !this.getPluginDAO().saveInfo( KESHIG_SERVER, server.getHostname(), server ) )
+        {
+            throw new Exception( "Could not save server info" );
+        }
+    }
+
+
+    @Override
+    public void removeKeshigServer( final String hostname )
+    {
+        this.pluginDAO.deleteInfo( KESHIG_SERVER, hostname );
+    }
+
+
+    @Override
+    public void updateKeshigServer( final KeshigServer keshigServer )
+    {
+        try
+        {
+            addKeshigServer( keshigServer );
+        }
+        catch ( Exception e )
+        {
+            e.printStackTrace();
+        }
+    }
+
+
+    @Override
+    public KeshigServer getKeshigServer( final String hostname )
+    {
+        return this.pluginDAO.getInfo( KESHIG_SERVER, hostname, KeshigServer.class );
+    }
+
+
+    @Override
+    public List<KeshigServer> getAllKeshigServers()
+    {
+        List<KeshigServer> keshigServer = Lists.newArrayList();
+        keshigServer = this.pluginDAO.getInfo( KESHIG_SERVER, KeshigServer.class );
+        return keshigServer;
+    }
+
+
+    @Override
+    public void dropAllServers()
+    {
+        List<KeshigServer> existingServer = getAllKeshigServers();
+        for ( KeshigServer server : existingServer )
+        {
+            removeKeshigServer( server.getHostname() );
+        }
+    }
+
+
+    @Override
+    public void addKeshigServers( final List<KeshigServer> servers )
+    {
+        for ( KeshigServer keshigServer : servers )
+        {
+            try
+            {
+                addKeshigServer( keshigServer );
+            }
+            catch ( Exception e )
+            {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -230,7 +310,7 @@ public class KeshigImpl implements Keshig
 
 
     @Override
-    public void tpr(String serverId)
+    public void tpr( String serverId )
     {
 
         try
@@ -245,23 +325,24 @@ public class KeshigImpl implements Keshig
             host.execute(
                     new RequestBuilder( "mkdir" ).withCmdArgs( Lists.newArrayList( tprDir ) ).withRunAs( "ubuntu" ) );
 
-            host.execute( new RequestBuilder( "/home/ubuntu/export-tpr" )
-                    .withCmdArgs( Lists.newArrayList( "-o", tprDir ) ), ( ( response, commandResult ) -> {
+            host.execute(
+                    new RequestBuilder( "/home/ubuntu/export-tpr" ).withCmdArgs( Lists.newArrayList( "-o", tprDir ) ),
+                    ( ( response, commandResult ) -> {
 
-                if ( commandResult.hasCompleted() )
-                {
-                    history.setStdOut( String.format( "/%s/acceptance-tests.pdf", history.getId() ) );
-                }
-                else
-                {
-                    history.setStdErr( "ERROR. More details in tracker" );
-                }
-                history.setExitCode( commandResult.getExitCode().toString() );
-                history.setEndTime( System.currentTimeMillis() );
-                getPluginDAO().saveInfo( KeshigConfig.PRODUCT_HISTORY, history.getId(), history );
+                        if ( commandResult.hasCompleted() )
+                        {
+                            history.setStdOut( String.format( "/%s/acceptance-tests.pdf", history.getId() ) );
+                        }
+                        else
+                        {
+                            history.setStdErr( "ERROR. More details in tracker" );
+                        }
+                        history.setExitCode( commandResult.getExitCode().toString() );
+                        history.setEndTime( System.currentTimeMillis() );
+                        getPluginDAO().saveInfo( KeshigConfig.PRODUCT_HISTORY, history.getId(), history );
 
-                return;
-            } ) );
+                        return;
+                    } ) );
         }
         catch ( HostNotFoundException | CommandException e )
         {
@@ -314,9 +395,7 @@ public class KeshigImpl implements Keshig
         {
             final ResourceHost buildHost =
                     this.getPeerManager().getLocalPeer().getResourceHostById( buildServer.getServerId() );
-            final CommandResult result = buildHost.execute(
-                    new RequestBuilder( Command.getDeployCommand() ).withCmdArgs( Lists.newArrayList( "-l", "list" ) )
-                                                                    .withTimeout( 30 ) );
+            final CommandResult result = buildHost.execute( new RequestBuilder( "ls /var/qnd/SNAPS/" ) );
 
             if ( result.hasSucceeded() )
             {
@@ -348,8 +427,8 @@ public class KeshigImpl implements Keshig
             final ResourceHost testHost =
                     this.getPeerManager().getLocalPeer().getResourceHostById( testServer.getServerId() );
 
-            final CommandResult result = testHost.execute( new RequestBuilder( Command.getTestComand() )
-                    .withCmdArgs(Lists.newArrayList("-l" ) ) );
+            final CommandResult result = testHost.execute(
+                    new RequestBuilder( Command.getTestComand() ).withCmdArgs( Lists.newArrayList( "-l" ) ) );
 
             if ( result.hasSucceeded() )
             {
@@ -402,6 +481,14 @@ public class KeshigImpl implements Keshig
             playbooks.add( match );
         }
         return playbooks;
+    }
+
+
+    @Override
+    public void updateKeshigServerStatuses()
+    {
+        ServerStatusUpdateHandler serverStatusUpdateHandler = new ServerStatusUpdateHandler( this );
+        serverStatusUpdateHandler.run();
     }
 
 
@@ -667,7 +754,7 @@ public class KeshigImpl implements Keshig
             case CLONE:
             {
                 final List<CloneOption> cloneOptions =
-                        ( List<CloneOption> ) this.getPluginDAO().getInfo( type.toString(), CloneOption.class );
+                        this.getPluginDAO().getInfo( type.toString(), CloneOption.class );
                 for ( final CloneOption option : cloneOptions )
                 {
                     if ( option.isActive() )
@@ -680,7 +767,7 @@ public class KeshigImpl implements Keshig
             case BUILD:
             {
                 final List<BuildOption> buildOptions =
-                        ( List<BuildOption> ) this.getPluginDAO().getInfo( type.toString(), BuildOption.class );
+                        this.getPluginDAO().getInfo( type.toString(), BuildOption.class );
                 for ( final BuildOption buildOption : buildOptions )
                 {
                     if ( buildOption.isActive() )
@@ -693,7 +780,7 @@ public class KeshigImpl implements Keshig
             case DEPLOY:
             {
                 final List<DeployOption> deployOptions =
-                        ( List<DeployOption> ) this.getPluginDAO().getInfo( type.toString(), DeployOption.class );
+                        this.getPluginDAO().getInfo( type.toString(), DeployOption.class );
                 for ( final DeployOption deployOption : deployOptions )
                 {
                     if ( deployOption.isActive() )
@@ -705,8 +792,7 @@ public class KeshigImpl implements Keshig
             }
             case TEST:
             {
-                final List<TestOption> testOptions =
-                        ( List<TestOption> ) this.getPluginDAO().getInfo( type.toString(), TestOption.class );
+                final List<TestOption> testOptions = this.getPluginDAO().getInfo( type.toString(), TestOption.class );
                 for ( final TestOption testOption : testOptions )
                 {
                     if ( testOption.isActive() )
@@ -767,19 +853,19 @@ public class KeshigImpl implements Keshig
         {
             case CLONE:
             {
-                return ( List<?> ) this.getPluginDAO().getInfo( type.toString(), CloneOption.class );
+                return this.getPluginDAO().getInfo( type.toString(), CloneOption.class );
             }
             case BUILD:
             {
-                return ( List<?> ) this.getPluginDAO().getInfo( type.toString(), BuildOption.class );
+                return this.getPluginDAO().getInfo( type.toString(), BuildOption.class );
             }
             case DEPLOY:
             {
-                return ( List<?> ) this.getPluginDAO().getInfo( type.toString(), DeployOption.class );
+                return this.getPluginDAO().getInfo( type.toString(), DeployOption.class );
             }
             case TEST:
             {
-                return ( List<?> ) this.getPluginDAO().getInfo( type.toString(), TestOption.class );
+                return this.getPluginDAO().getInfo( type.toString(), TestOption.class );
             }
             default:
             {

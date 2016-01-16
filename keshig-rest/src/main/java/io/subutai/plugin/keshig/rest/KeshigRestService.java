@@ -13,6 +13,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import io.subutai.common.peer.ResourceHost;
 import io.subutai.plugin.keshig.api.Profile;
 import io.subutai.plugin.keshig.api.entity.options.BuildOption;
 import io.subutai.plugin.keshig.api.entity.options.CloneOption;
@@ -159,7 +160,15 @@ public interface KeshigRestService
     @GET
     @Path( "tests" )
     public Response getTests();
+    //UPDATE STATUS
+    @PUT
+    @Path("statuses")
+    public Response updateStatuses();
 
+    @GET
+    @Path( "statuses" )
+    @Produces( MediaType.APPLICATION_JSON )
+    public Response getStatuses();
 
     //HISTORY CRUD
     @GET

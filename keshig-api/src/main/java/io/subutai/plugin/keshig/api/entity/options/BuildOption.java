@@ -14,8 +14,8 @@ public class BuildOption
 
     private boolean cleanInstall;
     private boolean runTests;
-    private int timeOut;
-    private String name;
+    private int     timeOut;
+    private String  name;
     private boolean active;
 
 
