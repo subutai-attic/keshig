@@ -20,7 +20,6 @@ import io.subutai.common.command.CommandResult;
 import io.subutai.common.command.RequestBuilder;
 import io.subutai.common.mdc.SubutaiExecutors;
 import io.subutai.common.peer.HostNotFoundException;
-import io.subutai.common.peer.ManagementHost;
 import io.subutai.common.peer.ResourceHost;
 import io.subutai.common.tracker.TrackerOperation;
 import io.subutai.core.environment.api.EnvironmentManager;
@@ -575,7 +574,7 @@ public class KeshigImpl implements Keshig
             if ( build.length == 5 )
             {
                 final Date date = new Date( Long.valueOf( build[3] ) * 1000L );
-
+                LOG.debug( "Found build: " + line );
                 list.add( new Build( line, build[0], build[1], build[3], build[2], date ) );
             }
         }
