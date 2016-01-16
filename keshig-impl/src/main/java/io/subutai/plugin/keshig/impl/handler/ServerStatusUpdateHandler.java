@@ -69,13 +69,15 @@ public class ServerStatusUpdateHandler implements Runnable
                 {
                     PeerInfo info = keshigServer1.getPeers().get( ip );
                     //copy old values of isFree and UsedBy
-                    if ( info.getIp() != null && keshigServer1.getPeers().get( ip ) != null )
+                    if ( info != null && keshigServer1.getPeers().get( ip ) != null )
                     {
                         info.setFree( existingKeshigServer.getPeers().get( ip ).isFree() );
 
                         info.setUsedBy( existingKeshigServer.getPeers().get( ip ).getUsedBy() );
-
-                        keshigServer1.getPeers().put( info.getIp(), info );
+                        if ( info.getIp() != null )
+                        {
+                            keshigServer1.getPeers().put( info.getIp(), info );
+                        }
                     }
                     //update
 
@@ -125,7 +127,7 @@ public class ServerStatusUpdateHandler implements Runnable
         try
         {
             CommandResult commandResult =
-                    server.execute( new RequestBuilder( "/var/qnd/getIp" ).withRunAs( "ubuntu" ) );
+                    server.execute( new RequestBuilder( "/var/qnd/getIPs" ).withRunAs( "ubuntu" ) );
 
             if ( commandResult.hasSucceeded() )
             {
@@ -138,14 +140,16 @@ public class ServerStatusUpdateHandler implements Runnable
 
                     PeerInfo peerInfo = new PeerInfo();
                     HashMap map = getPeerDetails( ip );
-
-                    if ( map.get( "status" ).equals( HTTP_OK ) )
-                    {
-                        peerInfo.setDetails( map );
-                        peerInfo.setIp( ip );
-                        peerInfo.setFree( false );
-                        peerInfo.setStatus( "OK" );
-                    }
+//                    if ( map.size() > 0 )
+//                    {
+//                        if ( map.get( "status" ).equals( HTTP_OK ) )
+//                        {
+                            peerInfo.setDetails( map );
+                            peerInfo.setIp( ip );
+                            peerInfo.setFree( false );
+                            peerInfo.setStatus( "OK" );
+//                        }
+                    //                    }
                     peerInfos.put( ip, peerInfo );
 
                     LOG.debug( String.format( "Found peer:%s", peerInfo.toString() ) );
@@ -186,6 +190,7 @@ public class ServerStatusUpdateHandler implements Runnable
     private HashMap getPeerDetails( String ipAddr )
     {
         HashMap serverDetails = new HashMap<>();
+
         serverDetails.put( "status", 0 );
 
         try
@@ -195,7 +200,7 @@ public class ServerStatusUpdateHandler implements Runnable
             LOG.debug( String.format( "Making request to : %s", serverUri ) );
             CloseableHttpClient httpclient = HttpClients.createDefault();
 
-            HttpPost httpPost = new HttpPost( serverUri );
+            HttpGet httpPost = new HttpGet( serverUri );
             ResponseHandler<String> responseHandler = new ResponseHandler<String>()
             {
                 @Override
@@ -229,7 +234,8 @@ public class ServerStatusUpdateHandler implements Runnable
         }
         catch ( IOException e )
         {
-            e.printStackTrace();
+            LOG.error( "Error getting peer info:\n " + e.getMessage() );
+            return serverDetails;
         }
 
 
@@ -245,8 +251,7 @@ public class ServerStatusUpdateHandler implements Runnable
 
         LOG.debug( String.format( "Making request to : %s", serverUri ) );
 
-        CloseableHttpClient httpclient = HttpClients.createDefault();
-        try
+        try ( CloseableHttpClient httpclient = HttpClients.createDefault() )
         {
             HttpGet httpget = new HttpGet( serverUri );
 
@@ -279,10 +284,6 @@ public class ServerStatusUpdateHandler implements Runnable
             LOG.debug( "Response Body: " + responseBody );
 
             return responseBody;
-        }
-        finally
-        {
-            httpclient.close();
         }
     }
 }
