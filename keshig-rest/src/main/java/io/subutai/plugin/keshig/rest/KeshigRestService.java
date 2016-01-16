@@ -168,7 +168,8 @@ public interface KeshigRestService
 
     @POST
     @Path( "statuses" )
-    public Response updateReserved( @FormParam( "hostname" ) String hostName, @FormParam( "serverIp" ) String serverIp,
+    public Response updateReserved( @FormParam( "hostname" ) String hostName,
+                                    @FormParam( "serverIp" ) String serverIp,
                                     @FormParam( "usedBy" ) String usedBy );
 
     @GET

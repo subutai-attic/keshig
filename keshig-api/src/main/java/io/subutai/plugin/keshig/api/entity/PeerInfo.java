@@ -9,7 +9,7 @@ public class PeerInfo
 
     private String ip;
     private String status;
-    private boolean isFree;
+    private boolean isFree = true;
     private HashMap details;
     private String usedBy;
 
