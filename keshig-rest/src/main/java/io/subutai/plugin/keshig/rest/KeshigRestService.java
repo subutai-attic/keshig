@@ -168,10 +168,12 @@ public interface KeshigRestService
 
     @POST
     @Path( "statuses" )
-    public Response updateReserved( @FormParam( "hostname" ) String hostName,
-                                    @FormParam( "serverIp" ) String serverIp,
-                                    @FormParam( "usedBy" ) String usedBy,
-                                    @FormParam("comment") String comment);
+    public Response updateReserved( @FormParam( "hostname" ) String hostName, @FormParam( "serverIp" ) String serverIp,
+                                    @FormParam( "usedBy" ) String usedBy, @FormParam( "comment" ) String comment );
+
+    @DELETE
+    @Path( "statuses/{hostname}/{serverIp}" )
+    public Response deleteReservation( @PathParam( "hostname" ) String hostname, @PathParam("serverIp") String serverIp );
 
     @GET
     @Path( "statuses" )

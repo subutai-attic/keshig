@@ -259,7 +259,8 @@ public class KeshigImpl implements Keshig
 
 
     @Override
-    public void updateReserved( final String hostName, final String serverIp, final String usedBy, final String comment )
+    public void updateReserved( final String hostName, final String serverIp, final String usedBy,
+                                final String comment )
     {
 
         KeshigServer keshigServer = getKeshigServer( hostName );
@@ -269,6 +270,21 @@ public class KeshigImpl implements Keshig
         peerInfo.setFree( false );
         peerInfo.setUsedBy( usedBy );
         peerInfo.setComment( comment );
+
+        keshigServer.getPeers().put( peerInfo.getIp(), peerInfo );
+
+        updateKeshigServer( keshigServer );
+    }
+
+
+    @Override
+    public void freeReserver( final String hostname, final String serverIp )
+    {
+        KeshigServer keshigServer = getKeshigServer( hostname );
+
+        PeerInfo peerInfo = keshigServer.getPeers().get( serverIp );
+
+        peerInfo.setFree( true );
 
         keshigServer.getPeers().put( peerInfo.getIp(), peerInfo );
 

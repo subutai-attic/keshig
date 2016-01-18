@@ -130,5 +130,7 @@ public interface Keshig
     void publish( String boxName, String serverId );
 
     void tpr( String serverId );
+
+    void freeReserver( String hostname, String serverIp );
 }
 

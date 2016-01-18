@@ -451,7 +451,16 @@ public class KeshigRestServiceImpl implements KeshigRestService
                                     final String comment )
     {
         keshig.updateReserved( hostName, serverIp, usedBy, comment );
-        
+
+        return Response.ok( keshig.getAllKeshigServers() ).build();
+    }
+
+
+    @Override
+    public Response deleteReservation(final String hostname, final String serverIp )
+    {
+        keshig.freeReserver(hostname, serverIp);
+
         return Response.ok( keshig.getAllKeshigServers() ).build();
     }
 
