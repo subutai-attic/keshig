@@ -1,0 +1,36 @@
+<div class="b-popup">
+    <div class="b-popup__header">
+        <span>Edit Peer Data</span>
+        <a href ng-click="closeThisDialog()">
+            <img src="assets/elements/buttons/b-icon-close.svg" class="b-icon g-right"/>
+        </a>
+    </div>
+    <form ng-submit="keshigCtrl.updateResourceHost()" name="editPeerData">
+        <div class="b-popup__body">
+            <div class="b-popup-body">
+                <label class="b-popup-body-label b-popup-body-label_block">Used By:</label>
+                <input type="text"
+                       placeholder="Name"
+                       ng-model="keshigCtrl.currentResourceHost.peer.usedBy"
+                       class="b-popup-body-input b-popup-body-input_full b-popup-body-input_margin-bttm"
+                       required>
+
+                <label class="b-popup-body-label b-popup-body-label_block">Comment:</label>
+                <input type="text"
+                       placeholder="comment"
+                       ng-model="keshigCtrl.currentResourceHost.peer.comment"
+                       class="b-popup-body-input b-popup-body-input_full b-popup-body-input_margin-bttm">
+                <div class="clear"></div>
+            </div>
+            <div class="b-popup-body b-popup-body_col-2 g-right">
+                <col-select></col-select>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="b-popup__footer">
+            <button class="b-btn b-btn_green g-right" type="submit">Approve Peer</button>
+            <div class="clear"></div>
+        </div>
+    </form>
+</div>
+
