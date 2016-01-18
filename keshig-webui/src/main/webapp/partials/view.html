@@ -35,7 +35,12 @@
 				<li class="b-tabs-menu__item"
 						ng-click="keshigCtrl.changeTab('tpr')"
 						ng-class="keshigCtrl.activeTab == 'tpr' ? 'b-tabs-menu__item_active' : ''">
-					TPR	
+					TPR
+				</li>
+				<li class="b-tabs-menu__item"
+					ng-click="keshigCtrl.changeTab('rh')"
+					ng-class="keshigCtrl.activeTab == 'rh' ? 'b-tabs-menu__item_active' : ''">
+					Resource Hosts
 				</li>
 			</ul>
 		</div>
@@ -63,6 +68,10 @@
 		<div
 				ng-if="keshigCtrl.activeTab == 'tpr'"
 				ng-include="'plugins/keshig/partials/tpr.html'">
+		</div>
+		<div
+				ng-if="keshigCtrl.activeTab == 'rh'"
+				ng-include="'plugins/keshig/partials/rh.html'">
 		</div>
 
 	</div>
