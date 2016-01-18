@@ -45,7 +45,7 @@ public interface Keshig
 
     void addKeshigServers( List<KeshigServer> servers );
 
-    void updateReserved( String hostName, String serverIp, String usedBy );
+    void updateReserved( String hostName, String serverIp, String usedBy, String comment );
 
     /*
     *   Keshig Option handlers

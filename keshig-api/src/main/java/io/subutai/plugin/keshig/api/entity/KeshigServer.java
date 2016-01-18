@@ -11,8 +11,6 @@ public class KeshigServer
     private String hostname;
     private Map<String, PeerInfo> peers;
     private Date lastUpdated;
-    private String comment;
-
 
     public KeshigServer()
     {
@@ -24,24 +22,10 @@ public class KeshigServer
         this.hostname = hostname;
     }
 
-
-    public String getComment()
-    {
-        return comment;
-    }
-
-
-    public void setComment( final String comment )
-    {
-        this.comment = comment;
-    }
-
-
     public Map<String, PeerInfo> getPeers()
     {
         return peers;
     }
-
 
     public void setPeers( final Map<String, PeerInfo> peers )
     {

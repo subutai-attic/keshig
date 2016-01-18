@@ -447,10 +447,12 @@ public class KeshigRestServiceImpl implements KeshigRestService
 
 
     @Override
-    public Response updateReserved( final String hostName, final String serverIp, final String usedBy )
+    public Response updateReserved( final String hostName, final String serverIp, final String usedBy,
+                                    final String comment )
     {
-        keshig.updateReserved( hostName, serverIp, usedBy );
-        return Response.ok().build();
+        keshig.updateReserved( hostName, serverIp, usedBy, comment );
+        
+        return Response.ok( keshig.getAllKeshigServers() ).build();
     }
 
 

@@ -13,7 +13,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import io.subutai.common.peer.ResourceHost;
+
 import io.subutai.plugin.keshig.api.Profile;
 import io.subutai.plugin.keshig.api.entity.options.BuildOption;
 import io.subutai.plugin.keshig.api.entity.options.CloneOption;
@@ -170,7 +170,8 @@ public interface KeshigRestService
     @Path( "statuses" )
     public Response updateReserved( @FormParam( "hostname" ) String hostName,
                                     @FormParam( "serverIp" ) String serverIp,
-                                    @FormParam( "usedBy" ) String usedBy );
+                                    @FormParam( "usedBy" ) String usedBy,
+                                    @FormParam("comment") String comment);
 
     @GET
     @Path( "statuses" )

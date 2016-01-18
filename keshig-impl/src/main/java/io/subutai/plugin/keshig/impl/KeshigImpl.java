@@ -259,13 +259,16 @@ public class KeshigImpl implements Keshig
 
 
     @Override
-    public void updateReserved( final String hostName, final String serverIp, final String usedBy )
+    public void updateReserved( final String hostName, final String serverIp, final String usedBy, final String comment )
     {
+
         KeshigServer keshigServer = getKeshigServer( hostName );
+
         PeerInfo peerInfo = keshigServer.getPeers().get( serverIp );
 
         peerInfo.setFree( false );
         peerInfo.setUsedBy( usedBy );
+        peerInfo.setComment( comment );
 
         keshigServer.getPeers().put( peerInfo.getIp(), peerInfo );
 
