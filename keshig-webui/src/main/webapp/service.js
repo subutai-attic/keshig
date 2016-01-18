@@ -12,6 +12,7 @@ function keshigSrv($http) {
 	var OPTIONS_URL = BASE_URL + 'option/';
 	var PROFILES_URL = BASE_URL + 'profiles/';
 	var HISTORY_URL = BASE_URL + 'history/';
+	var STATUSES_URL = BASE_URL + 'statuses/';
 
 
 	var keshigSrv = {
@@ -34,6 +35,10 @@ function keshigSrv($http) {
 		getBuilds: getBuilds,
 		getPlaybooks: getPlaybooks,
 		updateOption : updateOption,
+		getStatuses : getStatuses,
+		getResourceHostsUpdates: getResourceHostsUpdates,
+		updateResourceHost: updateResourceHost,
+		unapprovePeer: unapprovePeer,
 
 		exportBuild : exportBuild,
 		getTPR : getTPR,
@@ -110,8 +115,8 @@ function keshigSrv($http) {
 	}
 
 	function addServer( server ) {
-		var postData = 'serverName=' + server.serverName 
-			+ '&serverType=' + server.serverType 
+		var postData = 'serverName=' + server.serverName
+			+ '&serverType=' + server.serverType
 			+ '&serverId=' + server.serverId;
 		return $http.post(SERVERS_URL, postData, {
 			withCredentials: true,
@@ -133,9 +138,9 @@ function keshigSrv($http) {
 	}
 
 	function updateServer( server ) {
-		var postData = 'serverName=' + server.serverName 
-			+ '&serverType=' + server.serverType 
-			+ '&serverId=' + server.serverId;		
+		var postData = 'serverName=' + server.serverName
+			+ '&serverType=' + server.serverType
+			+ '&serverId=' + server.serverId;
 		return $http.put(SERVERS_URL, postData, {
 			withCredentials: true,
 			headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
@@ -183,6 +188,36 @@ function keshigSrv($http) {
 		return $http.put(OPTIONS_URL + type.toLowerCase(), object, {
 			withCredentials: true,
 			headers: { 'Content-Type': 'application/json' }
+		});
+	}
+
+	function getStatuses() {
+		return $http.get( STATUSES_URL, {
+			withCredentials: true
+		});
+	}
+
+	function getResourceHostsUpdates() {
+		return $http.put( STATUSES_URL, {
+			withCredentials: true
+		});
+	}
+
+	function updateResourceHost(params) {
+		var postParams = 'hostname=' + params.hostname
+				+ '&serverIp=' + params.serverIp
+				+ '&comment=' + params.comment
+				+ '&usedBy=' + params.usedBy;
+		return $http.post( STATUSES_URL, postParams, {
+			withCredentials: true,
+			headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+		});
+	}
+
+	function unapprovePeer(params) {
+		return $http.delete( STATUSES_URL + params.hostname + '/' + params.serverIp, {
+			withCredentials: true,
+			headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 		});
 	}
 }
