@@ -51,7 +51,6 @@ public class KeshigRestServiceImpl implements KeshigRestService
     @Override
     public Response listServers()
     {
-
         return Response.ok( keshig.getServers() ).build();
     }
 
@@ -102,13 +101,19 @@ public class KeshigRestServiceImpl implements KeshigRestService
     public Response listOptions()
     {
         List<DeployOption> deployOptions = keshig.getAllDeployOptions();
-        List<TestOption> testOptions = keshig.getAllTestOptions();
 
+        List<TestOption> testOptions = keshig.getAllTestOptions();
 
         Map<String, List<?>> allOptions = new HashMap<>();
 
-        allOptions.put( "DEPLOY", deployOptions );
-        allOptions.put( "TEST", testOptions );
+        if ( deployOptions.size() > 0 )
+        {
+            allOptions.put( "DEPLOY", deployOptions );
+        }
+        if ( testOptions.size() > 0 )
+        {
+            allOptions.put( "TEST", testOptions );
+        }
 
         return Response.ok().entity( allOptions ).build();
     }

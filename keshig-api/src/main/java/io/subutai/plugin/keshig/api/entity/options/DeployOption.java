@@ -3,12 +3,13 @@ package io.subutai.plugin.keshig.api.entity.options;
 
 import java.util.List;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import com.google.common.collect.Lists;
 
-import io.subutai.plugin.keshig.api.entity.Command;
+
 
 
 @JsonIgnoreProperties( ignoreUnknown = true )

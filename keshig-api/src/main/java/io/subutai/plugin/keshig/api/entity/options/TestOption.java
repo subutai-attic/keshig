@@ -3,13 +3,16 @@ package io.subutai.plugin.keshig.api.entity.options;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import com.google.common.collect.Lists;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class TestOption implements Option{
+
+@JsonIgnoreProperties( ignoreUnknown = true )
+public class TestOption implements Option
+{
 
     @JsonIgnore
     private String indexHtml = "/home/ubuntu/repo/%s";
@@ -25,13 +28,15 @@ public class TestOption implements Option{
 
     private int timeOut = 1000;
 
-    public TestOption() {
+
+    public TestOption()
+    {
 
     }
 
 
-
-    public int getTimeOut() {
+    public int getTimeOut()
+    {
         return timeOut;
     }
 
@@ -43,63 +48,81 @@ public class TestOption implements Option{
     }
 
 
-    public void setTimeOut(final int timeOut) {
+    public void setTimeOut( final int timeOut )
+    {
         this.timeOut = timeOut;
     }
 
 
-    public String getName() {
+    public String getName()
+    {
         return name;
     }
 
 
-    public void setName(final String name) {
+    public void setName( final String name )
+    {
         this.name = name;
     }
 
 
-    public boolean isAll() {
+    public boolean isAll()
+    {
         return all;
     }
 
 
-    public void setAll(final boolean all) {
+    public void setAll( final boolean all )
+    {
         this.all = all;
     }
 
 
-    public List<String> getTargetIps() {
+    public List<String> getTargetIps()
+    {
         return targetIps;
     }
 
 
-    public void setTargetIps(final List<String> targetIps) {
+    public void setTargetIps( final List<String> targetIps )
+    {
         this.targetIps = targetIps;
     }
 
 
-    public List<String> getPlaybooks() {
+    public List<String> getPlaybooks()
+    {
         return playbooks;
     }
 
 
-    public void setPlaybooks(final List<String> playbooks) {
+    public void setPlaybooks( final List<String> playbooks )
+    {
         this.playbooks = playbooks;
     }
 
-    public String getTestId() {
+
+    public String getTestId()
+    {
         return testId;
     }
 
-    public void setTestId(String testId) {
+
+    public void setTestId( String testId )
+    {
         this.testId = testId;
     }
 
-    public String getOutputPath() {
+
+    @JsonIgnore
+    public String getOutputPath()
+    {
         return indexHtml;
     }
 
-    public void setOutputPath(String outputPath) {
+
+    public void setOutputPath( String outputPath )
+    {
         this.indexHtml = outputPath;
     }
 
@@ -112,36 +135,42 @@ public class TestOption implements Option{
 
 
     @JsonIgnore
-    public List<String> getArgs() {
-//
+    public List<String> getArgs()
+    {
+        if ( targetIps == null )
+        {
+            return Lists.newArrayList( " " );
+        }
         List<String> args = Lists.newArrayList();
 
-        if (targetIps.size() > 0) {
-            args.add("-m");
-            args.add(targetIps.get(0));
+        if ( targetIps.size() > 0 )
+        {
+            args.add( "-m" );
+            args.add( targetIps.get( 0 ) );
         }
-        if (targetIps.size() > 1) {
-            args.add("-M");
-            args.add(targetIps.get(1));
-        }
-
-        args.add("-s");
-        if (all) {
-
-            args.add("all");
-
-        } else {
-            args.add(String.format("\"%s\"", String.join(" ", playbooks)));
+        if ( targetIps.size() > 1 )
+        {
+            args.add( "-M" );
+            args.add( targetIps.get( 1 ) );
         }
 
-        args.add("-r");
+        args.add( "-s" );
+        if ( all )
+        {
 
-        args.add("-o");
+            args.add( "all" );
+        }
+        else
+        {
+            args.add( String.format( "\"%s\"", String.join( " ", playbooks ) ) );
+        }
 
-        args.add(String.format(indexHtml, getTestId()));
+        args.add( "-r" );
+
+        args.add( "-o" );
+
+        args.add( String.format( indexHtml, getTestId() ) );
 
         return args;
-
     }
-
 }

@@ -51,28 +51,28 @@ public interface KeshigRestService
 
     @GET
     @Path( "option" )
-    @Produces( MediaType.APPLICATION_JSON )
+    @Produces( {MediaType.APPLICATION_JSON })
     public Response listOptions();
 
     @GET
     @Path( "option/types" )
-    @Produces( MediaType.APPLICATION_JSON )
+    @Produces( {MediaType.APPLICATION_JSON })
     public Response getOptionTypes();
 
     @GET
     @Path( "option/type/{type}" )
-    @Produces( MediaType.APPLICATION_JSON )
+    @Produces( {MediaType.APPLICATION_JSON })
     public Response getOptionsByType( @PathParam( "type" ) String type );
 
     @GET
     @Path( "option/{type}/{optionName}" )
-    @Produces( MediaType.APPLICATION_JSON )
+    @Produces( {MediaType.APPLICATION_JSON })
     public Response getOption( @PathParam( "type" ) String type, @PathParam( "optionName" ) String optionName );
 
 
     @GET
     @Path( "option/{type}/{optionName}/start/{serverId}" )
-    @Produces( MediaType.APPLICATION_JSON )
+    @Produces( {MediaType.APPLICATION_JSON })
     public Response runOptionOnTargetServer( @PathParam( "type" ) String type,
                                              @PathParam( "optionName" ) String optionName,
                                              @PathParam( "serverId" ) String serverId );
@@ -82,25 +82,25 @@ public interface KeshigRestService
     public Response export( @PathParam( "serverId" ) String serverId, @PathParam( "buildName" ) String buildName );
 
     @POST
-    @Produces( MediaType.APPLICATION_JSON )
+    @Produces( {MediaType.APPLICATION_JSON })
     @Path( "option/test" )
-    @Consumes( MediaType.APPLICATION_JSON )
+    @Consumes( {MediaType.APPLICATION_JSON })
     public Response addTestOption( TestOption option );
 
     @POST
-    @Produces( MediaType.APPLICATION_JSON )
+    @Produces( {MediaType.APPLICATION_JSON })
     @Path( "option/deploy" )
-    @Consumes( MediaType.APPLICATION_JSON )
+    @Consumes( {MediaType.APPLICATION_JSON })
     public Response addDeployOption( DeployOption option );
 
     @PUT
     @Path( "option/test" )
-    @Consumes( MediaType.APPLICATION_JSON )
+    @Consumes( {MediaType.APPLICATION_JSON })
     public Response updateTestOption( TestOption option );
 
     @PUT
     @Path( "option/deploy" )
-    @Consumes( MediaType.APPLICATION_JSON )
+    @Consumes( {MediaType.APPLICATION_JSON })
     public Response updateDeployOption( DeployOption option );
 
     @DELETE
@@ -128,45 +128,45 @@ public interface KeshigRestService
 
     @GET
     @Path( "statuses" )
-    @Produces( MediaType.APPLICATION_JSON )
+    @Produces( {MediaType.APPLICATION_JSON })
     public Response getStatuses();
 
     //HISTORY CRUD
     @GET
     @Path( "history" )
-    @Produces( MediaType.APPLICATION_JSON )
+    @Produces( {MediaType.APPLICATION_JSON })
     public Response listHistory();
 
     @GET
     @Path( "history/{id}" )
-    @Produces( MediaType.APPLICATION_JSON )
+    @Produces( {MediaType.APPLICATION_JSON })
     public Response getHistory( @PathParam( "id" ) String id );
 
     //Run profiles
 
     @GET
     @Path( "profiles/{profileName}/start" )
-    @Produces( MediaType.APPLICATION_JSON )
+    @Produces( {MediaType.APPLICATION_JSON })
     public Response runProfile( @PathParam( "profileName" ) String profileName );
 
     @GET
     @Path( "profiles" )
-    @Produces( MediaType.APPLICATION_JSON )
+    @Produces( {MediaType.APPLICATION_JSON })
     public Response listProfiles();
 
     @GET
     @Path( "profiles/{profileName}" )
-    @Produces( MediaType.APPLICATION_JSON )
+    @Produces( {MediaType.APPLICATION_JSON })
     public Response getProfile( @PathParam( "profileName" ) String profileName );
 
     @POST
     @Path( "profiles" )
-    @Consumes( MediaType.APPLICATION_JSON )
+    @Consumes( {MediaType.APPLICATION_JSON })
     public Response addProfile( Profile profile );
 
     @PUT
     @Path( "profiles" )
-    @Consumes( MediaType.APPLICATION_JSON )
+    @Consumes( {MediaType.APPLICATION_JSON })
     public Response updateProfile( Profile profile );
 
     @DELETE

@@ -123,16 +123,18 @@ public class KeshigImpl implements Keshig
     public void addServer( final String server ) throws Exception
     {
         ResourceHost resourceHost = peerManager.getLocalPeer().getResourceHostById( server );
+
         String serverName = resourceHost.getHostname();
-
         String serverId = resourceHost.getId();
-        Server server1 = new Server();
 
+        Server server1 = new Server();
         server1.setServerId( serverId );
         server1.setServerName( serverName );
         server1.setAdded( true );
-
-        addServer( server1 );
+        if ( serverId != null && serverName != null )
+        {
+            addServer( server1 );
+        }
     }
 
 

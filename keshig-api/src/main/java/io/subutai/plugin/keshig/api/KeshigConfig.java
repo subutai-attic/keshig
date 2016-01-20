@@ -4,7 +4,7 @@ package io.subutai.plugin.keshig.api;
 
 public class KeshigConfig {
 
-    public static final String PRODUCT_KEY = "KESHIGQD";
+    public static final String PRODUCT_KEY = "KESHIG";
 
     public static final String PRODUCT_HISTORY = "HISTORY";
 
