@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
+import com.google.common.util.concurrent.ExecutionError;
 
 import io.subutai.common.command.CommandException;
 import io.subutai.common.command.CommandResult;
@@ -117,12 +118,28 @@ public class KeshigImpl implements Keshig
     }
 
 
-    public void addServer( final Server server ) throws Exception
+    @Override
+    public void addServer( final String server ) throws Exception
+    {
+        ResourceHost resourceHost = peerManager.getLocalPeer().getResourceHostById( server );
+        String serverName = resourceHost.getHostname();
+
+        String serverId = resourceHost.getId();
+        Server server1 = new Server(  );
+
+        server1.setServerId( serverId );
+        server1.setServerName( serverName );
+
+        addServer( server1 );
+    }
+
+
+    private void addServer( final Server server ) throws Exception
     {
 
         Preconditions.checkNotNull( server );
 
-        if ( !this.getPluginDAO().saveInfo( PRODUCT_KEY, server.getServerName(), server ) )
+        if ( !this.getPluginDAO().saveInfo( PRODUCT_KEY, server.getServerId(), server ) )
         {
             throw new Exception( "Could not save server info" );
         }
@@ -228,20 +245,24 @@ public class KeshigImpl implements Keshig
 
     @Override
     public void updateReserved( final String hostName, final String serverIp, final String usedBy,
-                                final String comment )
+                                final String comment ) throws Exception
     {
 
         KeshigServer keshigServer = getKeshigServer( hostName );
 
         PeerInfo peerInfo = keshigServer.getPeers().get( serverIp );
 
-        peerInfo.setFree( false );
-        peerInfo.setUsedBy( usedBy );
-        peerInfo.setComment( comment );
+        if ( peerInfo.isFree() )
+        {
+            peerInfo.setFree( false );
+            peerInfo.setUsedBy( usedBy );
+            peerInfo.setComment( comment );
+            keshigServer.getPeers().put( peerInfo.getIp(), peerInfo );
+            updateKeshigServer( keshigServer );
+        }else{
+            throw new Exception("Server is already reserved");
+        }
 
-        keshigServer.getPeers().put( peerInfo.getIp(), peerInfo );
-
-        updateKeshigServer( keshigServer );
     }
 
 

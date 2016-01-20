@@ -56,7 +56,7 @@ public interface Keshig
 
     void addKeshigServers( List<KeshigServer> servers );
 
-    void updateReserved( String hostName, String serverIp, String usedBy, String comment );
+    void updateReserved( String hostName, String serverIp, String usedBy, String comment ) throws Exception;
 
     void runOption(String optionName, String serverId);
 

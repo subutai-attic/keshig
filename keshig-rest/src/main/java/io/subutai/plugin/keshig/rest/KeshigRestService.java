@@ -22,8 +22,6 @@ import io.subutai.plugin.keshig.api.entity.options.TestOption;
 public interface KeshigRestService
 {
 
-
-
     //SERVER CRUD
     @GET
     @Path( "server" )

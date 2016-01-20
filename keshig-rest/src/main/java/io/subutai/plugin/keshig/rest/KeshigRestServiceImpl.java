@@ -79,7 +79,7 @@ public class KeshigRestServiceImpl implements KeshigRestService
     public Response deleteServer( final String id )
     {
         keshig.removeServer( id );
-        return null;
+        return Response.ok().build();
     }
 
 
@@ -231,7 +231,14 @@ public class KeshigRestServiceImpl implements KeshigRestService
     public Response updateReserved( final String hostName, final String serverIp, final String usedBy,
                                     final String comment )
     {
-        keshig.updateReserved( hostName, serverIp, usedBy, comment );
+        try
+        {
+            keshig.updateReserved( hostName, serverIp, usedBy, comment );
+        }
+        catch ( Exception e )
+        {
+            return Response.status( BAD_REQUEST ).entity( "Server is already reserved" ).build();
+        }
 
         return Response.ok( keshig.getAllKeshigServers() ).build();
     }
