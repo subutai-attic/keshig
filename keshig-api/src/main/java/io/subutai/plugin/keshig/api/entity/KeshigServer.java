@@ -12,6 +12,8 @@ public class KeshigServer
     private Map<String, PeerInfo> peers;
     private Date lastUpdated;
 
+    private boolean nightlyBuild = true;
+
     public KeshigServer()
     {
     }
@@ -21,6 +23,19 @@ public class KeshigServer
     {
         this.hostname = hostname;
     }
+
+
+    public boolean isNightlyBuild()
+    {
+        return nightlyBuild;
+    }
+
+
+    public void setNightlyBuild( final boolean nightlyBuild )
+    {
+        this.nightlyBuild = nightlyBuild;
+    }
+
 
     public Map<String, PeerInfo> getPeers()
     {

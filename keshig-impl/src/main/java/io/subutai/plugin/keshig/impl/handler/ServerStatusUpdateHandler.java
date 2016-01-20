@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
@@ -27,9 +25,11 @@ import org.apache.http.util.EntityUtils;
 import io.subutai.common.command.CommandException;
 import io.subutai.common.command.CommandResult;
 import io.subutai.common.command.RequestBuilder;
+import io.subutai.common.peer.HostNotFoundException;
 import io.subutai.common.peer.ResourceHost;
 import io.subutai.plugin.keshig.api.entity.KeshigServer;
 import io.subutai.plugin.keshig.api.entity.PeerInfo;
+import io.subutai.plugin.keshig.api.entity.Server;
 import io.subutai.plugin.keshig.impl.KeshigImpl;
 
 
@@ -83,6 +83,7 @@ public class ServerStatusUpdateHandler implements Runnable
         }
 
         keshig.dropAllServers();
+
         keshig.addKeshigServers( new ArrayList<>( updatedKeshigServers.values() ) );
     }
 
@@ -94,15 +95,14 @@ public class ServerStatusUpdateHandler implements Runnable
 
         Map<String, PeerInfo> peerInfos;
 
-        Set<ResourceHost> resourceHosts = keshig.getPeerManager().getLocalPeer().getResourceHosts();
-
-        for ( ResourceHost resourceHost : resourceHosts )
+        List<Server> servers = keshig.getServers();
+        for ( Server resourceHost : servers )
         {
-            LOG.debug( String.format( "Hostname: %s", resourceHost.getHostname() ) );
+            LOG.debug( String.format( "Hostname: %s", resourceHost.getServerName() ) );
 
-            peerInfos = getDeployedServersInfo( resourceHost );
+            peerInfos = getDeployedServersInfo( resourceHost.getServerId() );
 
-            KeshigServer keshigServer = new KeshigServer( resourceHost.getHostname() );
+            KeshigServer keshigServer = new KeshigServer( resourceHost.getServerName() );
 
             keshigServer.setLastUpdated( new Date( System.currentTimeMillis() ) );
 
@@ -116,12 +116,21 @@ public class ServerStatusUpdateHandler implements Runnable
     }
 
 
-    private Map<String, PeerInfo> getDeployedServersInfo( ResourceHost server )
+    private Map<String, PeerInfo> getDeployedServersInfo( String serverId )
     {
 
         Map<String, PeerInfo> peerInfos = new HashMap<>();
-        LOG.warn( "Getting deployed peers info from :" + server.getHostname() );
 
+        ResourceHost server = null;
+        try
+        {
+            server = keshig.getPeerManager().getLocalPeer().getResourceHostById( serverId );
+            LOG.warn( "Getting deployed peers info from :" + server.getHostname() );
+        }
+        catch ( HostNotFoundException e )
+        {
+            e.printStackTrace();
+        }
         try
         {
             CommandResult commandResult =
@@ -194,25 +203,20 @@ public class ServerStatusUpdateHandler implements Runnable
             CloseableHttpClient httpclient = HttpClients.createDefault();
 
             HttpGet httpPost = new HttpGet( serverUri );
-            ResponseHandler<String> responseHandler = new ResponseHandler<String>()
-            {
-                @Override
-                public String handleResponse( final HttpResponse response ) throws IOException
+            ResponseHandler<String> responseHandler = response -> {
+                int status = response.getStatusLine().getStatusCode();
+                if ( status >= 200 && status < 300 )
                 {
-                    int status = response.getStatusLine().getStatusCode();
-                    if ( status >= 200 && status < 300 )
-                    {
-                        LOG.warn( "Response Status POST: " + status );
+                    LOG.warn( "Response Status POST: " + status );
 
-                        HttpEntity entity = response.getEntity();
+                    HttpEntity entity = response.getEntity();
 
-                        return entity != null ? EntityUtils.toString( entity ) : null;
-                    }
-                    else
-                    {
-                        LOG.warn( "Response Status POST: " + status );
-                        throw new ClientProtocolException( "Unexpected response status: " + status );
-                    }
+                    return entity != null ? EntityUtils.toString( entity ) : null;
+                }
+                else
+                {
+                    LOG.warn( "Response Status POST: " + status );
+                    throw new ClientProtocolException( "Unexpected response status: " + status );
                 }
             };
 
@@ -251,25 +255,20 @@ public class ServerStatusUpdateHandler implements Runnable
             LOG.debug( "Executing request " + httpget.getRequestLine() );
 
             // Create a custom response handler
-            ResponseHandler<String> responseHandler = new ResponseHandler<String>()
-            {
-                @Override
-                public String handleResponse( final HttpResponse response ) throws IOException
+            ResponseHandler<String> responseHandler = response -> {
+                int status = response.getStatusLine().getStatusCode();
+                if ( status >= 200 && status < 300 )
                 {
-                    int status = response.getStatusLine().getStatusCode();
-                    if ( status >= 200 && status < 300 )
-                    {
-                        LOG.warn( "Response Status GET: " + status );
+                    LOG.warn( "Response Status GET: " + status );
 
-                        HttpEntity entity = response.getEntity();
+                    HttpEntity entity = response.getEntity();
 
-                        return entity != null ? EntityUtils.toString( entity ) : null;
-                    }
-                    else
-                    {
-                        LOG.warn( "Response Status GET: " + status );
-                        throw new ClientProtocolException( "Unexpected response status: " + status );
-                    }
+                    return entity != null ? EntityUtils.toString( entity ) : null;
+                }
+                else
+                {
+                    LOG.warn( "Response Status GET: " + status );
+                    throw new ClientProtocolException( "Unexpected response status: " + status );
                 }
             };
             String responseBody = httpclient.execute( httpget, responseHandler );

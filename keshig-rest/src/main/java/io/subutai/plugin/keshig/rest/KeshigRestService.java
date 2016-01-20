@@ -34,12 +34,17 @@ public interface KeshigRestService
     public Response getServer( @PathParam( "serverId" ) String serverName );
 
     @POST
-    @Path( "server" )
-    public Response addServer( @FormParam( "serverId" ) String serverId);
+    @Path( "server/{serverId}" )
+    public Response addServer( @PathParam( "serverId" ) String serverId );
 
     @DELETE
     @Path( "server/{serverId}" )
     public Response deleteServer( @PathParam( "serverId" ) String serverId );
+
+    @PUT
+    @Path( "server/{hostname}/{status}" )
+    public Response updateNightlyBuildStatus( @PathParam( "hostname" ) String hostname,
+                                              @PathParam( "status" ) boolean status );
 
     //OPTION CRUD
     //CLONE,BUILD,DEPLOY,TEST
@@ -100,7 +105,7 @@ public interface KeshigRestService
 
     @DELETE
     @Path( "option/{optionName}" )
-    public Response deleteOption(@PathParam( "optionName" ) String optionName );
+    public Response deleteOption( @PathParam( "optionName" ) String optionName );
 
     @GET
     @Path( "tests" )

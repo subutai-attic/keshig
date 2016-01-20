@@ -24,6 +24,7 @@ public class OperationHandler implements Runnable
 
 
     private TrackerOperation trackerOperation;
+
     private KeshigImpl keshig;
     private String serverId;
 

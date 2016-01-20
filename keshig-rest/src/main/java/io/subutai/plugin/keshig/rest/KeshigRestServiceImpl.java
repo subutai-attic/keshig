@@ -1,13 +1,18 @@
 package io.subutai.plugin.keshig.rest;
 
 
-import javax.ws.rs.FormParam;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import javax.ws.rs.core.Response;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.Sets;
 
 import io.subutai.plugin.keshig.api.Keshig;
 import io.subutai.plugin.keshig.api.Profile;
@@ -79,6 +84,16 @@ public class KeshigRestServiceImpl implements KeshigRestService
     public Response deleteServer( final String id )
     {
         keshig.removeServer( id );
+
+        return Response.ok().build();
+    }
+
+
+    @Override
+    public Response updateNightlyBuildStatus( final String hostname, final boolean status )
+    {
+        keshig.updateNightlyBuild( hostname, status );
+
         return Response.ok().build();
     }
 
@@ -86,14 +101,28 @@ public class KeshigRestServiceImpl implements KeshigRestService
     @Override
     public Response listOptions()
     {
-        return null;
+        List<DeployOption> deployOptions = keshig.getAllDeployOptions();
+        List<TestOption> testOptions = keshig.getAllTestOptions();
+
+
+        Map<String, List<?>> allOptions = new HashMap<>();
+
+        allOptions.put( "DEPLOY", deployOptions );
+        allOptions.put( "TEST", testOptions );
+
+        return Response.ok().entity( allOptions ).build();
     }
 
 
     @Override
     public Response getOptionTypes()
     {
-        return null;
+        Set<Object> options = Sets.newHashSet();
+
+        options.add( "DEPLOY" );
+        options.add( "TEST" );
+
+        return Response.ok( options ).build();
     }
 
 
@@ -142,7 +171,7 @@ public class KeshigRestServiceImpl implements KeshigRestService
     @Override
     public Response runOptionOnTargetServer( String type, String optionName, String serverId )
     {
-
+        keshig.runOption( type, optionName, serverId );
         return Response.ok().build();
     }
 
@@ -314,7 +343,6 @@ public class KeshigRestServiceImpl implements KeshigRestService
     {
         try
         {
-
             keshig.addProfile( profile );
         }
         catch ( Exception e )

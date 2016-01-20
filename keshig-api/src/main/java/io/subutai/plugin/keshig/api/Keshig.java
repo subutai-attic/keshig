@@ -58,9 +58,11 @@ public interface Keshig
 
     void updateReserved( String hostName, String serverIp, String usedBy, String comment ) throws Exception;
 
-    void runOption(String optionName, String serverId);
+    void runOption(String type, String optionName, String serverId);
 
     void runProfile( String profileName );
+
+    void updateNightlyBuild(String hostName, boolean nightlyBuild);
 
     /*
     *  Keshig History Handlers

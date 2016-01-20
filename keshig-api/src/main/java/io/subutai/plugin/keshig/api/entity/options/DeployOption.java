@@ -10,7 +10,8 @@ import com.google.common.collect.Lists;
 
 import io.subutai.plugin.keshig.api.entity.Command;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
+
+@JsonIgnoreProperties( ignoreUnknown = true )
 public class DeployOption implements Option
 {
 
@@ -18,8 +19,6 @@ public class DeployOption implements Option
     private String name;
     private String url;
     private String branch;
-
-    private String type = "DEPLOY";
 
     @JsonIgnore
     private int timeOut = 1000;
@@ -29,10 +28,11 @@ public class DeployOption implements Option
     {
     }
 
+
     @JsonIgnore
     public String getType()
     {
-        return this.type;
+        return "DEPLOY";
     }
 
 
@@ -41,6 +41,7 @@ public class DeployOption implements Option
     {
         return timeOut;
     }
+
 
     public void setTimeOut( final int timeOut )
     {
@@ -84,17 +85,16 @@ public class DeployOption implements Option
     }
 
 
-
     @JsonIgnore
     public String getCommand()
     {
-        return null;
+        return "keshig";
     }
+
 
     @JsonIgnore
     public List<String> getArgs()
     {
-
-        return Lists.newArrayList( Command.branchOpt, this.branch, Command.repoOpt, this.url );
+        return Lists.newArrayList( this.branch);
     }
 }

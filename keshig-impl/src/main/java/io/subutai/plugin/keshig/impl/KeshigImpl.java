@@ -2,18 +2,18 @@ package io.subutai.plugin.keshig.impl;
 
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.bouncycastle.util.test.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
-import com.google.common.util.concurrent.ExecutionError;
 
 import io.subutai.common.command.CommandException;
 import io.subutai.common.command.CommandResult;
@@ -37,6 +37,7 @@ import io.subutai.plugin.keshig.api.entity.Server;
 import io.subutai.plugin.keshig.api.entity.options.DeployOption;
 import io.subutai.plugin.keshig.api.entity.options.Option;
 import io.subutai.plugin.keshig.api.entity.options.TestOption;
+import io.subutai.plugin.keshig.impl.handler.OperationHandler;
 import io.subutai.plugin.keshig.impl.handler.ServerStatusUpdateHandler;
 
 import static io.subutai.plugin.keshig.api.KeshigConfig.KESHIG_SERVER;
@@ -125,10 +126,11 @@ public class KeshigImpl implements Keshig
         String serverName = resourceHost.getHostname();
 
         String serverId = resourceHost.getId();
-        Server server1 = new Server(  );
+        Server server1 = new Server();
 
         server1.setServerId( serverId );
         server1.setServerName( serverName );
+        server1.setAdded( true );
 
         addServer( server1 );
     }
@@ -138,10 +140,12 @@ public class KeshigImpl implements Keshig
     {
 
         Preconditions.checkNotNull( server );
-
-        if ( !this.getPluginDAO().saveInfo( PRODUCT_KEY, server.getServerId(), server ) )
+        if ( !server.getServerId().isEmpty() || server.getServerId() == null )
         {
-            throw new Exception( "Could not save server info" );
+            if ( !this.getPluginDAO().saveInfo( KESHIG_SERVER, server.getServerId(), server ) )
+            {
+                throw new Exception( "Could not save server info" );
+            }
         }
     }
 
@@ -149,20 +153,41 @@ public class KeshigImpl implements Keshig
     public void removeServer( final String serverName )
     {
 
-        this.pluginDAO.deleteInfo( PRODUCT_KEY, serverName );
+        this.pluginDAO.deleteInfo( KESHIG_SERVER, serverName );
     }
 
 
     public Server getServer( final String serverName )
     {
         Preconditions.checkNotNull( serverName );
-        return this.pluginDAO.getInfo( PRODUCT_KEY, serverName, Server.class );
+        return this.pluginDAO.getInfo( KESHIG_SERVER, serverName, Server.class );
+    }
+
+
+    private boolean serverExists( String serverId )
+    {
+        return this.pluginDAO.getInfo( KESHIG_SERVER, serverId, Server.class ) != null;
     }
 
 
     public List<Server> getServers()
     {
-        return this.pluginDAO.getInfo( PRODUCT_KEY, Server.class );
+        //get all servers
+        Set<ResourceHost> rh = this.peerManager.getLocalPeer().getResourceHosts();
+
+        List<Server> keshigServer = Lists.newArrayList();
+
+        for ( ResourceHost resourceHost : rh )
+        {
+            if ( !serverExists( resourceHost.getId() ) )
+            {
+                keshigServer.add( new Server( resourceHost.getId(), resourceHost.getHostname(), false ) );
+            }
+        }
+
+        keshigServer.addAll( this.pluginDAO.getInfo( KESHIG_SERVER, Server.class ) );
+
+        return keshigServer;
     }
 
 
@@ -259,24 +284,67 @@ public class KeshigImpl implements Keshig
             peerInfo.setComment( comment );
             keshigServer.getPeers().put( peerInfo.getIp(), peerInfo );
             updateKeshigServer( keshigServer );
-        }else{
-            throw new Exception("Server is already reserved");
         }
-
+        else
+        {
+            throw new Exception( "Server is already reserved" );
+        }
     }
 
 
     @Override
-    public void runOption( final String optionName, final String serverId )
+    public void runOption( final String type, final String optionName, final String serverId )
     {
+        Option option = null;
+        if ( type.equalsIgnoreCase( "deploy" ) )
+        {
+            option = getDeployOption( optionName );
+        }
+        else if ( type.equalsIgnoreCase( "deploy" ) )
+        {
+            option = getTestOption( optionName );
+        }
+        OperationHandler operationHandler = new OperationHandler( this, serverId, option );
 
+        executor.execute( operationHandler );
     }
 
 
     @Override
     public void runProfile( final String profileName )
     {
+        Profile profile = this.getProfile( profileName );
 
+        if ( !profile.getDeployOption().isEmpty() && !profile.getDeployServer().isEmpty() )
+        {
+            DeployOption deployOption = this.getDeployOption( profile.getDeployOption() );
+            OperationHandler deployOperationHandler =
+                    new OperationHandler( this, profile.getDeployServer(), deployOption );
+            deployOperationHandler.run();
+        }
+
+        if ( !profile.getTestOption().isEmpty() && !profile.getTestServer().isEmpty() )
+        {
+            TestOption testOption = this.getTestOption( profile.getTestOption() );
+            OperationHandler testOperationHandler = new OperationHandler( this, profile.getTestServer(), testOption );
+            testOperationHandler.run();
+        }
+    }
+
+
+    @Override
+    public void updateNightlyBuild( final String hostName, final boolean nightlyBuild )
+    {
+        KeshigServer keshigServer = this.getKeshigServer( hostName );
+        keshigServer.setNightlyBuild( nightlyBuild );
+        try
+        {
+            this.addKeshigServer( keshigServer );
+        }
+        catch ( Exception e )
+        {
+            e.printStackTrace();
+        }
     }
 
 

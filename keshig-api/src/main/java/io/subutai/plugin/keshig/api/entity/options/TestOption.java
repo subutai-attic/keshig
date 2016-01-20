@@ -25,7 +25,6 @@ public class TestOption implements Option{
 
     private int timeOut = 1000;
 
-
     public TestOption() {
 
     }
@@ -34,6 +33,13 @@ public class TestOption implements Option{
 
     public int getTimeOut() {
         return timeOut;
+    }
+
+
+    @JsonIgnore
+    public String getType()
+    {
+        return "TEST";
     }
 
 
