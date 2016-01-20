@@ -1,38 +1,20 @@
 package io.subutai.plugin.keshig.rest;
 
 
-import com.google.common.base.Strings;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
-
-import io.subutai.common.peer.ResourceHost;
-import io.subutai.common.settings.Common;
-import io.subutai.plugin.keshig.api.Keshig;
-import io.subutai.plugin.keshig.api.Profile;
-import io.subutai.plugin.keshig.api.entity.History;
-import io.subutai.plugin.keshig.api.entity.OperationType;
-import io.subutai.plugin.keshig.api.entity.Server;
-import io.subutai.plugin.keshig.api.entity.ServerType;
-import io.subutai.plugin.keshig.api.entity.options.BuildOption;
-import io.subutai.plugin.keshig.api.entity.options.CloneOption;
-import io.subutai.plugin.keshig.api.entity.options.DeployOption;
-import io.subutai.plugin.keshig.api.entity.options.TestOption;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.core.Response;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.FormParam;
-import javax.ws.rs.core.Response;
+import com.google.common.base.Strings;
 
-import java.io.File;
-import java.util.*;
+import io.subutai.plugin.keshig.api.Keshig;
+import io.subutai.plugin.keshig.api.Profile;
+import io.subutai.plugin.keshig.api.entity.options.DeployOption;
+import io.subutai.plugin.keshig.api.entity.options.TestOption;
 
-import static io.subutai.plugin.keshig.api.entity.OperationType.*;
-import static io.subutai.plugin.keshig.api.entity.OperationType.BUILD;
-import static io.subutai.plugin.keshig.api.entity.OperationType.CLONE;
-import static io.subutai.plugin.keshig.api.entity.OperationType.TEST;
-
-import static javax.ws.rs.core.Response.Status.*;
+import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 
 
 public class KeshigRestServiceImpl implements KeshigRestService
@@ -65,137 +47,53 @@ public class KeshigRestServiceImpl implements KeshigRestService
     public Response listServers()
     {
 
-        List<Server> serverList = keshig.getServers();
-
-        List<Server> availableServers = new ArrayList<>();
-
-        for ( Server server : serverList )
-        {
-            if ( !server.getType().equals( ServerType.PEER_SERVER ) )
-            {
-                availableServers.add( server );
-            }
-        }
-
-        return Response.ok( availableServers ).build();
+        return Response.ok( keshig.getServers() ).build();
     }
 
 
     @Override
-    public Response getServer( String serverName )
+    public Response getServer( final String serverId )
     {
-
-        if ( Strings.isNullOrEmpty( serverName ) )
-        {
-            Response response = Response.status( BAD_REQUEST ).entity( "Invalid server name" ).build();
-            return response;
-        }
-        Server server = keshig.getServer( serverName );
-
-        if ( server == null )
-        {
-            return Response.status( NOT_FOUND ).entity( String.format( "Server with name: %s not found", serverName ) )
-                           .build();
-        }
-
-        return Response.ok( keshig.getServer( serverName ) ).build();
+        return Response.ok( keshig.getServer( serverId ) ).build();
     }
 
 
     @Override
-    public Response addServer( String serverId, String serverName, String serverType )
+    public Response addServer( final String serverId )
     {
-
-        if ( Strings.isNullOrEmpty( serverId ) )
+        try
         {
-            return Response.status( BAD_REQUEST ).entity( "Invalid server id" ).build();
+            keshig.addServer( serverId );
         }
-
-        if ( Strings.isNullOrEmpty( serverName ) )
+        catch ( Exception e )
         {
-            return Response.status( BAD_REQUEST ).entity( "Invalid server name" ).build();
+            e.printStackTrace();
+
+            return Response.serverError().build();
         }
-
-        if ( Strings.isNullOrEmpty( serverType ) )
-        {
-            return Response.status( BAD_REQUEST ).entity( "Invalid server type" ).build();
-        }
-
-        keshig.setServer( serverId, serverType, serverName );
-
         return Response.ok().build();
     }
 
 
     @Override
-    public Response updateServer( String serverId, String serverName, String serverType )
+    public Response deleteServer( final String id )
     {
-
-        keshig.setServer( serverId, serverType, serverName );
-
-        return Response.ok().build();
-    }
-
-
-    @Override
-    public Response deleteServer( String serverName )
-    {
-
-        if ( Strings.isNullOrEmpty( serverName ) )
-        {
-            return Response.status( BAD_REQUEST ).entity( "Invalid server name" ).build();
-        }
-        keshig.removeServer( serverName );
-
-        return Response.ok().build();
+        keshig.removeServer( id );
+        return null;
     }
 
 
     @Override
     public Response listOptions()
     {
-
-        List<DeployOption> deployOptions = ( List<DeployOption> ) keshig.allOptionsByType( DEPLOY );
-        List<TestOption> testOptions = ( List<TestOption> ) keshig.allOptionsByType( TEST );
-        List<CloneOption> cloneOptionList = ( List<CloneOption> ) keshig.allOptionsByType( CLONE );
-        List<BuildOption> buildOptions = ( List<BuildOption> ) keshig.allOptionsByType( BUILD );
-
-        Map<String, List<?>> allOptions = new HashMap<>();
-        allOptions.put( CLONE.toString(), cloneOptionList );
-        allOptions.put( BUILD.toString(), buildOptions );
-        allOptions.put( DEPLOY.toString(), deployOptions );
-        allOptions.put( TEST.toString(), testOptions );
-
-        return Response.ok().entity( allOptions ).build();
+        return null;
     }
 
 
     @Override
     public Response getOptionTypes()
     {
-
-        Set<Object> options = Sets.newHashSet();
-
-        options.add( BUILD );
-        options.add( CLONE );
-        options.add( DEPLOY );
-        options.add( TEST );
-
-        return Response.ok( options ).build();
-    }
-
-
-    public Response getServerType()
-    {
-
-        Set<Object> serverTypes = Sets.newHashSet();
-
-        serverTypes.add( ServerType.DEPLOY_SERVER );
-        serverTypes.add( ServerType.BUILD_SERVER );
-        serverTypes.add( ServerType.TEST_SERVER );
-
-
-        return Response.ok( serverTypes ).build();
+        return null;
     }
 
 
@@ -203,35 +101,19 @@ public class KeshigRestServiceImpl implements KeshigRestService
     public Response getOptionsByType( String type )
     {
 
-        OperationType operationType = OperationType.valueOf( type.toUpperCase() );
-
-        switch ( operationType )
+        switch ( type )
         {
+            case "DEPLOY":
 
-            case CLONE:
-            {
-                List<CloneOption> cloneOptionList = ( List<CloneOption> ) keshig.allOptionsByType( CLONE );
-                return Response.ok().entity( cloneOptionList ).build();
-            }
-            case BUILD:
-            {
-                List<BuildOption> buildOptions = ( List<BuildOption> ) keshig.allOptionsByType( BUILD );
-                return Response.ok().entity( buildOptions ).build();
-            }
-            case DEPLOY:
-            {
-                List<DeployOption> deployOptions = ( List<DeployOption> ) keshig.allOptionsByType( DEPLOY );
-                return Response.ok().entity( deployOptions ).build();
-            }
-            case TEST:
-            {
-                List<TestOption> testOptions = ( List<TestOption> ) keshig.allOptionsByType( TEST );
-                return Response.ok().entity( testOptions ).build();
-            }
+                return Response.ok().entity( keshig.getAllDeployOptions() ).build();
+
+            case "TEST":
+
+                return Response.ok().entity( keshig.getAllTestOptions() ).build();
+
             default:
-            {
+
                 return Response.status( BAD_REQUEST ).entity( "Invalid option type" ).build();
-            }
         }
     }
 
@@ -240,28 +122,20 @@ public class KeshigRestServiceImpl implements KeshigRestService
     public Response getOption( String type, String optionName )
     {
 
-        if ( Strings.isNullOrEmpty( type ) )
+        switch ( type )
         {
+            case "DEPLOY":
 
-            return Response.status( BAD_REQUEST ).entity( "Invalid option type" ).build();
+                return Response.ok().entity( keshig.getDeployOption( optionName ) ).build();
+
+            case "TEST":
+
+                return Response.ok().entity( keshig.getTestOption( optionName ) ).build();
+
+            default:
+
+                return Response.status( BAD_REQUEST ).entity( "Invalid option type" ).build();
         }
-        if ( Strings.isNullOrEmpty( optionName ) )
-        {
-
-            return Response.status( BAD_REQUEST ).entity( "Invalid option name" ).build();
-        }
-
-        return Response.ok().entity( keshig.getOption( optionName, OperationType.valueOf( type.toUpperCase() ) ) )
-                       .build();
-    }
-
-
-    @Override
-    public Response runOption( String type, String optionName )
-    {
-
-        keshig.runOption( optionName, type );
-        return Response.ok().build();
     }
 
 
@@ -269,39 +143,7 @@ public class KeshigRestServiceImpl implements KeshigRestService
     public Response runOptionOnTargetServer( String type, String optionName, String serverId )
     {
 
-        OperationType operationType = OperationType.valueOf( type.toUpperCase() );
-
-        LOG.info( String.format( "Request type:%s Option to Run:%s Target Server:%s", operationType.toString(),
-                optionName, serverId ) );
-
-        switch ( operationType )
-        {
-
-            case CLONE:
-            {
-                keshig.runCloneOption( serverId, optionName );
-                return Response.ok().build();
-            }
-            case BUILD:
-            {
-                keshig.runBuildOption( serverId, optionName );
-                return Response.ok().build();
-            }
-            case DEPLOY:
-            {
-                keshig.runDeployOption( serverId, optionName );
-                return Response.ok().build();
-            }
-            case TEST:
-            {
-                keshig.runTestOption( serverId, optionName );
-                return Response.ok().build();
-            }
-            default:
-            {
-                return Response.status( BAD_REQUEST ).entity( "Invalid option type" ).build();
-            }
-        }
+        return Response.ok().build();
     }
 
 
@@ -315,39 +157,10 @@ public class KeshigRestServiceImpl implements KeshigRestService
 
 
     @Override
-    public Response tpr( final String serverId )
-    {
-        keshig.tpr( serverId );
-
-        return Response.ok().build();
-    }
-
-
-    @Override
-    public Response addCloneOption( CloneOption option )
-    {
-
-        keshig.saveOption( option, CLONE );
-
-        return Response.ok().build();
-    }
-
-
-    @Override
-    public Response addBuildOption( BuildOption option )
-    {
-
-        keshig.saveOption( option, BUILD );
-
-        return Response.ok().build();
-    }
-
-
-    @Override
     public Response addTestOption( TestOption option )
     {
 
-        keshig.saveOption( option, TEST );
+        keshig.addOption( option );
 
         return Response.ok().build();
     }
@@ -357,27 +170,7 @@ public class KeshigRestServiceImpl implements KeshigRestService
     public Response addDeployOption( DeployOption option )
     {
 
-        keshig.saveOption( option, DEPLOY );
-
-        return Response.ok().build();
-    }
-
-
-    @Override
-    public Response updateCloneOption( CloneOption option )
-    {
-
-        keshig.updateOption( option, CLONE );
-
-        return Response.ok().build();
-    }
-
-
-    @Override
-    public Response updateBuildOption( BuildOption option )
-    {
-
-        keshig.updateOption( option, BUILD );
+        keshig.addOption( option );
 
         return Response.ok().build();
     }
@@ -387,7 +180,7 @@ public class KeshigRestServiceImpl implements KeshigRestService
     public Response updateTestOption( TestOption option )
     {
 
-        keshig.updateOption( option, TEST );
+        keshig.addOption( option );
 
         return Response.ok().build();
     }
@@ -397,37 +190,25 @@ public class KeshigRestServiceImpl implements KeshigRestService
     public Response updateDeployOption( DeployOption option )
     {
 
-        keshig.updateOption( option, DEPLOY );
+        keshig.addOption( option );
 
         return Response.ok().build();
     }
 
 
     @Override
-    public Response deleteOption( String type, String optionName )
+    public Response deleteOption( String optionName )
     {
 
-        if ( Strings.isNullOrEmpty( type ) )
-        {
-
-            return Response.status( BAD_REQUEST ).entity( "Invalid option type" ).build();
-        }
         if ( Strings.isNullOrEmpty( optionName ) )
         {
 
             return Response.status( BAD_REQUEST ).entity( "Invalid option name" ).build();
         }
 
-        keshig.deleteOption( optionName, OperationType.valueOf( type.toUpperCase() ) );
+        keshig.deleteOption( optionName );
 
         return Response.ok().build();
-    }
-
-
-    @Override
-    public Response getBuilds()
-    {
-        return Response.ok().entity( keshig.getBuilds() ).build();
     }
 
 
@@ -457,9 +238,9 @@ public class KeshigRestServiceImpl implements KeshigRestService
 
 
     @Override
-    public Response deleteReservation(final String hostname, final String serverIp )
+    public Response deleteReservation( final String hostname, final String serverIp )
     {
-        keshig.freeReserver(hostname, serverIp);
+        keshig.freeReserved( hostname, serverIp );
 
         return Response.ok( keshig.getAllKeshigServers() ).build();
     }

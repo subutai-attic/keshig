@@ -1,34 +1,45 @@
 package io.subutai.plugin.keshig.api;
 
 
-import io.subutai.common.command.RequestBuilder;
-import io.subutai.plugin.keshig.api.entity.*;
-
 import java.util.List;
-import java.util.UUID;
+
+import io.subutai.plugin.keshig.api.entity.History;
+import io.subutai.plugin.keshig.api.entity.KeshigServer;
+import io.subutai.plugin.keshig.api.entity.Server;
+import io.subutai.plugin.keshig.api.entity.options.DeployOption;
+import io.subutai.plugin.keshig.api.entity.options.Option;
+import io.subutai.plugin.keshig.api.entity.options.TestOption;
 
 
 public interface Keshig
 {
 
     /*
-    *   Keshig Server handlers
+    *   Keshig Option handlers
     * */
-    void addServer( Server server ) throws Exception;
 
-    void removeServer( String serverName );
+    void addOption( Option option );
 
-    Server getServer( String serverName );
+    TestOption getTestOption( String name );
 
-    List<Server> getServers( ServerType serverType );
+    DeployOption getDeployOption(String name);
+
+    List<TestOption> getAllTestOptions();
+
+    List<DeployOption> getAllDeployOptions();
+
+    void deleteOption(String name);
+    //
+    void addServer( String server ) throws Exception;
+
+    void removeServer( String serverId );
+
+    Server getServer(String id);
 
     List<Server> getServers();
 
-    void updateServer( Server server ) throws Exception;
-
-    void setServer( String serverId, String serverType, String serverName );
-
     //Keshig Server -> Hosting VM with Peer details
+
     void addKeshigServer( KeshigServer keshigServer ) throws Exception;
 
     void removeKeshigServer( String hostname );
@@ -47,55 +58,10 @@ public interface Keshig
 
     void updateReserved( String hostName, String serverIp, String usedBy, String comment );
 
-    /*
-    *   Keshig Option handlers
-    * */
-    void saveOption( Object option, OperationType type );
-
-    void updateOption( Object option, OperationType type );
-
-    Object getOption( String optionName, OperationType type );
-
-    void deleteOption( String optionName, OperationType type );
-
-    List<?> allOptionsByType( OperationType type );
-
-    void setActive( String optionName, OperationType type );
-
-    void deactivate( String optionName, OperationType type );
-
-    List<Build> getBuilds();
-
-    Build getLatestBuild();
-
-    UUID runCloneOption( String serverId, String optionName );
-
-    UUID runBuildOption( String serverId, String optionName );
-
-    UUID runDeployOption( String serverId, String optionName );
-
-    UUID runTestOption( String serverId, String optionName );
-    /*
-    *   Keshig Operation Handlers
-    * */
-
-    UUID deploy( RequestBuilder requestBuilder, String serverId );
-
-    UUID test( RequestBuilder requestBuilder, String serverId );
-
-    UUID build( RequestBuilder requestBuilder, String serverId );
-
-    UUID clone( RequestBuilder requestBuilder, String serverId );
-
-    /*
-    *   run defaults will initiate Keshig process that will execute each step
-    *   depending on the configurations(clone/build/deploy/test) provided
-    * */
-    void runDefaults();
-
-    void runOption( String optionName, String optionType );
+    void runOption(String optionName, String serverId);
 
     void runProfile( String profileName );
+
     /*
     *  Keshig History Handlers
     * */
@@ -107,6 +73,7 @@ public interface Keshig
     List<String> getPlaybooks();
 
     void saveHistory( History history );
+
     /*
     *  Keshig Profile Handlers
     * */
@@ -129,8 +96,6 @@ public interface Keshig
 
     void publish( String boxName, String serverId );
 
-    void tpr( String serverId );
-
-    void freeReserver( String hostname, String serverIp );
+    void freeReserved( String hostname, String serverIp );
 }
 

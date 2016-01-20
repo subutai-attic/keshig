@@ -15,14 +15,14 @@ import javax.ws.rs.core.Response;
 
 
 import io.subutai.plugin.keshig.api.Profile;
-import io.subutai.plugin.keshig.api.entity.options.BuildOption;
-import io.subutai.plugin.keshig.api.entity.options.CloneOption;
 import io.subutai.plugin.keshig.api.entity.options.DeployOption;
 import io.subutai.plugin.keshig.api.entity.options.TestOption;
 
 
 public interface KeshigRestService
 {
+
+
 
     //SERVER CRUD
     @GET
@@ -31,30 +31,17 @@ public interface KeshigRestService
     public Response listServers();
 
     @GET
-    @Path( "server/{serverName}" )
+    @Path( "server/{serverId}" )
     @Produces( { MediaType.APPLICATION_JSON } )
-    public Response getServer( @PathParam( "serverName" ) String serverName );
-
-    @GET
-    @Path( "server/types" )
-    @Produces( { MediaType.APPLICATION_JSON } )
-    public Response getServerType();
-
+    public Response getServer( @PathParam( "serverId" ) String serverName );
 
     @POST
     @Path( "server" )
-    public Response addServer( @FormParam( "serverId" ) String serverId, @FormParam( "serverName" ) String serverName,
-                               @FormParam( "serverType" ) String serverType );
-
-    @PUT
-    @Path( "server" )
-    public Response updateServer( @FormParam( "serverId" ) String serverId,
-                                  @FormParam( "serverName" ) String serverName,
-                                  @FormParam( "serverType" ) String serverType );
+    public Response addServer( @FormParam( "serverId" ) String serverId);
 
     @DELETE
-    @Path( "server/{serverName}" )
-    public Response deleteServer( @PathParam( "serverName" ) String serverName );
+    @Path( "server/{serverId}" )
+    public Response deleteServer( @PathParam( "serverId" ) String serverId );
 
     //OPTION CRUD
     //CLONE,BUILD,DEPLOY,TEST
@@ -79,11 +66,6 @@ public interface KeshigRestService
     @Produces( MediaType.APPLICATION_JSON )
     public Response getOption( @PathParam( "type" ) String type, @PathParam( "optionName" ) String optionName );
 
-    //run options
-    @GET
-    @Path( "option/{type}/{optionName}/start" )
-    @Produces( MediaType.APPLICATION_JSON )
-    public Response runOption( @PathParam( "type" ) String type, @PathParam( "optionName" ) String optionName );
 
     @GET
     @Path( "option/{type}/{optionName}/start/{serverId}" )
@@ -95,28 +77,6 @@ public interface KeshigRestService
     @GET
     @Path( "export/{serverId}/{buildName}/start" )
     public Response export( @PathParam( "serverId" ) String serverId, @PathParam( "buildName" ) String buildName );
-
-    @GET
-    @Path( "tpr/{serverId}" )
-    public Response tpr( @PathParam( "serverId" ) String serverId );
-
-    //---------------------------------------------------------------------------------------------------//
-    @POST
-    @Path( "option/clone" )
-    @Consumes( MediaType.APPLICATION_JSON )
-    public Response addCloneOption( CloneOption option );
-
-    @PUT
-    @Produces( MediaType.APPLICATION_JSON )
-    @Path( "option/clone" )
-    @Consumes( MediaType.APPLICATION_JSON )
-    public Response updateCloneOption( CloneOption option );
-
-    @POST
-    @Produces( MediaType.APPLICATION_JSON )
-    @Path( "option/build" )
-    @Consumes( MediaType.APPLICATION_JSON )
-    public Response addBuildOption( BuildOption option );
 
     @POST
     @Produces( MediaType.APPLICATION_JSON )
@@ -130,13 +90,6 @@ public interface KeshigRestService
     @Consumes( MediaType.APPLICATION_JSON )
     public Response addDeployOption( DeployOption option );
 
-
-    @PUT
-    @Produces( MediaType.APPLICATION_JSON )
-    @Path( "option/build" )
-    @Consumes( MediaType.APPLICATION_JSON )
-    public Response updateBuildOption( BuildOption option );
-
     @PUT
     @Path( "option/test" )
     @Consumes( MediaType.APPLICATION_JSON )
@@ -148,14 +101,8 @@ public interface KeshigRestService
     public Response updateDeployOption( DeployOption option );
 
     @DELETE
-    @Path( "option/{type}/{optionName}" )
-    public Response deleteOption( @PathParam( "type" ) String type, @PathParam( "optionName" ) String optionName );
-
-    //BUILDS
-    @GET
-    @Path( "build" )
-    public Response getBuilds();
-    //TESTS
+    @Path( "option/{optionName}" )
+    public Response deleteOption(@PathParam( "optionName" ) String optionName );
 
     @GET
     @Path( "tests" )
@@ -173,7 +120,8 @@ public interface KeshigRestService
 
     @DELETE
     @Path( "statuses/{hostname}/{serverIp}" )
-    public Response deleteReservation( @PathParam( "hostname" ) String hostname, @PathParam("serverIp") String serverIp );
+    public Response deleteReservation( @PathParam( "hostname" ) String hostname,
+                                       @PathParam( "serverIp" ) String serverIp );
 
     @GET
     @Path( "statuses" )

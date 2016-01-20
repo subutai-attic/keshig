@@ -3,70 +3,48 @@ package io.subutai.plugin.keshig.api.entity.options;
 
 import java.util.List;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Lists;
 
 import io.subutai.plugin.keshig.api.entity.Command;
-import io.subutai.plugin.keshig.api.entity.OperationType;
 
-
-public class DeployOption
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class DeployOption implements Option
 {
+
+
     private String name;
-    private int numberOfPeers;
-    private int numberOfRhsPerPeer;
-    private String buildName;
-    private boolean active;
+    private String url;
+    private String branch;
+
+    private String type = "DEPLOY";
 
     @JsonIgnore
-    private OperationType type = OperationType.DEPLOY;
-    private int timeOut;
+    private int timeOut = 1000;
+
 
     public DeployOption()
     {
     }
 
-
-    public DeployOption( final String name, int numberOfPeers, int numberOfRhsPerPeer,
-                         final String buildName, boolean isActive, int timeOut )
+    @JsonIgnore
+    public String getType()
     {
-        this.name = name;
-        this.numberOfPeers = numberOfPeers;
-        this.numberOfRhsPerPeer = numberOfRhsPerPeer;
-        this.buildName = buildName;
-        this.active = isActive;
-        this.timeOut = timeOut;
+        return this.type;
     }
 
 
+    @JsonIgnore
     public int getTimeOut()
     {
         return timeOut;
     }
 
-
     public void setTimeOut( final int timeOut )
     {
         this.timeOut = timeOut;
-    }
-
-
-
-    public OperationType getType()
-    {
-        return type;
-    }
-
-
-    public boolean isActive()
-    {
-        return active;
-    }
-
-
-    public void setIsActive( final boolean isActive )
-    {
-        this.active = isActive;
     }
 
 
@@ -76,65 +54,47 @@ public class DeployOption
     }
 
 
-    public List<String> getArgs()
-    {
-        return Lists.newArrayList( Command.folder, buildName);
-    }
-
-
     public void setName( final String name )
     {
         this.name = name;
     }
 
 
-    public int getNumberOfPeers()
+    public String getUrl()
     {
-        return numberOfPeers;
+        return url;
     }
 
 
-    public void setNumberOfPeers( final int numberOfPeers )
+    public void setUrl( final String url )
     {
-        this.numberOfPeers = numberOfPeers;
+        this.url = url;
     }
 
 
-    public int getNumberOfRhsPerPeer()
+    public String getBranch()
     {
-        return numberOfRhsPerPeer;
+        return branch;
     }
 
 
-    public void setNumberOfRhsPerPeer( final int numberOfRhsPerPeer )
+    public void setBranch( final String branch )
     {
-        this.numberOfRhsPerPeer = numberOfRhsPerPeer;
+        this.branch = branch;
     }
 
 
-    public String getBuildName()
+
+    @JsonIgnore
+    public String getCommand()
     {
-        return buildName;
+        return null;
     }
 
-
-    public void setBuildName( final String buildName )
+    @JsonIgnore
+    public List<String> getArgs()
     {
-        this.buildName = buildName;
-    }
 
-
-    @Override
-    public String toString()
-    {
-        return "DeployOption{" +
-                "name='" + name + '\'' +
-                ", numberOfPeers=" + numberOfPeers +
-                ", numberOfRhsPerPeer=" + numberOfRhsPerPeer +
-                ", buildName='" + buildName + '\'' +
-                ", isActive=" + active +
-                ", type=" + type +
-                ", timeOut=" + timeOut +
-                '}';
+        return Lists.newArrayList( Command.branchOpt, this.branch, Command.repoOpt, this.url );
     }
 }

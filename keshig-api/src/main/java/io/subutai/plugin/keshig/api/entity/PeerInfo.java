@@ -11,8 +11,8 @@ public class PeerInfo
     private String status;
     private boolean isFree = true;
     private HashMap details;
-    private String usedBy;
-    private String comment;
+    private String usedBy = "";
+    private String comment = "";
 
     public PeerInfo()
     {

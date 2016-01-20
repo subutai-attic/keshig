@@ -1,17 +1,15 @@
 package io.subutai.plugin.keshig.api.entity.options;
 
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Lists;
 
-import io.subutai.plugin.keshig.api.entity.OperationType;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class TestOption {
+public class TestOption implements Option{
 
     @JsonIgnore
     private String indexHtml = "/home/ubuntu/repo/%s";
@@ -21,34 +19,17 @@ public class TestOption {
 
     private String name;
     private boolean all;
+
     private List<String> targetIps;
     private List<String> playbooks;
-    private boolean active;
-    private int timeOut;
 
+    private int timeOut = 1000;
 
-    private OperationType type = OperationType.TEST;
 
     public TestOption() {
 
     }
 
-
-    public TestOption(final String name, final boolean all, final List<String> targetIps, final boolean isActive) {
-        this.name = name;
-        this.all = all;
-        this.targetIps = targetIps;
-        this.active = isActive;
-    }
-
-
-    public TestOption(final List<String> targetIps, final List<String> playbooks, final boolean isActive,
-                      final String name) {
-        this.targetIps = targetIps;
-        this.playbooks = playbooks;
-        this.active = isActive;
-        this.name = name;
-    }
 
 
     public int getTimeOut() {
@@ -58,21 +39,6 @@ public class TestOption {
 
     public void setTimeOut(final int timeOut) {
         this.timeOut = timeOut;
-    }
-
-
-    public OperationType getType() {
-        return type;
-    }
-
-
-    public boolean isActive() {
-        return active;
-    }
-
-
-    public void setIsActive(final boolean isActive) {
-        this.active = isActive;
     }
 
 
@@ -131,6 +97,14 @@ public class TestOption {
         this.indexHtml = outputPath;
     }
 
+
+    @JsonIgnore
+    public String getCommand()
+    {
+        return null;
+    }
+
+
     @JsonIgnore
     public List<String> getArgs() {
 //
@@ -164,17 +138,4 @@ public class TestOption {
 
     }
 
-
-    @Override
-    public String toString() {
-        return "TestOption{" +
-                "name='" + name + '\'' +
-                ", all=" + all +
-                ", targetIps=" + targetIps +
-                ", playbooks=" + playbooks +
-                ", isActive=" + active +
-                ", timeOut=" + timeOut +
-                ", type=" + type +
-                '}';
-    }
 }

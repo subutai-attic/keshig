@@ -138,16 +138,11 @@ public class ServerStatusUpdateHandler implements Runnable
 
                     PeerInfo peerInfo = new PeerInfo();
                     HashMap map = getPeerDetails( ip );
-//                    if ( map.size() > 0 )
-//                    {
-//                        if ( map.get( "status" ).equals( HTTP_OK ) )
-//                        {
-                            peerInfo.setDetails( map );
-                            peerInfo.setIp( ip );
-                            peerInfo.setFree( false );
-                            peerInfo.setStatus( "OK" );
-//                        }
-                    //                    }
+
+                    peerInfo.setDetails( map );
+                    peerInfo.setIp( ip );
+                    peerInfo.setFree( false );
+                    peerInfo.setStatus( "OK" );
                     peerInfos.put( ip, peerInfo );
 
                     LOG.debug( String.format( "Found peer:%s", peerInfo.toString() ) );
