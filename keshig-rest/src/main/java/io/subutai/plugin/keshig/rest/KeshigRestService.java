@@ -46,9 +46,6 @@ public interface KeshigRestService
     public Response updateNightlyBuildStatus( @PathParam( "hostname" ) String hostname,
                                               @PathParam( "status" ) boolean status );
 
-    //OPTION CRUD
-    //CLONE,BUILD,DEPLOY,TEST
-
     @GET
     @Path( "option" )
     @Produces( {MediaType.APPLICATION_JSON })
@@ -109,6 +106,7 @@ public interface KeshigRestService
 
     @GET
     @Path( "tests" )
+    @Produces( {MediaType.APPLICATION_JSON })
     public Response getTests();
 
     //UPDATE STATUS

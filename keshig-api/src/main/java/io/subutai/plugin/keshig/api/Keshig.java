@@ -32,7 +32,7 @@ public interface Keshig
     //
     void addServer( String server ) throws Exception;
 
-    void removeServer( String serverId );
+    void removeServer( String id );
 
     Server getServer(String id);
 

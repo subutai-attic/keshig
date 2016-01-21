@@ -2,7 +2,6 @@ package io.subutai.plugin.keshig.impl;
 
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
@@ -120,9 +119,9 @@ public class KeshigImpl implements Keshig
 
 
     @Override
-    public void addServer( final String server ) throws Exception
+    public void addServer( final String id ) throws Exception
     {
-        ResourceHost resourceHost = peerManager.getLocalPeer().getResourceHostById( server );
+        ResourceHost resourceHost = peerManager.getLocalPeer().getResourceHostById( id );
 
         String serverName = resourceHost.getHostname();
         String serverId = resourceHost.getId();
@@ -131,6 +130,7 @@ public class KeshigImpl implements Keshig
         server1.setServerId( serverId );
         server1.setServerName( serverName );
         server1.setAdded( true );
+
         if ( serverId != null && serverName != null )
         {
             addServer( server1 );
@@ -152,10 +152,9 @@ public class KeshigImpl implements Keshig
     }
 
 
-    public void removeServer( final String serverName )
+    public void removeServer( final String id )
     {
-
-        this.pluginDAO.deleteInfo( KESHIG_SERVER, serverName );
+        this.pluginDAO.deleteInfo( KESHIG_SERVER, id );
     }
 
 
@@ -197,10 +196,12 @@ public class KeshigImpl implements Keshig
     public void addKeshigServer( final KeshigServer server ) throws Exception
     {
         Preconditions.checkNotNull( server );
-
-        if ( !this.getPluginDAO().saveInfo( KESHIG_SERVER, server.getHostname(), server ) )
+        if ( server.getHostname() != null )
         {
-            throw new Exception( "Could not save server info" );
+            if ( !this.getPluginDAO().saveInfo( KESHIG_SERVER, server.getHostname(), server ) )
+            {
+                throw new Exception( "Could not save server info" );
+            }
         }
     }
 
@@ -237,7 +238,9 @@ public class KeshigImpl implements Keshig
     public List<KeshigServer> getAllKeshigServers()
     {
         List<KeshigServer> keshigServer = Lists.newArrayList();
+
         keshigServer = this.pluginDAO.getInfo( KESHIG_SERVER, KeshigServer.class );
+
         return keshigServer;
     }
 
@@ -246,6 +249,7 @@ public class KeshigImpl implements Keshig
     public void dropAllServers()
     {
         List<KeshigServer> existingServer = getAllKeshigServers();
+
         for ( KeshigServer server : existingServer )
         {
             removeKeshigServer( server.getHostname() );
@@ -499,6 +503,7 @@ public class KeshigImpl implements Keshig
     public void updateKeshigServerStatuses()
     {
         ServerStatusUpdateHandler serverStatusUpdateHandler = new ServerStatusUpdateHandler( this );
+
         serverStatusUpdateHandler.run();
     }
 

@@ -96,6 +96,7 @@ public class ServerStatusUpdateHandler implements Runnable
         Map<String, PeerInfo> peerInfos;
 
         List<Server> servers = keshig.getServers();
+
         for ( Server resourceHost : servers )
         {
             LOG.debug( String.format( "Hostname: %s", resourceHost.getServerName() ) );
@@ -130,6 +131,7 @@ public class ServerStatusUpdateHandler implements Runnable
         catch ( HostNotFoundException e )
         {
             e.printStackTrace();
+            return peerInfos;
         }
         try
         {
@@ -144,17 +146,19 @@ public class ServerStatusUpdateHandler implements Runnable
 
                 for ( String ip : ipList )
                 {
+                    if ( ip != null )
+                    {
+                        PeerInfo peerInfo = new PeerInfo();
+                        HashMap map = getPeerDetails( ip );
 
-                    PeerInfo peerInfo = new PeerInfo();
-                    HashMap map = getPeerDetails( ip );
+                        peerInfo.setDetails( map );
+                        peerInfo.setIp( ip );
+                        peerInfo.setFree( false );
+                        peerInfo.setStatus( "OK" );
+                        peerInfos.put( ip, peerInfo );
 
-                    peerInfo.setDetails( map );
-                    peerInfo.setIp( ip );
-                    peerInfo.setFree( false );
-                    peerInfo.setStatus( "OK" );
-                    peerInfos.put( ip, peerInfo );
-
-                    LOG.debug( String.format( "Found peer:%s", peerInfo.toString() ) );
+                        LOG.debug( String.format( "Found peer:%s", peerInfo.toString() ) );
+                    }
                 }
             }
             else

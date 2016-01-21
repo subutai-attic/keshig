@@ -196,7 +196,7 @@ public class KeshigRestServiceImpl implements KeshigRestService
 
         keshig.addOption( option );
 
-        return Response.ok().build();
+        return Response.ok(keshig.getAllTestOptions()).build();
     }
 
 
@@ -206,7 +206,7 @@ public class KeshigRestServiceImpl implements KeshigRestService
 
         keshig.addOption( option );
 
-        return Response.ok().build();
+        return Response.ok(keshig.getAllDeployOptions()).build();
     }
 
 
@@ -216,7 +216,7 @@ public class KeshigRestServiceImpl implements KeshigRestService
 
         keshig.addOption( option );
 
-        return Response.ok().build();
+        return Response.ok(keshig.getAllTestOptions()).build();
     }
 
 
@@ -226,7 +226,7 @@ public class KeshigRestServiceImpl implements KeshigRestService
 
         keshig.addOption( option );
 
-        return Response.ok().build();
+        return Response.ok(keshig.getAllDeployOptions()).build();
     }
 
 

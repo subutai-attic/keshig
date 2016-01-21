@@ -18,7 +18,7 @@ public class DeployOption implements Option
 
 
     private String name;
-    private String url;
+
     private String branch;
 
     @JsonIgnore
@@ -59,18 +59,6 @@ public class DeployOption implements Option
     public void setName( final String name )
     {
         this.name = name;
-    }
-
-
-    public String getUrl()
-    {
-        return url;
-    }
-
-
-    public void setUrl( final String url )
-    {
-        this.url = url;
     }
 
 
