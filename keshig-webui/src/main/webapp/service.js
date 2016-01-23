@@ -39,6 +39,7 @@ function keshigSrv($http) {
 		getResourceHostsUpdates: getResourceHostsUpdates,
 		updateResourceHost: updateResourceHost,
 		unapprovePeer: unapprovePeer,
+		updateNightlyBuildStatus: updateNightlyBuildStatus,
 
 		exportBuild : exportBuild,
 		getTPR : getTPR,
@@ -57,13 +58,13 @@ function keshigSrv($http) {
 	 * */
 
 	function getBuilds() {
-		return $http.get(BASE_URL + 'build', {withCredentials: true, headers: {'Content-Type': 'application/json'}});
+		//return $http.get(BASE_URL + 'build', {withCredentials: true, headers: {'Content-Type': 'application/json'}});
 	}
 
 	function exportBuild(build) {
-		return $http.get(BASE_URL + 'export/' + build.serverId + '/' + build.buildName + '/start', {
-			withCredentials: true
-		});
+		//return $http.get(BASE_URL + 'export/' + build.serverId + '/' + build.buildName + '/start', {
+		//	withCredentials: true
+		//});
 	}
 
 	function getTPR(serverId) {
@@ -73,7 +74,10 @@ function keshigSrv($http) {
 	}
 
 	function getPlaybooks() {
-		return $http.get(BASE_URL + 'tests', {withCredentials: true, headers: {'Content-Type': 'application/json'}});
+		return $http.get(BASE_URL + 'tests', {
+			withCredentials: true,
+			headers: {'Content-Type': 'application/json'}
+		});
 	}
 
 	function getProfiles() {
@@ -114,18 +118,15 @@ function keshigSrv($http) {
 		});
 	}
 
-	function addServer( server ) {
-		var postData = 'serverName=' + server.serverName
-			+ '&serverType=' + server.serverType
-			+ '&serverId=' + server.serverId;
-		return $http.post(SERVERS_URL, postData, {
+	function addServer( serverId ) {
+		return $http.post(SERVERS_URL + serverId, {
 			withCredentials: true,
 			headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 		});
 	}
 
-	function removeServer(hostId) {
-		return $http.delete(SERVERS_URL + hostId, {
+	function removeServer(serverId) {
+		return $http.delete(SERVERS_URL + serverId, {
 			withCredentials: true
 		});
 	}
@@ -138,9 +139,9 @@ function keshigSrv($http) {
 	}
 
 	function updateServer( server ) {
-		var postData = 'serverName=' + server.serverName
-			+ '&serverType=' + server.serverType
-			+ '&serverId=' + server.serverId;
+		var postData = 'serverName=' + server.serverName 
+			+ '&serverType=' + server.serverType 
+			+ '&serverId=' + server.serverId;		
 		return $http.put(SERVERS_URL, postData, {
 			withCredentials: true,
 			headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
@@ -152,6 +153,8 @@ function keshigSrv($http) {
 			withCredentials: true
 		});
 	}
+	//Deploy server : target server to run deploy option
+	//Deploy option : deploy option to run
 
 	function getOptionTypes() {
 		return $http.get(OPTIONS_URL + 'types', {
@@ -166,7 +169,7 @@ function keshigSrv($http) {
 	}
 
 	function deleteOption(type, optionName) {
-		return $http.delete(OPTIONS_URL + type.toLowerCase() + '/' + optionName, {
+		return $http.delete(OPTIONS_URL  + type + '/' + optionName, {
 			withCredentials: true
 		});
 	}
@@ -216,6 +219,13 @@ function keshigSrv($http) {
 
 	function unapprovePeer(params) {
 		return $http.delete( STATUSES_URL + params.hostname + '/' + params.serverIp, {
+			withCredentials: true,
+			headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+		});
+	}
+
+	function updateNightlyBuildStatus(hostname, status) {
+		return $http.put( SERVERS_URL + hostname + '/' + status, {
 			withCredentials: true,
 			headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 		});

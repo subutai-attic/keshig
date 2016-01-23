@@ -28,18 +28,8 @@
 					History
 				</li>
 				<li class="b-tabs-menu__item"
-						ng-click="keshigCtrl.changeTab('export')"
-						ng-class="keshigCtrl.activeTab == 'export' ? 'b-tabs-menu__item_active' : ''">
-					Export
-				</li>
-				<li class="b-tabs-menu__item"
-						ng-click="keshigCtrl.changeTab('tpr')"
-						ng-class="keshigCtrl.activeTab == 'tpr' ? 'b-tabs-menu__item_active' : ''">
-					TPR
-				</li>
-				<li class="b-tabs-menu__item"
-					ng-click="keshigCtrl.changeTab('rh')"
-					ng-class="keshigCtrl.activeTab == 'rh' ? 'b-tabs-menu__item_active' : ''">
+						ng-click="keshigCtrl.changeTab('rh')"
+						ng-class="keshigCtrl.activeTab == 'rh' ? 'b-tabs-menu__item_active' : ''">
 					Resource Hosts
 				</li>
 			</ul>
@@ -60,14 +50,6 @@
 		<div
 				ng-if="keshigCtrl.activeTab == 'history'"
 				ng-include="'plugins/keshig/partials/history.html'">
-		</div>
-		<div
-				ng-if="keshigCtrl.activeTab == 'export'"
-				ng-include="'plugins/keshig/partials/export.html'">
-		</div>
-		<div
-				ng-if="keshigCtrl.activeTab == 'tpr'"
-				ng-include="'plugins/keshig/partials/tpr.html'">
 		</div>
 		<div
 				ng-if="keshigCtrl.activeTab == 'rh'"
