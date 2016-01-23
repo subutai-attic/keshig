@@ -2,10 +2,11 @@
     <div class="b-workspace-content__row" style="text-align: right">
         <button class="b-btn b-btn_green" ng-click="keshigCtrl.getResourceHostsUpdates()">Update</button>
     </div>
-    <div class="b-data-table">
+    <div class="b-main-table b-main-table_with-header">
         <table datatable="ng" ng-show="keshigCtrl.resourceHostsStatuses.length > 0"
                dt-options="keshigCtrl.dtOptions"
                dt-column-defs="keshigCtrl.dtColumnDefs"
+               dt-instance="keshigCtrl.dtInstanceCallback"
                class="row-border hover subt_table-containers-table">
             <thead>
                 <tr>
