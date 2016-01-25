@@ -18,7 +18,6 @@ public class DeployOption implements Option
 
 
     private String name;
-
     private String branch;
 
     @JsonIgnore

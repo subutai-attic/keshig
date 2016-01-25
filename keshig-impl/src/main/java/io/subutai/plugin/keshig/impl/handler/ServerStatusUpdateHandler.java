@@ -36,6 +36,7 @@ import io.subutai.plugin.keshig.impl.KeshigImpl;
 public class ServerStatusUpdateHandler implements Runnable
 {
     private KeshigImpl keshig;
+
     private static final Logger LOG = LoggerFactory.getLogger( ServerStatusUpdateHandler.class );
 
 

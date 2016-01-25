@@ -1,5 +1,6 @@
 package io.subutai.plugin.keshig.api.entity;
 
+
 public class History
 {
     private String id;
@@ -9,52 +10,33 @@ public class History
 
     private String exitCode;
     private String server;
-    private String stdOut;
-    private String stdErr;
+    private String url;
 
-    public History() {
+
+    public History()
+    {
 
     }
 
-    public History(String id, String type, Long startTime, String server) {
+
+    public History( String id, String type, Long startTime, String server )
+    {
         this.id = id;
         this.type = type;
         this.startTime = startTime;
         this.server = server;
     }
 
-    public History(String id, String type, Long startTime, Long endTime, String exitCode, String server, String stdOut, String stdErr) {
+
+    public History( String id, String type, Long startTime, Long endTime, String exitCode, String server, String stdOut,
+                    String stdErr )
+    {
         this.id = id;
         this.type = type;
         this.startTime = startTime;
         this.endTime = endTime;
         this.exitCode = exitCode;
         this.server = server;
-        this.stdOut = stdOut;
-        this.stdErr = stdErr;
-    }
-
-    public String getStdOut()
-    {
-        return stdOut;
-    }
-
-
-    public void setStdOut( final String stdOut )
-    {
-        this.stdOut = stdOut;
-    }
-
-
-    public String getStdErr()
-    {
-        return stdErr;
-    }
-
-
-    public void setStdErr( final String stdErr )
-    {
-        this.stdErr = stdErr;
     }
 
 
@@ -105,6 +87,7 @@ public class History
         this.endTime = endTime;
     }
 
+
     public String getExitCode()
     {
         return exitCode;
@@ -128,17 +111,30 @@ public class History
         this.server = server;
     }
 
+
+    public String getUrl()
+    {
+        return url;
+    }
+
+
+    public void setUrl( final String url )
+    {
+        this.url = url;
+    }
+
+
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "History{" +
-                "stdErr='" + stdErr + '\'' +
-                ", stdOut='" + stdOut + '\'' +
-                ", server='" + server + '\'' +
-                ", exitCode='" + exitCode + '\'' +
-                ", endTime=" + endTime +
-                ", startTime=" + startTime +
+                "id='" + id + '\'' +
                 ", type='" + type + '\'' +
-                ", id='" + id + '\'' +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", exitCode='" + exitCode + '\'' +
+                ", server='" + server + '\'' +
+                ", url='" + url + '\'' +
                 '}';
     }
 }

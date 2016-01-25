@@ -39,9 +39,11 @@ import io.subutai.plugin.keshig.api.entity.options.TestOption;
 import io.subutai.plugin.keshig.impl.handler.OperationHandler;
 import io.subutai.plugin.keshig.impl.handler.ServerStatusUpdateHandler;
 
+import static io.subutai.plugin.keshig.api.KeshigConfig.KESHIG_DEPLOY_OPTION;
+import static io.subutai.plugin.keshig.api.KeshigConfig.KESHIG_PHYSICAL_SERVER;
 import static io.subutai.plugin.keshig.api.KeshigConfig.KESHIG_SERVER;
+import static io.subutai.plugin.keshig.api.KeshigConfig.KESHIG_TEST_OPTION;
 import static io.subutai.plugin.keshig.api.KeshigConfig.PRODUCT_HISTORY;
-import static io.subutai.plugin.keshig.api.KeshigConfig.PRODUCT_KEY;
 import static io.subutai.plugin.keshig.api.KeshigConfig.PROFILE;
 
 
@@ -81,40 +83,54 @@ public class KeshigImpl implements Keshig
 
     public void addOption( final Option option )
     {
-        this.pluginDAO.saveInfo( PRODUCT_KEY, option.getName(), option );
+        if ( option.getType().equalsIgnoreCase( "TEST" ) )
+        {
+            this.pluginDAO.saveInfo( KESHIG_TEST_OPTION, option.getName(), option );
+        }
+        else if ( option.getType().equalsIgnoreCase( "DEPLOY" ) )
+        {
+            this.pluginDAO.saveInfo( KESHIG_DEPLOY_OPTION, option.getName(), option );
+        }
     }
 
 
     public TestOption getTestOption( final String optionName )
     {
-        return this.pluginDAO.getInfo( PRODUCT_KEY, optionName, TestOption.class );
+        return this.pluginDAO.getInfo( KESHIG_TEST_OPTION, optionName, TestOption.class );
     }
 
 
     public DeployOption getDeployOption( final String name )
     {
-        return this.pluginDAO.getInfo( PRODUCT_KEY, name, DeployOption.class );
+        return this.pluginDAO.getInfo( KESHIG_DEPLOY_OPTION, name, DeployOption.class );
     }
 
 
     @Override
     public List<TestOption> getAllTestOptions()
     {
-        return this.pluginDAO.getInfo( PRODUCT_KEY, TestOption.class );
+        return this.pluginDAO.getInfo( KESHIG_TEST_OPTION, TestOption.class );
     }
 
 
     @Override
     public List<DeployOption> getAllDeployOptions()
     {
-        return this.pluginDAO.getInfo( PRODUCT_KEY, DeployOption.class );
+        return this.pluginDAO.getInfo( KESHIG_DEPLOY_OPTION, DeployOption.class );
     }
 
 
     @Override
-    public void deleteOption( String name )
+    public void deleteOption( String type, String name )
     {
-        this.pluginDAO.deleteInfo( PRODUCT_KEY, name );
+        if ( type.equalsIgnoreCase( "TEST" ) )
+        {
+            this.pluginDAO.deleteInfo( KESHIG_TEST_OPTION, name );
+        }
+        else if ( type.equalsIgnoreCase( "DEPLOY" ) )
+        {
+            this.pluginDAO.deleteInfo( KESHIG_DEPLOY_OPTION, name );
+        }
     }
 
 
@@ -140,7 +156,6 @@ public class KeshigImpl implements Keshig
 
     private void addServer( final Server server ) throws Exception
     {
-
         Preconditions.checkNotNull( server );
         if ( !server.getServerId().isEmpty() || server.getServerId() == null )
         {
@@ -198,7 +213,7 @@ public class KeshigImpl implements Keshig
         Preconditions.checkNotNull( server );
         if ( server.getHostname() != null )
         {
-            if ( !this.getPluginDAO().saveInfo( KESHIG_SERVER, server.getHostname(), server ) )
+            if ( !this.getPluginDAO().saveInfo( KESHIG_PHYSICAL_SERVER, server.getHostname(), server ) )
             {
                 throw new Exception( "Could not save server info" );
             }
@@ -209,7 +224,7 @@ public class KeshigImpl implements Keshig
     @Override
     public void removeKeshigServer( final String hostname )
     {
-        this.pluginDAO.deleteInfo( KESHIG_SERVER, hostname );
+        this.pluginDAO.deleteInfo( KESHIG_PHYSICAL_SERVER, hostname );
     }
 
 
@@ -230,7 +245,7 @@ public class KeshigImpl implements Keshig
     @Override
     public KeshigServer getKeshigServer( final String hostname )
     {
-        return this.pluginDAO.getInfo( KESHIG_SERVER, hostname, KeshigServer.class );
+        return this.pluginDAO.getInfo( KESHIG_PHYSICAL_SERVER, hostname, KeshigServer.class );
     }
 
 
@@ -239,7 +254,7 @@ public class KeshigImpl implements Keshig
     {
         List<KeshigServer> keshigServer = Lists.newArrayList();
 
-        keshigServer = this.pluginDAO.getInfo( KESHIG_SERVER, KeshigServer.class );
+        keshigServer = this.pluginDAO.getInfo( KESHIG_PHYSICAL_SERVER, KeshigServer.class );
 
         return keshigServer;
     }
@@ -440,7 +455,23 @@ public class KeshigImpl implements Keshig
 
         try
         {
-            final ResourceHost testHost = this.getPeerManager().getLocalPeer().getResourceHostById( " " );
+            List<Server> servers = this.getServers();
+            String serverId = null;
+
+            for ( Server server : servers )
+            {
+                if ( server.isAdded() )
+                {
+                    serverId = server.getServerId();
+                }
+            }
+            if ( serverId == null )
+            {
+                return Lists.newArrayList( "" );
+            }
+            LOG.debug( "Getting playbooks from : " + serverId );
+
+            final ResourceHost testHost = this.getPeerManager().getLocalPeer().getResourceHostById( serverId );
 
             final CommandResult result = testHost.execute(
                     new RequestBuilder( Command.getTestComand() ).withCmdArgs( Lists.newArrayList( "-l" ) ) );
@@ -455,7 +486,6 @@ public class KeshigImpl implements Keshig
         }
         catch ( CommandException | HostNotFoundException e )
         {
-
             e.printStackTrace();
             return null;
         }

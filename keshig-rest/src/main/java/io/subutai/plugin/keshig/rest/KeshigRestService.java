@@ -101,8 +101,8 @@ public interface KeshigRestService
     public Response updateDeployOption( DeployOption option );
 
     @DELETE
-    @Path( "option/{optionName}" )
-    public Response deleteOption( @PathParam( "optionName" ) String optionName );
+    @Path( "option/{type}/{optionName}" )
+    public Response deleteOption( @PathParam( "type" ) String type, @PathParam( "optionName" ) String optionName );
 
     @GET
     @Path( "tests" )

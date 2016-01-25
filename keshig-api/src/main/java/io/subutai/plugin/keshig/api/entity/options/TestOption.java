@@ -130,7 +130,7 @@ public class TestOption implements Option
     @JsonIgnore
     public String getCommand()
     {
-        return null;
+        return "/home/ubuntu/playbooks-newui/run_tests.sh";
     }
 
 

@@ -28,7 +28,7 @@ public interface Keshig
 
     List<DeployOption> getAllDeployOptions();
 
-    void deleteOption(String name);
+    void deleteOption(String type, String name);
     //
     void addServer( String server ) throws Exception;
 

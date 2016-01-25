@@ -231,7 +231,7 @@ public class KeshigRestServiceImpl implements KeshigRestService
 
 
     @Override
-    public Response deleteOption( String optionName )
+    public Response deleteOption(String type, String optionName )
     {
 
         if ( Strings.isNullOrEmpty( optionName ) )
@@ -240,7 +240,7 @@ public class KeshigRestServiceImpl implements KeshigRestService
             return Response.status( BAD_REQUEST ).entity( "Invalid option name" ).build();
         }
 
-        keshig.deleteOption( optionName );
+        keshig.deleteOption( type, optionName );
 
         return Response.ok().build();
     }
