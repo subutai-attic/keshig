@@ -1,4 +1,5 @@
 'use strict';
+var UPDATE_NIGHTLY_BUILD_STATUS;
 
 angular.module('subutai.plugins.keshig.controller', [])
     .controller('KeshigCtrl', KeshigCtrl)
