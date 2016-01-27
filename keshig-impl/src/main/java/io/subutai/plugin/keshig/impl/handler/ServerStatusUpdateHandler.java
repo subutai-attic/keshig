@@ -7,8 +7,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
@@ -143,7 +141,7 @@ public class ServerStatusUpdateHandler implements Runnable
             {
                 String stdOut = commandResult.getStdOut();
                 //peer ips
-                List<String> ipList = getPeerIps( stdOut );
+                List<String> ipList = keshig.getIps( stdOut );
 
                 for ( String ip : ipList )
                 {
@@ -174,25 +172,6 @@ public class ServerStatusUpdateHandler implements Runnable
         }
         return peerInfos;
     }
-
-
-    private List<String> getPeerIps( final String stdOut )
-    {
-        List<String> ips = new ArrayList<>();
-        final Pattern pattern = Pattern.compile( "management\\d=.*" );
-        final Matcher matcher = pattern.matcher( stdOut );
-
-        while ( matcher.find() )
-        {
-            final String match = matcher.group();
-            final String[] s = match.split( "=" );
-            final String ipAddr = s[1].trim();
-            ips.add( ipAddr );
-        }
-        LOG.debug( String.format( "Found IPs on Keshig Server:%s", ips.toString() ) );
-        return ips;
-    }
-
 
     private HashMap getPeerDetails( String ipAddr )
     {

@@ -13,7 +13,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-
 import io.subutai.plugin.keshig.api.Profile;
 import io.subutai.plugin.keshig.api.entity.options.DeployOption;
 import io.subutai.plugin.keshig.api.entity.options.TestOption;
@@ -26,148 +25,151 @@ public interface KeshigRestService
     @GET
     @Path( "server" )
     @Produces( { MediaType.APPLICATION_JSON } )
-    public Response listServers();
+    Response listServers();
 
     @GET
     @Path( "server/{serverId}" )
     @Produces( { MediaType.APPLICATION_JSON } )
-    public Response getServer( @PathParam( "serverId" ) String serverName );
+    Response getServer( @PathParam( "serverId" ) String serverName );
 
     @POST
     @Path( "server/{serverId}" )
-    public Response addServer( @PathParam( "serverId" ) String serverId );
+    Response addServer( @PathParam( "serverId" ) String serverId );
 
     @DELETE
     @Path( "server/{serverId}" )
-    public Response deleteServer( @PathParam( "serverId" ) String serverId );
+    Response deleteServer( @PathParam( "serverId" ) String serverId );
 
     @PUT
     @Path( "server/{hostname}/{status}" )
-    public Response updateNightlyBuildStatus( @PathParam( "hostname" ) String hostname,
-                                              @PathParam( "status" ) boolean status );
+    Response updateNightlyBuildStatus( @PathParam( "hostname" ) String hostname,
+                                       @PathParam( "status" ) boolean status );
 
     @GET
     @Path( "option" )
-    @Produces( {MediaType.APPLICATION_JSON })
-    public Response listOptions();
+    @Produces( { MediaType.APPLICATION_JSON } )
+    Response listOptions();
 
     @GET
     @Path( "option/types" )
-    @Produces( {MediaType.APPLICATION_JSON })
-    public Response getOptionTypes();
+    @Produces( { MediaType.APPLICATION_JSON } )
+    Response getOptionTypes();
 
     @GET
     @Path( "option/type/{type}" )
-    @Produces( {MediaType.APPLICATION_JSON })
-    public Response getOptionsByType( @PathParam( "type" ) String type );
+    @Produces( { MediaType.APPLICATION_JSON } )
+    Response getOptionsByType( @PathParam( "type" ) String type );
 
     @GET
     @Path( "option/{type}/{optionName}" )
-    @Produces( {MediaType.APPLICATION_JSON })
-    public Response getOption( @PathParam( "type" ) String type, @PathParam( "optionName" ) String optionName );
+    @Produces( { MediaType.APPLICATION_JSON } )
+    Response getOption( @PathParam( "type" ) String type, @PathParam( "optionName" ) String optionName );
 
 
     @GET
     @Path( "option/{type}/{optionName}/start/{serverId}" )
-    @Produces( {MediaType.APPLICATION_JSON })
-    public Response runOptionOnTargetServer( @PathParam( "type" ) String type,
-                                             @PathParam( "optionName" ) String optionName,
-                                             @PathParam( "serverId" ) String serverId );
+    @Produces( { MediaType.APPLICATION_JSON } )
+    Response runOptionOnTargetServer( @PathParam( "type" ) String type, @PathParam( "optionName" ) String optionName,
+                                      @PathParam( "serverId" ) String serverId );
+
+    @GET
+    @Path( "test/{gitId}/{playbooks}/start/{serverId}" )
+    Response runPlaybooks( @PathParam( "gitId" ) String gitId, @PathParam( "playbooks" ) String playbooks,
+                           @PathParam( "serverId" ) String serverId );
 
     @GET
     @Path( "export/{serverId}/{buildName}/start" )
-    public Response export( @PathParam( "serverId" ) String serverId, @PathParam( "buildName" ) String buildName );
+    Response export( @PathParam( "serverId" ) String serverId, @PathParam( "buildName" ) String buildName );
 
     @POST
-    @Produces( {MediaType.APPLICATION_JSON })
+    @Produces( { MediaType.APPLICATION_JSON } )
     @Path( "option/test" )
-    @Consumes( {MediaType.APPLICATION_JSON })
-    public Response addTestOption( TestOption option );
+    @Consumes( { MediaType.APPLICATION_JSON } )
+    Response addTestOption( TestOption option );
 
     @POST
-    @Produces( {MediaType.APPLICATION_JSON })
+    @Produces( { MediaType.APPLICATION_JSON } )
     @Path( "option/deploy" )
-    @Consumes( {MediaType.APPLICATION_JSON })
-    public Response addDeployOption( DeployOption option );
+    @Consumes( { MediaType.APPLICATION_JSON } )
+    Response addDeployOption( DeployOption option );
 
     @PUT
     @Path( "option/test" )
-    @Consumes( {MediaType.APPLICATION_JSON })
-    public Response updateTestOption( TestOption option );
+    @Consumes( { MediaType.APPLICATION_JSON } )
+    Response updateTestOption( TestOption option );
 
     @PUT
     @Path( "option/deploy" )
-    @Consumes( {MediaType.APPLICATION_JSON })
-    public Response updateDeployOption( DeployOption option );
+    @Consumes( { MediaType.APPLICATION_JSON } )
+    Response updateDeployOption( DeployOption option );
 
     @DELETE
     @Path( "option/{type}/{optionName}" )
-    public Response deleteOption( @PathParam( "type" ) String type, @PathParam( "optionName" ) String optionName );
+    Response deleteOption( @PathParam( "type" ) String type, @PathParam( "optionName" ) String optionName );
 
     @GET
     @Path( "tests" )
-    @Produces( {MediaType.APPLICATION_JSON })
-    public Response getTests();
+    @Produces( { MediaType.APPLICATION_JSON } )
+    Response getTests();
 
     //UPDATE STATUS
     @PUT
     @Path( "statuses" )
-    public Response updateStatuses();
+    Response updateStatuses();
 
     @POST
     @Path( "statuses" )
-    public Response updateReserved( @FormParam( "hostname" ) String hostName, @FormParam( "serverIp" ) String serverIp,
-                                    @FormParam( "usedBy" ) String usedBy, @FormParam( "comment" ) String comment );
+    Response updateReserved( @FormParam( "hostname" ) String hostName, @FormParam( "serverIp" ) String serverIp,
+                             @FormParam( "usedBy" ) String usedBy, @FormParam( "comment" ) String comment );
 
     @DELETE
     @Path( "statuses/{hostname}/{serverIp}" )
-    public Response deleteReservation( @PathParam( "hostname" ) String hostname,
-                                       @PathParam( "serverIp" ) String serverIp );
+    Response deleteReservation( @PathParam( "hostname" ) String hostname, @PathParam( "serverIp" ) String serverIp );
 
     @GET
     @Path( "statuses" )
-    @Produces( {MediaType.APPLICATION_JSON })
-    public Response getStatuses();
+    @Produces( { MediaType.APPLICATION_JSON } )
+    Response getStatuses();
 
     //HISTORY CRUD
     @GET
     @Path( "history" )
-    @Produces( {MediaType.APPLICATION_JSON })
-    public Response listHistory();
+    @Produces( { MediaType.APPLICATION_JSON } )
+    Response listHistory();
 
     @GET
     @Path( "history/{id}" )
-    @Produces( {MediaType.APPLICATION_JSON })
-    public Response getHistory( @PathParam( "id" ) String id );
+    @Produces( { MediaType.APPLICATION_JSON } )
+    Response getHistory( @PathParam( "id" ) String id );
 
     //Run profiles
 
     @GET
     @Path( "profiles/{profileName}/start" )
-    @Produces( {MediaType.APPLICATION_JSON })
-    public Response runProfile( @PathParam( "profileName" ) String profileName );
+    @Produces( { MediaType.APPLICATION_JSON } )
+    Response runProfile( @PathParam( "profileName" ) String profileName );
 
     @GET
     @Path( "profiles" )
-    @Produces( {MediaType.APPLICATION_JSON })
-    public Response listProfiles();
+    @Produces( { MediaType.APPLICATION_JSON } )
+    Response listProfiles();
 
     @GET
     @Path( "profiles/{profileName}" )
-    @Produces( {MediaType.APPLICATION_JSON })
-    public Response getProfile( @PathParam( "profileName" ) String profileName );
+    @Produces( { MediaType.APPLICATION_JSON } )
+    Response getProfile( @PathParam( "profileName" ) String profileName );
 
     @POST
     @Path( "profiles" )
-    @Consumes( {MediaType.APPLICATION_JSON })
-    public Response addProfile( Profile profile );
+    @Consumes( { MediaType.APPLICATION_JSON } )
+    Response addProfile( Profile profile );
 
     @PUT
     @Path( "profiles" )
-    @Consumes( {MediaType.APPLICATION_JSON })
-    public Response updateProfile( Profile profile );
+    @Consumes( { MediaType.APPLICATION_JSON } )
+    Response updateProfile( Profile profile );
 
     @DELETE
     @Path( "profiles/{profileName}" )
-    public Response deleteProfile( @PathParam( "profileName" ) String profileName );
+    Response deleteProfile( @PathParam( "profileName" ) String profileName );
 }

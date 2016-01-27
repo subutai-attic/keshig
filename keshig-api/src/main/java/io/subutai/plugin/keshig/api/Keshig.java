@@ -22,19 +22,20 @@ public interface Keshig
 
     TestOption getTestOption( String name );
 
-    DeployOption getDeployOption(String name);
+    DeployOption getDeployOption( String name );
 
     List<TestOption> getAllTestOptions();
 
     List<DeployOption> getAllDeployOptions();
 
-    void deleteOption(String type, String name);
+    void deleteOption( String type, String name );
+
     //
     void addServer( String server ) throws Exception;
 
     void removeServer( String id );
 
-    Server getServer(String id);
+    Server getServer( String id );
 
     List<Server> getServers();
 
@@ -58,12 +59,17 @@ public interface Keshig
 
     void updateReserved( String hostName, String serverIp, String usedBy, String comment ) throws Exception;
 
-    void runOption(String type, String optionName, String serverId);
+    void runOption( String type, String optionName, String serverId );
+
+    void runPlaybooks( String gitId, List<String> playbooks, String serverId ) throws Exception;
 
     void runProfile( String profileName );
 
-    void updateNightlyBuild(String hostName, boolean nightlyBuild);
+    void updateNightlyBuild( String hostName, boolean nightlyBuild );
 
+    List<String> getDeployedPeers(String serverId);
+
+    List<String> getIps(String stdOut);
     /*
     *  Keshig History Handlers
     * */

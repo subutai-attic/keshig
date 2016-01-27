@@ -35,6 +35,14 @@ public class TestOption implements Option
     }
 
 
+    public TestOption(final String name, final List<String> targetIps, final List<String> playbooks)
+    {
+        this.targetIps = targetIps;
+        this.playbooks = playbooks;
+        this.name = name;
+    }
+
+
     public int getTimeOut()
     {
         return timeOut;

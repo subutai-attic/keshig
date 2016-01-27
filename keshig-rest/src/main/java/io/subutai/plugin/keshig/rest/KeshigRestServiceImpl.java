@@ -1,6 +1,7 @@
 package io.subutai.plugin.keshig.rest;
 
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -182,6 +183,21 @@ public class KeshigRestServiceImpl implements KeshigRestService
 
 
     @Override
+    public Response runPlaybooks( final String gitId, final String playbooks, final String serverId )
+    {
+        try
+        {
+            keshig.runPlaybooks( gitId, Arrays.asList( playbooks.split( "," ) ), serverId );
+        }
+        catch ( Exception e )
+        {
+            e.printStackTrace();
+        }
+        return Response.ok().build();
+    }
+
+
+    @Override
     public Response export( final String serverId, final String buildName )
     {
         keshig.export( buildName, serverId );
@@ -196,7 +212,7 @@ public class KeshigRestServiceImpl implements KeshigRestService
 
         keshig.addOption( option );
 
-        return Response.ok(keshig.getAllTestOptions()).build();
+        return Response.ok( keshig.getAllTestOptions() ).build();
     }
 
 
@@ -206,7 +222,7 @@ public class KeshigRestServiceImpl implements KeshigRestService
 
         keshig.addOption( option );
 
-        return Response.ok(keshig.getAllDeployOptions()).build();
+        return Response.ok( keshig.getAllDeployOptions() ).build();
     }
 
 
@@ -216,7 +232,7 @@ public class KeshigRestServiceImpl implements KeshigRestService
 
         keshig.addOption( option );
 
-        return Response.ok(keshig.getAllTestOptions()).build();
+        return Response.ok( keshig.getAllTestOptions() ).build();
     }
 
 
@@ -226,12 +242,12 @@ public class KeshigRestServiceImpl implements KeshigRestService
 
         keshig.addOption( option );
 
-        return Response.ok(keshig.getAllDeployOptions()).build();
+        return Response.ok( keshig.getAllDeployOptions() ).build();
     }
 
 
     @Override
-    public Response deleteOption(String type, String optionName )
+    public Response deleteOption( String type, String optionName )
     {
 
         if ( Strings.isNullOrEmpty( optionName ) )

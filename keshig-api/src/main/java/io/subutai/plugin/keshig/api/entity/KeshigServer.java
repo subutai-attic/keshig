@@ -9,6 +9,7 @@ public class KeshigServer
 {
 
     private String hostname;
+    private String serverId;
     private Map<String, PeerInfo> peers;
     private Date lastUpdated;
 
@@ -16,6 +17,18 @@ public class KeshigServer
 
     public KeshigServer()
     {
+    }
+
+
+    public String getServerId()
+    {
+        return serverId;
+    }
+
+
+    public void setServerId( final String serverId )
+    {
+        this.serverId = serverId;
     }
 
 

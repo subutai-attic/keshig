@@ -332,6 +332,30 @@ public class KeshigImpl implements Keshig
 
 
     @Override
+    public void runPlaybooks( final String gitId, final List<String> playbooks, String serverId ) throws Exception
+    {
+        Option deployOption = new DeployOption( String.format( "Auto:%", gitId ), gitId );
+        this.addOption( deployOption );
+        OperationHandler operationHandler = new OperationHandler( this, serverId, deployOption );
+
+        operationHandler.run();
+
+        List<String> ips = getDeployedPeers( serverId );
+
+        if ( ips.size() > 0 )
+        {
+            Option testOption = new TestOption( String.format( "Auto:%s", playbooks.toString() ), ips, playbooks );
+            OperationHandler testOperationHandler = new OperationHandler( this, serverId, testOption );
+            testOperationHandler.run();
+        }
+        else
+        {
+            throw new Exception( "Could not find deployed peers with git id: " + gitId );
+        }
+    }
+
+
+    @Override
     public void runProfile( final String profileName )
     {
         Profile profile = this.getProfile( profileName );
@@ -366,6 +390,51 @@ public class KeshigImpl implements Keshig
         {
             e.printStackTrace();
         }
+    }
+
+
+    @Override
+    public List<String> getDeployedPeers( final String serverId )
+    {
+
+        ResourceHost server = null;
+        try
+        {
+            server = this.getPeerManager().getLocalPeer().getResourceHostById( serverId );
+            CommandResult commandResult =
+                    server.execute( new RequestBuilder( "/var/qnd/getIPs" ).withRunAs( "ubuntu" ) );
+
+            if ( commandResult.hasSucceeded() )
+            {
+                String stdOut = commandResult.getStdOut();
+                List<String> ipList = getIps( stdOut );
+                return ipList;
+            }
+        }
+        catch ( HostNotFoundException | CommandException e )
+        {
+            e.printStackTrace();
+        }
+
+        return new ArrayList<>();
+    }
+
+
+    public List<String> getIps( String stdOut )
+    {
+        List<String> ips = new ArrayList<>();
+        final Pattern pattern = Pattern.compile( "management\\d=.*" );
+        final Matcher matcher = pattern.matcher( stdOut );
+
+        while ( matcher.find() )
+        {
+            final String match = matcher.group();
+            final String[] s = match.split( "=" );
+            final String ipAddr = s[1].trim();
+            ips.add( ipAddr );
+        }
+        LOG.debug( String.format( "Found IPs on Keshig Server:%s", ips.toString() ) );
+        return ips;
     }
 
 

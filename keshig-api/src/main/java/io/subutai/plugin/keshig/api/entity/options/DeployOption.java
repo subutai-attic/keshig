@@ -29,6 +29,13 @@ public class DeployOption implements Option
     }
 
 
+    public DeployOption( final String name, final String branch )
+    {
+        this.name = name;
+        this.branch = branch;
+    }
+
+
     @JsonIgnore
     public String getType()
     {
