@@ -153,8 +153,6 @@ function keshigSrv($http) {
 			withCredentials: true
 		});
 	}
-	//Deploy server : target server to run deploy option
-	//Deploy option : deploy option to run
 
 	function getOptionTypes() {
 		return $http.get(OPTIONS_URL + 'types', {

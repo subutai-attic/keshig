@@ -35,7 +35,7 @@
                         <div class="b-form-input b-form-input_fix-size-1 b-form-label_margin_r b-form-input_dropdown"
                              checkbox-list-dropdown>
                             <span class="b-form-input__placeholder">Playbooks</span>
-                            <ul class="b-form-input-dropdown-list">
+                            <ul class="b-form-input-dropdown-list" ng-if="keshigCtrl.playbooks.length > 0 && keshigCtrl.playbooks[0]">
                                 <li class="b-form-input-dropdown-list-li" ng-repeat="playbook in keshigCtrl.playbooks">
                                     <label class="b-form-input-dropdown-list-li-label">
                                         <input
@@ -43,6 +43,13 @@
                                                 ng-click="keshigCtrl.toggleItem(playbook, keshigCtrl.currentOption.playbooks)"
                                                 ng-checked="keshigCtrl.currentOption.playbooks.indexOf(playbook) >= 0">
                                         <span>{{ playbook }}</span>
+                                    </label>
+                                </li>
+                            </ul>
+                            <ul class="b-form-input-dropdown-list" ng-if="keshigCtrl.playbooks.length <= 1 && !keshigCtrl.playbooks[0]">
+                                <li>
+                                    <label class="b-form-input-dropdown-list-li-label">
+                                        <i>No playbooks</i>
                                     </label>
                                 </li>
                             </ul>
@@ -58,7 +65,7 @@
                         <div class="b-form-input b-form-input_fix-size-1 b-form-label_margin_r b-form-input_dropdown"
                              checkbox-list-dropdown>
                             <span class="b-form-input__placeholder">Taget IPs</span>
-                            <ul class="b-form-input-dropdown-list">
+                            <ul class="b-form-input-dropdown-list" ng-if="keshigCtrl.targetIPs.length > 0">
                                 <li class="b-form-input-dropdown-list-li" ng-repeat="targetIP in keshigCtrl.targetIPs">
                                     <label class="b-form-input-dropdown-list-li-label">
                                         <input
@@ -69,15 +76,23 @@
                                     </label>
                                 </li>
                             </ul>
+                            <ul class="b-form-input-dropdown-list" ng-if="keshigCtrl.targetIPs.length == 0">
+                                <li>
+                                    <label class="b-form-input-dropdown-list-li-label">
+                                        <i>No target IPs</i>
+                                    </label>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="popup-body-box">
-                <label class="b-popup-body-label">Enter your own IP</label>
+                <label class="b-popup-body-label">Custom IPs</label>
                 <input type="text"
                        ng-model="customTargetIP"
                        class="b-popup-body-input b-popup-body-input_box ng-pristine ng-untouched ng-valid">
+                <div class="clear"></div>
                 <div class="b-btn b-btn_light-grey g-right"
                      style="margin-top: 10px"
                      ng-click="keshigCtrl.addCustomTargetIP(customTargetIP)">
