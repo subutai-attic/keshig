@@ -797,7 +797,7 @@ tip.description-tooltip {
 }
 
 .b-icon_remove {
-    background-image: url('../assets/elements/buttons/b-icon-remove.svg');
+    background-image: url('assets/elements/buttons/b-icon-remove.svg');
 }
 
 .b-icon_remove:hover {
@@ -837,7 +837,7 @@ tip.description-tooltip {
 }
 
 .b-icon_edit {
-    background-image: url('../assets/elements/buttons/b-icon-edit.svg');
+    background-image: url('assets/elements/buttons/b-icon-edit.svg');
 }
 
 .b-icon_edit:hover {
@@ -845,7 +845,7 @@ tip.description-tooltip {
 }
 
 .b-icon_info {
-    background-image: url('../assets/elements/buttons/Info_icon-01.svg');
+    background-image: url('assets/elements/buttons/Info_icon-01.svg');
 }
 
 .b-icon_info:hover {
@@ -853,7 +853,7 @@ tip.description-tooltip {
 }
 
 .b-icon_settings {
-    background-image: url('../assets/elements/buttons/b-icon-settings.svg');
+    background-image: url('assets/elements/buttons/b-icon-settings.svg');
 }
 
 .b-icon_settings:hover {
