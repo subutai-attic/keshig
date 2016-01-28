@@ -115,10 +115,12 @@ public interface KeshigRestService
     //UPDATE STATUS
     @PUT
     @Path( "statuses" )
+    @Produces( { MediaType.APPLICATION_JSON } )
     Response updateStatuses();
 
     @POST
     @Path( "statuses" )
+    @Produces( { MediaType.APPLICATION_JSON } )
     Response updateReserved( @FormParam( "hostname" ) String hostName, @FormParam( "serverIp" ) String serverIp,
                              @FormParam( "usedBy" ) String usedBy, @FormParam( "comment" ) String comment );
 

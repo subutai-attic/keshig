@@ -70,6 +70,8 @@ public class ServerStatusUpdateHandler implements Runnable
                         info.setFree( existingKeshigServer.getPeers().get( ip ).isFree() );
 
                         info.setUsedBy( existingKeshigServer.getPeers().get( ip ).getUsedBy() );
+                        info.setComment( existingKeshigServer.getPeers().get( ip ).getComment() );
+
                         if ( info.getIp() != null )
                         {
                             keshigServer1.getPeers().put( info.getIp(), info );
@@ -152,7 +154,8 @@ public class ServerStatusUpdateHandler implements Runnable
 
                         peerInfo.setDetails( map );
                         peerInfo.setIp( ip );
-                        peerInfo.setFree( false );
+                        peerInfo.setUsedBy( "" );
+                        peerInfo.setComment( "" );
                         peerInfo.setStatus( "OK" );
                         peerInfos.put( ip, peerInfo );
 
@@ -172,6 +175,7 @@ public class ServerStatusUpdateHandler implements Runnable
         }
         return peerInfos;
     }
+
 
     private HashMap getPeerDetails( String ipAddr )
     {
@@ -194,7 +198,6 @@ public class ServerStatusUpdateHandler implements Runnable
                     LOG.warn( "Response Status POST: " + status );
 
                     HttpEntity entity = response.getEntity();
-
                     return entity != null ? EntityUtils.toString( entity ) : null;
                 }
                 else

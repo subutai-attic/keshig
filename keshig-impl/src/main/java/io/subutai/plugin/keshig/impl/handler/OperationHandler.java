@@ -16,6 +16,7 @@ import io.subutai.common.tracker.TrackerOperation;
 import io.subutai.plugin.keshig.api.KeshigConfig;
 import io.subutai.plugin.keshig.api.entity.History;
 import io.subutai.plugin.keshig.api.entity.options.Option;
+import io.subutai.plugin.keshig.api.entity.options.TestOption;
 import io.subutai.plugin.keshig.impl.KeshigImpl;
 
 
@@ -59,16 +60,18 @@ public class OperationHandler implements Runnable
             final ResourceHost buildHost = this.keshig.getPeerManager().getLocalPeer().getResourceHostById( serverId );
 
             this.trackerOperation.addLog( String.format( "Server used %s", buildHost.toString() ) );
-            
+
             if ( option.getType().equalsIgnoreCase( "TEST" ) )
             {
                 keshig.getPeerManager().getLocalPeer().getManagementHost().execute( new RequestBuilder( "mkdir" )
                         .withCmdArgs( Lists.newArrayList( String.format( "/home/ubuntu/repo/%s", history.getId() ) ) )
                         .withRunAs( "ubuntu" ) );
+                ( ( TestOption ) option ).setOutputPath( history.getId() );
             }
 
             buildHost.execute( new RequestBuilder( option.getCommand() ).withCmdArgs( option.getArgs() )
-                                                                        .withTimeout( option.getTimeOut() ).withRunAs( "root" ),
+                                                                        .withTimeout( option.getTimeOut() )
+                                                                        .withRunAs( "root" ),
                     ( response, commandResult ) -> {
                         if ( commandResult.hasCompleted() )
                         {

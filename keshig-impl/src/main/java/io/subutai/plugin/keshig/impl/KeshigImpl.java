@@ -321,7 +321,7 @@ public class KeshigImpl implements Keshig
         {
             option = getDeployOption( optionName );
         }
-        else if ( type.equalsIgnoreCase( "deploy" ) )
+        else if ( type.equalsIgnoreCase( "test" ) )
         {
             option = getTestOption( optionName );
         }

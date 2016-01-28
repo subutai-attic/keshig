@@ -23,9 +23,16 @@ public class KeshigWebModule implements WebuiModule {
     @Override
     public String getAngularDependecyList() {
         return String.format(".state('keshig', {\n" + "url: '/plugins/keshig',\n"
-                + "templateUrl: 'plugins/keshig/partials/view.html',\n" + "resolve: {\n"
+                + "templateUrl: 'plugins/keshig/partials/view.html',"
+                + "data: {\n" + "bodyClass: '',\n" + "layout: 'default'\n" + "},"
+                + "\n" + "resolve: {\n"
                 + "loadPlugin: ['$ocLazyLoad', function ($ocLazyLoad) {\n"
-                + "return $ocLazyLoad.load([\n" + "{\n"
+                + "return $ocLazyLoad.load([\n"
+                + "{\n"
+                + "files: [\n"
+                + "'plugins/keshig/keshig.css'"
+                + "]},\n"
+                + "{\n"
                 + "name: 'subutai.plugins.keshig',\n" + "files: [\n"
                 + "'plugins/keshig/keshig.js',\n" + "'plugins/keshig/controller.js',\n"
                 + "'plugins/keshig/service.js',\n"
