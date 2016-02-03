@@ -1,0 +1,113 @@
+<div class="b-popup b-popup_middle">
+    <div class="b-popup__header">
+        <span ng-if="!keshigCtrl.profilesFormUpdate">Add profile</span>
+        <span ng-if="keshigCtrl.profilesFormUpdate">Edit profile</span>
+        <a href ng-click="closeThisDialog()">
+            <img src="assets/elements/buttons/b-icon-close.svg" class="b-icon g-right"/>
+        </a>
+    </div>
+    <form ng-submit="keshigCtrl.proceedProfile(keshigCtrl.currentProfile)">
+        <div class="b-popup__body">
+            <div class="popup-body-box">
+                <label class="b-popup-body-label">Enter name</label>
+                <i class="fa fa-info-circle"
+                   tooltips
+                   tooltip-class="description-tooltip"
+                   tooltip-template="Name of your profile"
+                   tooltip-speed="0"
+                   tooltip-size="large"></i>
+                <input type="text"
+                       ng-model="keshigCtrl.currentProfile.name"
+                       ng-disabled="keshigCtrl.profilesFormUpdate"
+                       class="b-popup-body-input b-popup-body-input_box ng-pristine ng-untouched ng-valid"
+                       required>
+
+                <div class="clear"></div>
+            </div>
+            <div class="popup-body-box">
+                <label class="b-popup-body-label">Deploy Server</label>
+                <i class="fa fa-info-circle"
+                   tooltips
+                   tooltip-class="description-tooltip"
+                   tooltip-template="Target server to run <br/> deploy option"
+                   tooltip-speed="0"
+                   tooltip-size="large"></i>
+                <select class="b-popup-body-input b-popup-body-input_box ng-pristine ng-valid ng-touched"
+                        ng-model="keshigCtrl.currentProfile.deployServer" required>
+                    <option ng-repeat="server in keshigCtrl.selectedServers"
+                            value="{{ server.serverName }}"
+                            ng-selected="server.serverName == keshigCtrl.currentProfile.deployServer">
+                        {{ server.serverName }}
+                    </option>
+                </select>
+
+                <div class="clear"></div>
+            </div>
+            <div class="popup-body-box">
+                <label class="b-popup-body-label">Deploy Option</label>
+                <i class="fa fa-info-circle"
+                   tooltips
+                   tooltip-class="description-tooltip"
+                   tooltip-template="Deploy option to run"
+                   tooltip-speed="0"
+                   tooltip-size="large"></i>
+                <select class="b-popup-body-input b-popup-body-input_box ng-pristine ng-valid ng-touched"
+                        ng-model="keshigCtrl.currentProfile.deployOption" required>
+                    <option ng-repeat="option in keshigCtrl.optionsByType.DEPLOY"
+                            value="{{ option.name }}"
+                            ng-selected="option.name == keshigCtrl.currentProfile.deployOption">
+                        {{ option.name }}
+                    </option>
+                </select>
+
+                <div class="clear"></div>
+            </div>
+            <div class="popup-body-box">
+                <label class="b-popup-body-label">Test Server</label>
+                <i class="fa fa-info-circle"
+                   tooltips
+                   tooltip-class="description-tooltip"
+                   tooltip-template="Target server to run <br/> test option"
+                   tooltip-speed="0"
+                   tooltip-size="large"></i>
+                <select class="b-popup-body-input b-popup-body-input_box ng-pristine ng-valid ng-touched"
+                        ng-model="keshigCtrl.currentProfile.testServer" required>
+                    <option ng-repeat="server in keshigCtrl.selectedServers"
+                            value="{{ server.serverName }}"
+                            ng-selected="server.serverName == keshigCtrl.currentProfile.testServer">
+                        {{ server.serverName }}
+                    </option>
+                </select>
+
+                <div class="clear"></div>
+            </div>
+            <div class="popup-body-box">
+                <label class="b-popup-body-label">Test Option</label>
+                <i class="fa fa-info-circle"
+                   tooltips
+                   tooltip-class="description-tooltip"
+                   tooltip-template="Test option to run"
+                   tooltip-speed="0"
+                   tooltip-size="large"></i>
+                <select class="b-popup-body-input b-popup-body-input_box ng-pristine ng-valid ng-touched"
+                        ng-model="keshigCtrl.currentProfile.testOption" required>
+                    <option ng-repeat="option in keshigCtrl.optionsByType.TEST"
+                            value="{{ option.name }}"
+                            ng-selected="option.name == keshigCtrl.currentProfile.testOption">
+                        {{ option.name }}
+                    </option>
+                </select>
+
+                <div class="clear"></div>
+            </div>
+
+        </div>
+        <div class="b-popup__footer">
+            <button class="b-btn b-btn_green g-right" type="submit" ng-disabled="keshigCtrl.isProfileFormValid()">
+                <span ng-if="!keshigCtrl.profilesFormUpdate">Add</span>
+                <span ng-if="keshigCtrl.profilesFormUpdate">Update</span>
+            </button>
+            <div class="clear"></div>
+        </div>
+    </form>
+</div>

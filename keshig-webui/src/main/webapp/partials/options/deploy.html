@@ -1,0 +1,43 @@
+<div class="b-data-table">
+	<table datatable="ng"
+		dt-options="keshigCtrl.dtOptions"
+		dt-column-defs="keshigCtrl.dtColumnDefs"
+		dt-instance="keshigCtrl.dtInstance"
+		class="row-border hover subt_table-containers-table">
+		<thead>
+		<tr>
+			<th>Name</th>
+			<th>Branch</th>
+			<th></th>
+			<th></th>
+			<th></th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr ng-repeat="option in keshigCtrl.optionsByType['DEPLOY']">
+			<td>{{ option.name }}</td>
+			<td>{{ option.branch }}</td>
+			<td>
+				<span class="b-btn b-btn_green" ng-click="keshigCtrl.runOptionForm(option.name)">RUN</span>
+			</td>
+			<td>
+				<a href class="b-icon b-icon_edit" style="visibility: visible;"
+				   tooltips
+				   tooltip-template="Edit"
+				   ng-if="resourceHost.peer !== 'NONE'"
+				   ng-click="keshigCtrl.editOption(option)">
+				</a>
+			</td>
+			<td>
+				<a href class="b-icon b-icon_remove"
+				   tooltips
+				   tooltip-template="Delete"
+				   ng-if="resourceHost.peer !== 'NONE'"
+				   ng-click="keshigCtrl.deleteOption(option.name)">
+				</a>
+			</td>
+		</tr>
+		</tbody>
+	</table>
+</div>
+
