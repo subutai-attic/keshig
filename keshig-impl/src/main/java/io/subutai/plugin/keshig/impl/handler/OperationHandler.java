@@ -71,7 +71,7 @@ public class OperationHandler implements Runnable
 
             buildHost.execute( new RequestBuilder( option.getCommand() ).withCmdArgs( option.getArgs() )
                                                                         .withTimeout( option.getTimeOut() )
-                                                                        .withRunAs( "root" ),
+                                                                        .withRunAs( option.getRunAs() ),
                     ( response, commandResult ) -> {
                         if ( commandResult.hasCompleted() )
                         {

@@ -3,11 +3,10 @@ package io.subutai.plugin.keshig.api.entity.options;
 
 import java.util.List;
 
-
-import com.google.common.collect.Lists;
-
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+
+import com.google.common.collect.Lists;
 
 
 @JsonIgnoreProperties( ignoreUnknown = true )
@@ -19,6 +18,9 @@ public class TestOption implements Option
 
     @JsonIgnore
     private String testId;
+
+    @JsonIgnore
+    private String runAs = "root";
 
     private String name;
     private boolean all;
@@ -42,7 +44,7 @@ public class TestOption implements Option
         this.name = name;
     }
 
-
+    @JsonIgnore
     public int getTimeOut()
     {
         return timeOut;
@@ -53,6 +55,13 @@ public class TestOption implements Option
     public String getType()
     {
         return "TEST";
+    }
+
+
+    @JsonIgnore
+    public String getRunAs()
+    {
+        return runAs;
     }
 
 

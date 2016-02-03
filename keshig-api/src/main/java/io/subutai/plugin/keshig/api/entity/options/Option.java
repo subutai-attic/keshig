@@ -16,4 +16,6 @@ public interface Option
 
     String getType();
 
+    String getRunAs();
+
 }

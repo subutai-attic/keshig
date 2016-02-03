@@ -19,9 +19,10 @@ public class DeployOption implements Option
 
     private String name;
     private String branch;
-
     @JsonIgnore
-    private int timeOut = 1000;
+    private String runAs = "ubuntu";
+    @JsonIgnore
+    private int timeout = 3000;
 
 
     public DeployOption()
@@ -44,15 +45,22 @@ public class DeployOption implements Option
 
 
     @JsonIgnore
+    public String getRunAs()
+    {
+        return runAs;
+    }
+
+
+    @JsonIgnore
     public int getTimeOut()
     {
-        return timeOut;
+        return timeout;
     }
 
 
     public void setTimeOut( final int timeOut )
     {
-        this.timeOut = timeOut;
+        this.timeout = timeOut;
     }
 
 
