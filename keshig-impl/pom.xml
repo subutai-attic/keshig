@@ -32,6 +32,12 @@
       <version>4.0.0-RC5</version>
     </dependency>
     <dependency>
+      <groupId>org.apache.servicemix</groupId>
+      <artifactId>servicemix-beanflow</artifactId>
+      <version>3.2.3</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>webui</artifactId>
       <classifier>classes</classifier>
