@@ -1,0 +1,109 @@
+#!/bin/bash
+
+
+function deploy_usage {
+  echo -----------------------------------------------------------------------
+  echo Usage: deploy jobs
+  echo
+  echo "        subutai deploy  [-f <build_folder>] [-l list] [ -d <build_folder>]"
+  echo
+  echo -----------------------------------------------------------------------
+}
+
+function deploy {
+
+shift_amount=0;
+  while getopts ":f:l:d:v:x:a:" opt; do
+     case $opt in
+       f)
+     mgmt_folder=$OPTARG
+         ;;
+       l)
+     lvar=$OPTARG
+     ;;
+       d)
+     destr=$OPTARG
+     ;;
+       v)
+     vagrant=$OPTARG
+     ;;
+       x)
+     exportv=$OPTARG
+     ;;
+       a)
+     arm=$OPTARG
+     ;;
+       \?)
+          msg_error "Unrecognized option -$OPTARG"
+          show_usage "`deploy_usage`"
+      exit 1
+          ;;
+     esac
+     shift_amount=$(($shift_amount + 1))
+  done
+#branch=${branch:-master}
+
+
+#mytime=$(date +%N)
+#logfile="/tmp/log_$mytime.log"
+BUILDS="/var/qnd/SNAPS"
+
+if [[ $lvar = "list" ]]
+then
+#   find $BUILDS -maxdepth 1 -type d 
+  ls $BUILDS | awk '{ print $1"\r" }'
+
+elif [ "$exportv" ]; then 
+
+    if [ -f "$BUILDS/.lock" ]; then 
+       echo "Can't deploy! Another deploy in progress ..."
+       cat $BUILDS/.lock
+    else 
+#       touch $BUILDS/.lock 
+       echo "$exportv" > $BUILDS/.lock
+       sudo -H -u ubuntu bash -c "/var/qnd/export/deploy.sh $exportv"
+       rm -rf $BUILDS/.lock    
+    fi
+
+elif [  "$arm" ]
+then
+
+    if [ -f "$BUILDS/.lock" ]; then 
+       echo "Can't deploy! Another deploy in progress ..."
+       cat $BUILDS/.lock
+   else
+#       echo "ERROR: provide build folder with -f option"
+       echo "$exportv" > $BUILDS/.lock
+      sudo -H -u ubuntu bash -c "/var/qnd/arm/deploy.sh $arm"
+       rm -rf $BUILDS/.lock    
+ 
+
+  fi
+
+elif [ "$mgmt_folder" ]; then 
+    if [ -f "$BUILDS/.lock" ]; then 
+       echo "Can't deploy! Another deploy in progress ..."
+       cat $BUILDS/.lock
+    else 
+#       touch $BUILDS/.lock 
+       echo "$mgmt_folder" > $BUILDS/.lock
+       sudo -H -u ubuntu bash -c "/var/qnd/deploy.sh $mgmt_folder"
+       rm -rf $BUILDS/.lock    
+    fi
+elif [ "$destr" ]; then
+  if [ "$BUILDS/$destr"  ]; then
+  rm -rf $BUILDS/$destr
+  else
+  echo "$destr NOT exists"
+  fi
+
+
+fi
+
+
+exit 0
+}
+
+function deploy_description {
+  echo "deploys a jobs"
+}
