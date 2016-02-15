@@ -17,16 +17,19 @@ LIST="btrfs collectd curl lxc ovs rh rngd subutai cgmanager p2p dnsmasq"
 DATE="`date +%s`"
 #Export dirs for snapps
 EXPORT_DIR=$SNAPPY_DIR/snapps
+
 function download_deps {
+
 apt-get install qemu-kvm libvirt-bin virtinst -y
 
 }
+
 #download snappy image
 function wget_snappy_kvm {
 	printf "Downloading Ubuntu Snappy Image from: ${SNAPPY_URL}\n"
 	create_dir_dne $SNAPPY_DIR
 	if [ $? -eq 0 ]; then
-		if [ ! "$SNAPPY_DIR/$SNAPPY_IMG_XZ" ] || [ ! "$SNAPPYDIR/$SNAPPY_IMG" ]; then
+		if [ ! -f "$SNAPPY_DIR/$SNAPPY_IMG_XZ" ] && [ ! -f "$SNAPPYDIR/$SNAPPY_IMG" ]; then
 			printf "Does not exist: $SNAPPY_DIR$SNAPPY_IMG_XZ\n"
 			wget $SNAPPY_URL -P $SNAPPY_DIR
 		fi
@@ -66,11 +69,11 @@ function git_clone_subutai_snappy {
 }
 #import guest domain to libvirt
 function import_clean_snappy {
-	local snappy_clean=`virsh list --all | grep -oh snappy-clean`
+	local snappy_clean=`virsh list --all | grep "snappy-clean " | awk '{print $2'}`
 	printf "Found VM running with name:${snappy_clean}\n"
 	if [ ! "$snappy_clean" = "snappy-clean" ]; then
 		printf "Installing Ubuntu Snappy clean image from: $SNAPPY_DIR$SNAPPY_IMG\n"
-		$(sudo virt-install -n snappy-clean -r 2048 --disk=$SNAPPY_DIR$SNAPPY_IMG,bus=virtio,size=1 --network=default,model=virtio --graphics vnc,listen=0.0.0.0 --import --force --noautoconsole -v)
+		sudo virt-install -n snappy-clean -r 2048 --disk=$SNAPPY_DIR$SNAPPY_IMG,bus=virtio,size=1 --network=default,model=virtio  --import --noautoconsole -v
 	fi
 	printf "Seems Snappy Image is already installed\n"
 	virsh list --all | grep snappy-clean
@@ -94,10 +97,12 @@ function clone_vm {
 	
 	create_dir_dne "$SNAPPY_DIR/storage/"
 	local state=`virsh list | grep snappy-clean | grep -oh "running"`
+
 	if [ "$state" = "running" ]; then
 		virsh shutdown snappy-clean
-		sleep 3
+		sleep 10
 	fi
+
 	virt-clone -o "snappy-clean" -n "subutai-${DATE}" --file "$SNAPPY_DIR/storage/subutai-${DATE}"
 }
 
