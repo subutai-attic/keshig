@@ -1,22 +1,27 @@
 package main
 
 import (
-	"io"
 	"log"
 	"net/http"
+
 )
 
+//Handle git push
 func PushEventHandler(w http.ResponseWriter, r *http.Request) {
 
 	switch r.Method {
 
 	case "POST":
-		var push_event GitHubPushEventStruct
-		err := decoder.Decode(&push_event)
+		var pushEvent GitHubPushEventStruct
+
+		body, err:= ioutil.ReadAll(r.Body)
+
 		if err != nil {
 			log.Println("Error while decoding json")
 		}
-
+		err = json.Unmarshal(body, &pushEvent)
+		branchRef:=if pushEvent.Ref
+		fmt.Println(branchRef)
 		go buildSubutai()
 		//
 	default:
@@ -41,5 +46,5 @@ func publishToKurjun() {
 func main() {
 
 	http.HandleFunc("/github/subutai/develop", PushEventHandler)
-	http.ListenAndServe(":80", nil)
+	http.ListenAndServe(":8181", nil)
 }
