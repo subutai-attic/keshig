@@ -3,6 +3,9 @@ package main
 import (
 	"log"
 	"net/http"
+	"io/ioutil"
+	"fmt"
+	"encoding/json"
 
 )
 
@@ -20,7 +23,7 @@ func PushEventHandler(w http.ResponseWriter, r *http.Request) {
 			log.Println("Error while decoding json")
 		}
 		err = json.Unmarshal(body, &pushEvent)
-		branchRef:=if pushEvent.Ref
+		branchRef:=pushEvent.Ref
 		fmt.Println(branchRef)
 		go buildSubutai()
 		//
