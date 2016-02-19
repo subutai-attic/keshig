@@ -3,7 +3,7 @@ package main
 import "time"
 
 //github webhook json payload
-type GitHubPushEventStruct struct {
+type GitHubPushEvent struct {
 	Ref     string      `json:"ref"`
 	Before  string      `json:"before"`
 	After   string      `json:"after"`
@@ -149,4 +149,9 @@ type GitHubPushEventStruct struct {
 		Type              string `json:"type"`
 		SiteAdmin         bool   `json:"site_admin"`
 	} `json:"sender"`
+}
+
+//Assemble assembles
+func (g *GitHubPushEvent) Assemble() {
+	//TODO:Implement Management Template Assembler
 }

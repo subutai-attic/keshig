@@ -1,48 +1,40 @@
 package main
 
 import (
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
-	"io/ioutil"
-	"fmt"
-	"encoding/json"
-
 )
+
+func init() {
+	dispatcher := NewDispatcher(MaxWorker)
+	dispatcher.Run()
+}
 
 //Handle git push
 func PushEventHandler(w http.ResponseWriter, r *http.Request) {
 
-	switch r.Method {
-
-	case "POST":
-		var pushEvent GitHubPushEventStruct
-
-		body, err:= ioutil.ReadAll(r.Body)
-
-		if err != nil {
-			log.Println("Error while decoding json")
-		}
-		err = json.Unmarshal(body, &pushEvent)
-		branchRef:=pushEvent.Ref
-		fmt.Println(branchRef)
-		go buildSubutai()
-		//
-	default:
-		http.Error(w, "InvalidRequest", 405)
-
+	if r.Method != "POST" {
+		w.WriteHeader(http.StatusMethodNotAllowed)
 	}
+	//check for git headers and secret
+	var pushEvent GitHubPushEvent
 
-}
-
-//invoke script to build subutai
-func buildSubutai() {
-
-}
-
-//publish management template with
-//updates to global Kurjun
-func publishToKurjun() {
-
+	err := json.NewDecoder(r.Body).Decode(&pushEvent)
+	//respond with bad request on error
+	if err != nil {
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	//create task
+	task := Task{GitHubPushEvent: pushEvent}
+	//push task to queue
+	TaskQueue <- task
+	//http response
+	w.WriteHeader(http.StatusOK)
 }
 
 //main func
