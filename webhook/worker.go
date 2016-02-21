@@ -1,6 +1,6 @@
 package main
 var (
-	MaxWorker = 10
+	MaxWorker = 1
 	MaxQueue  = 10
 )
 

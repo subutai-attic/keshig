@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 )
 
@@ -21,8 +22,10 @@ func PushEventHandler(w http.ResponseWriter, r *http.Request) {
 
 	err := json.NewDecoder(r.Body).Decode(&pushEvent)
 	//respond with bad request on error
+	fmt.Printf("%+v",pushEvent)
 	if err != nil {
 		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		fmt.Println(err.Error())
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
