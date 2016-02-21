@@ -1,5 +1,4 @@
 package main
-
 var (
 	MaxWorker = 10
 	MaxQueue  = 10
@@ -32,8 +31,8 @@ func (w Worker) Start() {
 		select {
 		//start management update
 		case task := <-w.TaskChannel:
-			if err := task.GitHubPushEvent.UpdateMng(); err != nil {
-				log.Errorf("Error updating management container", err.Error())
+			if err := task.GitHubPushEvent.Assemble(); err != nil {
+			println("Error updating mng")
 			}
 		//terminate worker
 		case <-w.quit:

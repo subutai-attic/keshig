@@ -152,6 +152,8 @@ type GitHubPushEvent struct {
 }
 
 //Assemble assembles
-func (g *GitHubPushEvent) Assemble() {
+func (g *GitHubPushEvent) Assemble() (err error){
+
+	return nil
 	//TODO:Implement Management Template Assembler
 }

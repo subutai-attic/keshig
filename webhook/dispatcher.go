@@ -1,7 +1,9 @@
 package main
 
 type Dispatcher struct {
+	maxWorker int 
 	WorkerPool chan chan Task
+	
 }
 
 func NewDispatcher(maxWorker int) *Dispatcher {
@@ -15,7 +17,7 @@ func (d *Dispatcher) Run() {
 	//init with N number of workers
 	for i := 0; i < d.maxWorker; i++ {
 		//create worker
-		worker := NewWorker(d.pool)
+		worker := NewWorker(d.WorkerPool)
 		//start the worker
 		worker.Start()
 	}
@@ -27,8 +29,7 @@ func (d *Dispatcher) dispatch() {
 		select {
 		case task := <-TaskQueue:
 			go func(task Task) {
-			taskChannel:
-				<-d.WorkerPool
+			taskChannel :=<-d.WorkerPool
 				taskChannel <- task
 			}(task)
 		}
