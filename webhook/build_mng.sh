@@ -11,18 +11,15 @@ function build_management {
 	mvn clean install -DskipTests
 
 	popd > /dev/null
-
-
 }
 
-function upload_files {
-	
-	sshpass -p "ubuntu" ssh -P3021 root@dilshat.ddns.net "rm /root/update_mng.sh subutai-*.tar.gz"
-	sshpass -p "ubuntu" scp -P3021 update_mng.sh root@dilshat.ddns.net:/root
-	sshpass -p "ubuntu" scp -P3021 ${MANAGEMENT_ROOT_DIR}/server/server-karaf/target/subutai-*.tar.gz root@dilshat.ddns.net:/root
-	sshpass -p "ubuntu" ssh -P3021 root@dilshat.ddns.net "chmod a+x /root/update_mng.sh"
-	sshpass -p "ubuntu" ssh -P3021 root@dilshat.ddns.net "/root/update_mng.sh"
-	sshpass -p "ubuntu" ssh -P3021 root@dilshat.ddns.net "rm /root/update_mng.sh subutai-*.tar.gz"
+
+function upload_to_rh {
+
+	sshpass -p "ubuntu" scp -P3071 /github/Keshig/webhook/create_mng.sh ubuntu@dilshat.ddns.net:/home/ubuntu
+	sshpass -p "ubuntu" scp -P3021 ${MANAGEMENT_ROOT_DIR}/server/server-karaf/target/subutai-*.tar.gz ubuntu@dilshat.ddns.net:/home/ubuntu
+	sshpass -p "ubuntu" ssh -p 3071 ubuntu@dilshat.ddns.net "chmod a+x /home/ubuntu/create_mng.sh"
+	sshpass -p "ubuntu" ssh -p 3071 ubuntu@dilshat.ddns.net "/home/ubuntu/create_mng.sh $SHA"
 
 }
 
@@ -40,17 +37,6 @@ function git_pull {
 			git checkout $sha
 	#	fi
 	popd > /dev/null
-}
-function export_template {
-
-	sudo subutai export management
-
-}
-
-function upload_template {
-	local token="$1"
-	curl -k -F package=@/mnt/lib/lxc/lxc-data/tmpdir/management-subutai-template_4.0.0_amd64.tar -X POST https:10.10.10.1:8443/rest/kurjun/templates/upload/public?sptoken=$token
-
 }
 function init {
 
@@ -82,12 +68,9 @@ function install_deps {
 	fi
 }
 
+#git commit SHA
+SHA="$2"
+#fetch checkout
 git_pull $1 $2
-
 build_management
-
-upload_files
-
-export_template
-
-
+upload_to_rh

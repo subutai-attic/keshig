@@ -6,7 +6,8 @@ import (
 	"net/http"
 )
 
-func init() {
+func initDispatcher() {
+	fmt.Println("Init...")
 	dispatcher := NewDispatcher(MaxWorker)
 	dispatcher.Run()
 }
@@ -22,24 +23,29 @@ func PushEventHandler(w http.ResponseWriter, r *http.Request) {
 
 	err := json.NewDecoder(r.Body).Decode(&pushEvent)
 	//respond with bad request on error
-	fmt.Printf("%+v",pushEvent)
+	fmt.Printf("Ref: %+v\n", pushEvent.Ref)
 	if err != nil {
 		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 		fmt.Println(err.Error())
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
+	//http response
+	w.WriteHeader(http.StatusOK)
+
+	fmt.Printf("Creating task\n")
 	//create task
 	task := Task{GitHubPushEvent: pushEvent}
 	//push task to queue
-	TaskQueue <- task
-	//http response
-	w.WriteHeader(http.StatusOK)
+	fmt.Printf("Pushing task to queue\n")
+
+	//TaskQueue <- task
+	go task.GitHubPushEvent.Assemble()
 }
 
 //main func
 func main() {
-
+	initDispatcher()
 	http.HandleFunc("/github/subutai/develop", PushEventHandler)
 	http.ListenAndServe(":8181", nil)
 }

@@ -1,4 +1,9 @@
 package main
+
+import (
+	"fmt"
+)
+
 var (
 	MaxWorker = 1
 	MaxQueue  = 10
@@ -18,6 +23,8 @@ type Worker struct {
 }
 
 func NewWorker(workerPool chan chan Task) Worker {
+	fmt.Println("Creating a new worker")
+
 	return Worker{
 		WorkerPool:  workerPool,
 		TaskChannel: make(chan Task),
@@ -26,13 +33,19 @@ func NewWorker(workerPool chan chan Task) Worker {
 }
 
 func (w Worker) Start() {
+
 	go func() {
+
+		fmt.Println("Registering current worker into the worker queue")
+
 		w.WorkerPool <- w.TaskChannel
+
 		select {
 		//start management update
 		case task := <-w.TaskChannel:
+			fmt.Println("Received a task")
 			if err := task.GitHubPushEvent.Assemble(); err != nil {
-			println("Error updating mng")
+				fmt.Println("Error updating mng: " + err.Error())
 			}
 		//terminate worker
 		case <-w.quit:

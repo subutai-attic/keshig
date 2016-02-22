@@ -1,19 +1,25 @@
 package main
 
+import (
+	"fmt"
+)
+
 type Dispatcher struct {
-	maxWorker int 
+	maxWorker  int
 	WorkerPool chan chan Task
-	
 }
 
 func NewDispatcher(maxWorker int) *Dispatcher {
 
 	pool := make(chan chan Task, maxWorker)
 
-	return &Dispatcher{WorkerPool: pool}
+	return &Dispatcher{WorkerPool: pool,
+		maxWorker: maxWorker}
 }
 
 func (d *Dispatcher) Run() {
+	fmt.Printf("Starting dispatcher\n")
+	fmt.Printf("Adding workers : %d \n", d.maxWorker)
 	//init with N number of workers
 	for i := 0; i < d.maxWorker; i++ {
 		//create worker
@@ -25,12 +31,24 @@ func (d *Dispatcher) Run() {
 }
 
 func (d *Dispatcher) dispatch() {
+
+	fmt.Println("Listening on channel for tasks...")
+
 	for {
 		select {
 		case task := <-TaskQueue:
+
+			fmt.Printf("Dispatching a task\n")
+			fmt.Printf("Task details:%+v", task.GitHubPushEvent.Ref)
+
 			go func(task Task) {
-			taskChannel :=<-d.WorkerPool
+
+				fmt.Printf("Trying to obtain free worker channel\n")
+				taskChannel := <-d.WorkerPool
+
+				fmt.Printf("Dispatching task to a worker\n")
 				taskChannel <- task
+
 			}(task)
 		}
 	}
