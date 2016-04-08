@@ -1,12 +1,9 @@
 package main
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
-	"io"
 	"io/ioutil"
-	"mime/multipart"
 	"net/http"
 	"os"
 	"os/exec"
@@ -75,55 +72,16 @@ func GetTemplateID() string {
 	return string(bodyResp)
 }
 
-func UploadTemplate() (string, err error) {
-	// Prepare a form that you will submit to that URL.
-	var b bytes.Buffer
-	w := multipart.NewWriter(&b)
-	// Add your image file
-	f, err := os.Open("/mnt/lib/lxc/lxc-data/tmpdir/management-subutai-template_4.0.0_amd64.tar.gz")
-	if err != nil {
-		return nil, err
-	}
-	defer f.Close()
-	fw, err := w.CreateFormFile("template", file)
-	if err != nil {
-		return nil, err
-	}
-	if _, err = io.Copy(fw, f); err != nil {
-		return
-	}
-	// Add the other fields
-	if fw, err = w.CreateFormField("key"); err != nil {
-		return
-	}
-	if _, err = fw.Write([]byte("KEY")); err != nil {
-		return
-	}
-	// Don't forget to close the multipart writer.
-	// If you don't close it, your request will be missing the terminating boundary.
-	w.Close()
-
-	// Now that you have a form, you can submit it to your handler.
-	req, err := http.NewRequest("POST", url, &b)
-	if err != nil {
-		return
-	}
-	// Don't forget to set the content type, this will contain the boundary.
-	req.Header.Set("Content-Type", w.FormDataContentType())
-
-	// Submit the request
-	client := &http.Client{}
-	res, err := client.Do(req)
-	if err != nil {
-		return
-	}
-
-	// Check the response
-	if res.StatusCode != http.StatusOK {
-		err = fmt.Errorf("bad status: %s", res.Status)
-	}
-	return
-}
+// func UploadTemplate() (string, err error) {
+// 	resp, err := http.Post("http://peer.noip.me:8081/rest/kurjun/templates/upload/public?",
+// 		"", &buf)
+// 	http.Post(url string, bodyType string, body io.Reader)
+// 		// Check the response
+// 	if res.StatusCode != http.StatusOK {
+// 		err = fmt.Errorf("bad status: %s", res.Status)
+// 	}
+// 	return
+// }
 
 // UpdateTemplate is triggering build, test and deploy process for Subutai/base
 func UpdateTemplate(c *gin.Context) {
